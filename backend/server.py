@@ -278,6 +278,9 @@ async def register(user_data: UserCreate):
     user_doc.pop("password_hash")
     user_doc.pop("_id")
     
+    # Convert datetime to ISO string for JSON serialization
+    user_doc["created_at"] = user_doc["created_at"].isoformat()
+    
     response = JSONResponse(content=user_doc)
     response.set_cookie(
         key="session_token",
