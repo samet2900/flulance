@@ -287,7 +287,7 @@ async def register(user_data: UserCreate):
         value=session_token,
         httponly=True,
         secure=True,
-        samesite="none",
+        samesite="lax",
         path="/",
         max_age=7*24*60*60
     )
@@ -329,7 +329,7 @@ async def login(credentials: UserLogin):
         value=session_token,
         httponly=True,
         secure=True,
-        samesite="none",
+        samesite="lax",
         path="/",
         max_age=7*24*60*60
     )
@@ -400,7 +400,7 @@ async def google_session(x_session_id: str = Header(...)):
         value=session_token,
         httponly=True,
         secure=True,
-        samesite="none",
+        samesite="lax",
         path="/",
         max_age=7*24*60*60
     )
@@ -457,7 +457,7 @@ async def complete_google_signup(
         value=session_token,
         httponly=True,
         secure=True,
-        samesite="none",
+        samesite="lax",
         path="/",
         max_age=7*24*60*60
     )
