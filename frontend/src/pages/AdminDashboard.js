@@ -304,6 +304,18 @@ const AdminDashboard = () => {
             <DollarSign className="w-5 h-5" />
             Eşleşmeler
           </button>
+          <button
+            onClick={() => setActiveTab('announcements')}
+            className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'announcements'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                : 'bg-white/10 hover:bg-white/20'
+            }`}
+            data-testid="tab-announcements"
+          >
+            <Bell className="w-5 h-5" />
+            Duyurular
+          </button>
         </div>
 
         {/* Stats Tab */}
