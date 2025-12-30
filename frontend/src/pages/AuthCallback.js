@@ -38,14 +38,8 @@ const AuthCallback = () => {
           // New user needs to select type
           navigate('/select-user-type', { state: { tempSession: data.temp_session, userData: data } });
         } else {
-          // Existing user - redirect to dashboard
-          if (data.user_type === 'marka') {
-            navigate('/brand', { state: { user: data }, replace: true });
-          } else if (data.user_type === 'influencer') {
-            navigate('/influencer', { state: { user: data }, replace: true });
-          } else if (data.user_type === 'admin') {
-            navigate('/admin', { state: { user: data }, replace: true });
-          }
+          // Existing user - redirect to home feed
+          navigate('/home', { state: { user: data }, replace: true });
         }
       } catch (error) {
         console.error('Auth error:', error);
