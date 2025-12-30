@@ -201,6 +201,40 @@ async def seed_database():
     else:
         print("ℹ️  Komisyon ayarları zaten mevcut")
     
+    # Sample announcements
+    announcement_exists = await db.announcements.find_one({})
+    if not announcement_exists:
+        sample_announcements = [
+            {
+                "announcement_id": "ann_001",
+                "title": "FLULANCE'a Hoş Geldiniz!",
+                "content": "Yeni platformumuza hoş geldiniz! Markalar ve influencer'lar artık doğrudan buluşabiliyor. Ajans komisyonlarına veda!",
+                "type": "news",
+                "created_at": datetime.now(timezone.utc)
+            },
+            {
+                "announcement_id": "ann_002",
+                "title": "Yeni Özellik: Favori İlanlar",
+                "content": "Artık beğendiğiniz iş ilanlarını favorilerinize ekleyebilir ve daha sonra kolayca erişebilirsiniz!",
+                "type": "update",
+                "created_at": datetime.now(timezone.utc) - timedelta(hours=12)
+            },
+            {
+                "announcement_id": "ann_003",
+                "title": "İlk 100 Kullanıcıya Özel!",
+                "content": "İlk eşleşmenizde %5 ekstra komisyon indirimi! Hemen başvurun ve fırsatı kaçırmayın.",
+                "type": "promotion",
+                "created_at": datetime.now(timezone.utc) - timedelta(days=1)
+            }
+        ]
+        
+        for announcement in sample_announcements:
+            await db.announcements.insert_one(announcement)
+        
+        print(f"✅ {len(sample_announcements)} duyuru oluşturuldu")
+    else:
+        print("ℹ️  Duyurular zaten mevcut")
+    
     client.close()
     print("\n🎉 Seed data başarıyla tamamlandı!")
     print("\n📝 Test Kullanıcıları:")
