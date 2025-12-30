@@ -4,6 +4,7 @@ import AuthPage from './pages/AuthPage';
 import AuthCallback from './pages/AuthCallback';
 import UserTypeSelection from './pages/UserTypeSelection';
 import HomeFeed from './pages/HomeFeed';
+import AnnouncementsPage from './pages/AnnouncementsPage';
 import BrandDashboard from './pages/BrandDashboard';
 import InfluencerDashboard from './pages/InfluencerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
