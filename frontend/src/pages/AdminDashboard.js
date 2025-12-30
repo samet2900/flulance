@@ -552,7 +552,172 @@ const AdminDashboard = () => {
             )}
           </div>
         )}
+
+        {/* Announcements Tab */}
+        {activeTab === 'announcements' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold">Duyurular ({announcements.length})</h2>
+              <button
+                onClick={() => {
+                  setEditingAnnouncement(null);
+                  setAnnouncementForm({ title: '', content: '', type: 'news', is_pinned: false });
+                  setShowAnnouncementModal(true);
+                }}
+                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center gap-2"
+                data-testid="create-announcement-btn"
+              >
+                <Plus className="w-5 h-5" />
+                Yeni Duyuru
+              </button>
+            </div>
+
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
+              </div>
+            ) : announcements.length === 0 ? (
+              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+                <Bell className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <p className="text-gray-400">Henüz duyuru yok</p>
+              </div>
+            ) : (
+              <div className="grid gap-6" data-testid="announcements-list">
+                {announcements.map((announcement) => (
+                  <div key={announcement.announcement_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            announcement.type === 'news' ? 'bg-blue-500/30 text-blue-300' :
+                            announcement.type === 'update' ? 'bg-green-500/30 text-green-300' :
+                            'bg-yellow-500/30 text-yellow-300'
+                          }`}>
+                            {announcement.type === 'news' ? 'Haber' :
+                             announcement.type === 'update' ? 'Güncelleme' : 'Promosyon'}
+                          </span>
+                          {announcement.is_pinned && (
+                            <span className="px-3 py-1 bg-purple-500/30 text-purple-300 rounded-full text-xs font-semibold flex items-center gap-1">
+                              <Star className="w-3 h-3 fill-current" />
+                              Pinli
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">{announcement.title}</h3>
+                        <p className="text-gray-300 mb-3">{announcement.content}</p>
+                        <p className="text-sm text-gray-400">
+                          {new Date(announcement.created_at).toLocaleDateString('tr-TR')}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEditAnnouncement(announcement)}
+                          className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors flex items-center gap-2"
+                          data-testid={`edit-announcement-${announcement.announcement_id}`}
+                        >
+                          <Edit className="w-4 h-4" />
+                          Düzenle
+                        </button>
+                        <button
+                          onClick={() => handleDeleteAnnouncement(announcement.announcement_id)}
+                          className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-colors flex items-center gap-2"
+                          data-testid={`delete-announcement-${announcement.announcement_id}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Sil
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Announcement Modal */}
+      {showAnnouncementModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowAnnouncementModal(false)}>
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="announcement-modal">
+            <h2 className="text-3xl font-bold mb-6">{editingAnnouncement ? 'Duyuru Düzenle' : 'Yeni Duyuru Oluştur'}</h2>
+            <form onSubmit={handleSaveAnnouncement} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium mb-2">Başlık</label>
+                <input
+                  type="text"
+                  value={announcementForm.title}
+                  onChange={(e) => setAnnouncementForm({ ...announcementForm, title: e.target.value })}
+                  required
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                  placeholder="Duyuru başlığı"
+                  data-testid="announcement-title-input"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">İçerik</label>
+                <textarea
+                  value={announcementForm.content}
+                  onChange={(e) => setAnnouncementForm({ ...announcementForm, content: e.target.value })}
+                  required
+                  rows={4}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none text-white"
+                  placeholder="Duyuru içeriği"
+                  data-testid="announcement-content-input"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Tip</label>
+                <select
+                  value={announcementForm.type}
+                  onChange={(e) => setAnnouncementForm({ ...announcementForm, type: e.target.value })}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                  style={{colorScheme: 'dark'}}
+                  data-testid="announcement-type-select"
+                >
+                  <option value="news" className="bg-gray-800">Haber</option>
+                  <option value="update" className="bg-gray-800">Güncelleme</option>
+                  <option value="promotion" className="bg-gray-800">Promosyon</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="is_pinned"
+                  checked={announcementForm.is_pinned}
+                  onChange={(e) => setAnnouncementForm({ ...announcementForm, is_pinned: e.target.checked })}
+                  className="w-5 h-5 rounded bg-white/5 border-white/10"
+                  data-testid="announcement-pinned-checkbox"
+                />
+                <label htmlFor="is_pinned" className="text-sm font-medium flex items-center gap-2">
+                  <Star className="w-4 h-4 text-yellow-400" />
+                  Ana sayfada göster (Pinli)
+                </label>
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAnnouncementModal(false)}
+                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                >
+                  İptal
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  data-testid="save-announcement-btn"
+                >
+                  {editingAnnouncement ? 'Güncelle' : 'Oluştur'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
