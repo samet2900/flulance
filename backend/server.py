@@ -50,6 +50,9 @@ class User(BaseModel):
     name: str
     user_type: str
     picture: Optional[str] = None
+    badge: Optional[str] = None  # 'new', 'verified', 'top'
+    is_online: bool = False
+    last_active: Optional[datetime] = None
     created_at: datetime
 
 # Influencer Profile Models
