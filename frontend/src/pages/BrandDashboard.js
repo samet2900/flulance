@@ -242,25 +242,7 @@ const BrandDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white">
-      {/* Header */}
-      <header className="bg-black/30 backdrop-blur-lg border-b border-white/10 sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">FLULANCE</h1>
-            <div className="flex items-center gap-4">
-              <span className="text-gray-400">Merhaba, <span className="text-white font-semibold">{user.name}</span></span>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-2"
-                data-testid="logout-btn"
-              >
-                <LogOut className="w-4 h-4" />
-                Çıkış
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar user={user} onLogout={handleLogout} />
 
       <div className="container mx-auto px-4 py-8">
         {/* Tabs */}
