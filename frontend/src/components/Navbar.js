@@ -143,12 +143,7 @@ const Navbar = ({ user, onLogout }) => {
                     İş İlanları
                   </button>
                   <button
-                    onClick={() => {
-                      navigate('/home');
-                      setTimeout(() => {
-                        document.getElementById('announcements')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }, 100);
-                    }}
+                    onClick={() => navigate('/announcements')}
                     className="px-4 py-2 text-white hover:text-purple-400 transition-colors flex items-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4" />
