@@ -187,6 +187,40 @@ class Contact(BaseModel):
     user_type: Optional[str] = None
     created_at: datetime
 
+# Notification Models
+class Notification(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    notification_id: str
+    user_id: str
+    type: str  # 'application', 'match', 'message'
+    title: str
+    message: str
+    link: Optional[str] = None
+    is_read: bool = False
+    created_at: datetime
+
+# Announcement Models
+class AnnouncementCreate(BaseModel):
+    title: str
+    content: str
+    type: str  # 'news', 'update', 'promotion'
+
+class Announcement(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    announcement_id: str
+    title: str
+    content: str
+    type: str
+    created_at: datetime
+
+# Favorite Models
+class Favorite(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    favorite_id: str
+    user_id: str
+    job_id: str
+    created_at: datetime
+
 # ============= HELPER FUNCTIONS =============
 
 def hash_password(password: str) -> str:
