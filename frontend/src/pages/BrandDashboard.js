@@ -16,15 +16,38 @@ const BrandDashboard = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [applications, setApplications] = useState([]);
   const [showCreateJob, setShowCreateJob] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [brandProfile, setBrandProfile] = useState(null);
 
   const [newJob, setNewJob] = useState({
     title: '',
     description: '',
     category: '',
     budget: '',
-    platforms: []
+    platforms: [],
+    deadline_days: '',
+    start_date: '',
+    revision_rounds: '1',
+    experience_level: '',
+    min_followers: '',
+    content_requirements: { videos: '', images: '', stories: '' },
+    target_audience: { age_range: '', location: '' },
+    copyright: 'shared'
+  });
+
+  const [profileForm, setProfileForm] = useState({
+    company_name: '',
+    industry: '',
+    founded_year: '',
+    employee_count: '',
+    website: '',
+    logo_url: '',
+    bio: '',
+    phone: '',
+    address: '',
+    social_media: { instagram: '', linkedin: '', facebook: '', twitter: '' }
   });
 
   const categories = [
