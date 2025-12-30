@@ -131,14 +131,24 @@ const Navbar = ({ user, onLogout }) => {
               {user.user_type !== 'admin' && (
                 <>
                   <button
-                    onClick={() => navigate('/home#jobs')}
+                    onClick={() => {
+                      navigate('/home');
+                      setTimeout(() => {
+                        document.getElementById('jobs')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }, 100);
+                    }}
                     className="px-4 py-2 text-white hover:text-purple-400 transition-colors flex items-center gap-2"
                   >
                     <Briefcase className="w-4 h-4" />
                     İş İlanları
                   </button>
                   <button
-                    onClick={() => navigate('/home#announcements')}
+                    onClick={() => {
+                      navigate('/home');
+                      setTimeout(() => {
+                        document.getElementById('announcements')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }, 100);
+                    }}
                     className="px-4 py-2 text-white hover:text-purple-400 transition-colors flex items-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4" />
