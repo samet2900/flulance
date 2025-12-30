@@ -118,6 +118,52 @@ const BrandDashboard = () => {
     }
   };
 
+  const fetchBrandProfile = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/brand-profile/me`, {
+        withCredentials: true
+      });
+      if (response.data) {
+        setBrandProfile(response.data);
+        setProfileForm({
+          company_name: response.data.company_name || '',
+          industry: response.data.industry || '',
+          founded_year: response.data.founded_year || '',
+          employee_count: response.data.employee_count || '',
+          website: response.data.website || '',
+          logo_url: response.data.logo_url || '',
+          bio: response.data.bio || '',
+          phone: response.data.phone || '',
+          address: response.data.address || '',
+          social_media: response.data.social_media || { instagram: '', linkedin: '', facebook: '', twitter: '' }
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        ...profileForm,
+        founded_year: profileForm.founded_year ? parseInt(profileForm.founded_year) : null
+      };
+      
+      await axios.post(`${API_URL}/api/brand-profile`, payload, {
+        withCredentials: true
+      });
+      
+      setShowEditProfile(false);
+      fetchBrandProfile();
+      alert('Profil başarıyla kaydedildi!');
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      alert('Profil kaydedilirken bir hata oluştu');
+    }
+  };
+
   const fetchApplications = async (jobId) => {
     try {
       const response = await axios.get(`${API_URL}/api/jobs/${jobId}/applications`, {
