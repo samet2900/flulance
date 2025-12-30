@@ -210,6 +210,7 @@ async def seed_database():
                 "title": "FLULANCE'a Hoş Geldiniz!",
                 "content": "Yeni platformumuza hoş geldiniz! Markalar ve influencer'lar artık doğrudan buluşabiliyor. Ajans komisyonlarına veda!",
                 "type": "news",
+                "is_pinned": True,  # Ana sayfada göster
                 "created_at": datetime.now(timezone.utc)
             },
             {
@@ -217,6 +218,7 @@ async def seed_database():
                 "title": "Yeni Özellik: Favori İlanlar",
                 "content": "Artık beğendiğiniz iş ilanlarını favorilerinize ekleyebilir ve daha sonra kolayca erişebilirsiniz!",
                 "type": "update",
+                "is_pinned": False,
                 "created_at": datetime.now(timezone.utc) - timedelta(hours=12)
             },
             {
@@ -224,6 +226,7 @@ async def seed_database():
                 "title": "İlk 100 Kullanıcıya Özel!",
                 "content": "İlk eşleşmenizde %5 ekstra komisyon indirimi! Hemen başvurun ve fırsatı kaçırmayın.",
                 "type": "promotion",
+                "is_pinned": True,  # Ana sayfada göster
                 "created_at": datetime.now(timezone.utc) - timedelta(days=1)
             }
         ]
