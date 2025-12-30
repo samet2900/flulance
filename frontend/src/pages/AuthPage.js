@@ -33,14 +33,8 @@ const AuthPage = () => {
 
       const user = response.data;
       
-      // Redirect based on user type
-      if (user.user_type === 'marka') {
-        navigate('/brand', { state: { user } });
-      } else if (user.user_type === 'influencer') {
-        navigate('/influencer', { state: { user } });
-      } else if (user.user_type === 'admin') {
-        navigate('/admin', { state: { user } });
-      }
+      // Always redirect to home feed after login/register
+      navigate('/home', { state: { user } });
     } catch (err) {
       setError(err.response?.data?.detail || 'Bir hata oluştu');
     } finally {
