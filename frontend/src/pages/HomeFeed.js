@@ -299,29 +299,44 @@ const HomeFeed = () => {
           <div className="space-y-6">
             {/* Announcements */}
             <section id="announcements">
-              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <Bell className="w-5 h-5 text-purple-400" />
-                Duyurular
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                  <Bell className="w-5 h-5 text-purple-400" />
+                  Önemli Duyurular
+                </h3>
+                <button
+                  onClick={() => navigate('/announcements')}
+                  className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
+                >
+                  Tümünü Gör →
+                </button>
+              </div>
               <div className="space-y-3">
-                {announcements.slice(0, 3).map((announcement) => (
-                  <div
-                    key={announcement.announcement_id}
-                    className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-purple-500/50 transition-colors"
-                    data-testid={`announcement-${announcement.announcement_id}`}
-                  >
-                    <div className="flex items-start gap-3">
-                      {getAnnouncementIcon(announcement.type)}
-                      <div className="flex-1">
-                        <h4 className="font-semibold mb-1">{announcement.title}</h4>
-                        <p className="text-sm text-gray-400 mb-2">{announcement.content}</p>
-                        <p className="text-xs text-gray-500">
-                          {new Date(announcement.created_at).toLocaleDateString('tr-TR')}
-                        </p>
+                {announcements.length === 0 ? (
+                  <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
+                    <p className="text-sm text-gray-400">Henüz duyuru yok</p>
+                  </div>
+                ) : (
+                  announcements.map((announcement) => (
+                    <div
+                      key={announcement.announcement_id}
+                      className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-purple-500/50 transition-colors cursor-pointer"
+                      onClick={() => navigate('/announcements')}
+                      data-testid={`announcement-${announcement.announcement_id}`}
+                    >
+                      <div className="flex items-start gap-3">
+                        {getAnnouncementIcon(announcement.type)}
+                        <div className="flex-1">
+                          <h4 className="font-semibold mb-1">{announcement.title}</h4>
+                          <p className="text-sm text-gray-400 mb-2 line-clamp-2">{announcement.content}</p>
+                          <p className="text-xs text-gray-500">
+                            {new Date(announcement.created_at).toLocaleDateString('tr-TR')}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </section>
 
