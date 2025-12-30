@@ -35,12 +35,8 @@ const UserTypeSelection = () => {
 
       const user = response.data;
 
-      // Redirect to appropriate dashboard
-      if (user.user_type === 'marka') {
-        navigate('/brand', { state: { user }, replace: true });
-      } else if (user.user_type === 'influencer') {
-        navigate('/influencer', { state: { user }, replace: true });
-      }
+      // Always redirect to home feed
+      navigate('/home', { state: { user }, replace: true });
     } catch (error) {
       console.error('Error completing signup:', error);
       navigate('/auth');
