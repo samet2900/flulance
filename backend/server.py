@@ -250,6 +250,7 @@ class AnnouncementCreate(BaseModel):
     title: str
     content: str
     type: str  # 'news', 'update', 'promotion'
+    is_pinned: bool = False  # Ana sayfada gösterilsin mi?
 
 class Announcement(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -257,6 +258,7 @@ class Announcement(BaseModel):
     title: str
     content: str
     type: str
+    is_pinned: bool = False
     created_at: datetime
 
 # Favorite Models
