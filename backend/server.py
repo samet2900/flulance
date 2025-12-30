@@ -1126,7 +1126,13 @@ async def mark_all_read(request: Request):
 
 @api_router.get("/announcements", response_model=List[Announcement])
 async def get_announcements():
-    announcements = await db.announcements.find({}, {"_id": 0}).sort("created_at", -1).limit(10).to_list(10)
+    announcements = await db.announcements.find({}, {"_id": 0}).sort("created_at", -1).limit(50).to_list(50)
+    return [Announcement(**a) for a in announcements]
+
+@api_router.get("/announcements/pinned", response_model=List[Announcement])
+async def get_pinned_announcements():
+    """Ana sayfada gösterilecek pinned duyurular"""
+    announcements = await db.announcements.find({"is_pinned": True}, {"_id": 0}).sort("created_at", -1).limit(3).to_list(3)
     return [Announcement(**a) for a in announcements]
 
 @api_router.post("/admin/announcements", response_model=Announcement)
@@ -1145,6 +1151,37 @@ async def create_announcement(request: Request, announcement_data: AnnouncementC
     
     announcement_doc.pop("_id")
     return Announcement(**announcement_doc)
+
+@api_router.put("/admin/announcements/{announcement_id}", response_model=Announcement)
+async def update_announcement(request: Request, announcement_id: str, announcement_data: AnnouncementCreate):
+    await require_role(request, ["admin"])
+    
+    announcement_doc = {
+        **announcement_data.model_dump(),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    result = await db.announcements.update_one(
+        {"announcement_id": announcement_id},
+        {"$set": announcement_doc}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Announcement not found")
+    
+    updated = await db.announcements.find_one({"announcement_id": announcement_id}, {"_id": 0})
+    return Announcement(**updated)
+
+@api_router.delete("/admin/announcements/{announcement_id}")
+async def delete_announcement(request: Request, announcement_id: str):
+    await require_role(request, ["admin"])
+    
+    result = await db.announcements.delete_one({"announcement_id": announcement_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Announcement not found")
+    
+    return {"message": "Announcement deleted"}
 
 # ============= FAVORITE ROUTES =============
 
