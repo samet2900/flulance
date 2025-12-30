@@ -36,6 +36,16 @@ function AppRouter() {
         }
       />
       
+      {/* Announcements Page */}
+      <Route
+        path="/announcements"
+        element={
+          <ProtectedRoute allowedRoles={['marka', 'influencer', 'admin']}>
+            <AnnouncementsPage />
+          </ProtectedRoute>
+        }
+      />
+      
       {/* Brand Routes */}
       <Route
         path="/brand"
