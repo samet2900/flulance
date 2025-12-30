@@ -160,6 +160,78 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchAnnouncements = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_URL}/api/announcements`, {
+        withCredentials: true
+      });
+      setAnnouncements(response.data);
+    } catch (error) {
+      console.error('Error fetching announcements:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveAnnouncement = async (e) => {
+    e.preventDefault();
+    
+    try {
+      if (editingAnnouncement) {
+        // Update existing
+        await axios.put(
+          `${API_URL}/api/admin/announcements/${editingAnnouncement.announcement_id}`,
+          announcementForm,
+          { withCredentials: true }
+        );
+        alert('Duyuru güncellendi');
+      } else {
+        // Create new
+        await axios.post(
+          `${API_URL}/api/admin/announcements`,
+          announcementForm,
+          { withCredentials: true }
+        );
+        alert('Duyuru oluşturuldu');
+      }
+      
+      setShowAnnouncementModal(false);
+      setEditingAnnouncement(null);
+      setAnnouncementForm({ title: '', content: '', type: 'news', is_pinned: false });
+      fetchAnnouncements();
+    } catch (error) {
+      console.error('Error saving announcement:', error);
+      alert('Kaydetme başarısız');
+    }
+  };
+
+  const handleEditAnnouncement = (announcement) => {
+    setEditingAnnouncement(announcement);
+    setAnnouncementForm({
+      title: announcement.title,
+      content: announcement.content,
+      type: announcement.type,
+      is_pinned: announcement.is_pinned
+    });
+    setShowAnnouncementModal(true);
+  };
+
+  const handleDeleteAnnouncement = async (announcementId) => {
+    if (!window.confirm('Bu duyuruyu silmek istediğinizden emin misiniz?')) return;
+    
+    try {
+      await axios.delete(`${API_URL}/api/admin/announcements/${announcementId}`, {
+        withCredentials: true
+      });
+      alert('Duyuru silindi');
+      fetchAnnouncements();
+    } catch (error) {
+      console.error('Error deleting announcement:', error);
+      alert('Silme başarısız');
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await axios.post(`${API_URL}/api/auth/logout`, {}, {
