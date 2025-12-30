@@ -83,7 +83,8 @@ const HomeFeed = () => {
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/announcements`, {
+      // Sadece pinned duyuruları getir (ana sayfada göstermek için)
+      const response = await axios.get(`${API_URL}/api/announcements/pinned`, {
         withCredentials: true
       });
       setAnnouncements(response.data);
