@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { User, Briefcase, Send, MessageCircle, LogOut, Plus, Edit } from 'lucide-react';
+import { User, Briefcase, Send, MessageCircle, Plus, Edit } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
+import Navbar from '../components/Navbar';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
