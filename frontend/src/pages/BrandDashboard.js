@@ -73,6 +73,8 @@ const BrandDashboard = () => {
         fetchJobs();
       } else if (activeTab === 'matches') {
         fetchMatches();
+      } else if (activeTab === 'profile') {
+        fetchBrandProfile();
       }
     }
   }, [user, activeTab]);
