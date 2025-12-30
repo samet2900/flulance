@@ -248,6 +248,18 @@ const BrandDashboard = () => {
         {/* Tabs */}
         <div className="flex gap-4 mb-8 overflow-x-auto">
           <button
+            onClick={() => setActiveTab('profile')}
+            className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'profile'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                : 'bg-white/10 hover:bg-white/20'
+            }`}
+            data-testid="tab-profile"
+          >
+            <Building className="w-5 h-5" />
+            Firma Profilim
+          </button>
+          <button
             onClick={() => setActiveTab('jobs')}
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'jobs'
@@ -272,6 +284,88 @@ const BrandDashboard = () => {
             Eşleşmeler & Sohbet
           </button>
         </div>
+
+        {/* Profile Tab */}
+        {activeTab === 'profile' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold">Firma Profilim</h2>
+              <button
+                onClick={() => setShowEditProfile(true)}
+                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center gap-2"
+                data-testid="edit-profile-btn"
+              >
+                <Plus className="w-5 h-5" />
+                {brandProfile ? 'Profili Düzenle' : 'Profil Oluştur'}
+              </button>
+            </div>
+
+            {brandProfile ? (
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20" data-testid="brand-profile-card">
+                <div className="flex items-start gap-6 mb-6">
+                  {brandProfile.logo_url && (
+                    <img src={brandProfile.logo_url} alt={brandProfile.company_name} className="w-24 h-24 rounded-lg object-cover" />
+                  )}
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold mb-2">{brandProfile.company_name}</h3>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="px-3 py-1 bg-blue-500/30 rounded-full text-sm">{brandProfile.industry}</span>
+                      {brandProfile.employee_count && (
+                        <span className="px-3 py-1 bg-purple-500/30 rounded-full text-sm">{brandProfile.employee_count} çalışan</span>
+                      )}
+                      {brandProfile.founded_year && (
+                        <span className="px-3 py-1 bg-green-500/30 rounded-full text-sm">Kuruluş: {brandProfile.founded_year}</span>
+                      )}
+                    </div>
+                    {brandProfile.bio && <p className="text-gray-300 mb-4">{brandProfile.bio}</p>}
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <h4 className="text-lg font-semibold mb-3">İletişim Bilgileri</h4>
+                    {brandProfile.phone && (
+                      <p className="text-gray-300"><span className="text-gray-400">Telefon:</span> {brandProfile.phone}</p>
+                    )}
+                    {brandProfile.website && (
+                      <p className="text-gray-300">
+                        <span className="text-gray-400">Website:</span>{' '}
+                        <a href={brandProfile.website} target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300">
+                          {brandProfile.website}
+                        </a>
+                      </p>
+                    )}
+                    {brandProfile.address && (
+                      <p className="text-gray-300"><span className="text-gray-400">Adres:</span> {brandProfile.address}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-3">
+                    <h4 className="text-lg font-semibold mb-3">Sosyal Medya</h4>
+                    {brandProfile.social_media && Object.entries(brandProfile.social_media).map(([platform, handle]) => (
+                      handle && (
+                        <p key={platform} className="text-gray-300 capitalize">
+                          <span className="text-gray-400">{platform}:</span> {handle}
+                        </p>
+                      )
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+                <Building className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <p className="text-gray-400 mb-4">Henüz firma profilinizi oluşturmadınız</p>
+                <button
+                  onClick={() => setShowEditProfile(true)}
+                  className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                >
+                  Profil Oluştur
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Jobs Tab */}
         {activeTab === 'jobs' && (
