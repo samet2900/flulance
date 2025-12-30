@@ -25,6 +25,16 @@ function AppRouter() {
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/select-user-type" element={<UserTypeSelection />} />
       
+      {/* Home Feed - All authenticated users */}
+      <Route
+        path="/home"
+        element={
+          <ProtectedRoute allowedRoles={['marka', 'influencer', 'admin']}>
+            <HomeFeed />
+          </ProtectedRoute>
+        }
+      />
+      
       {/* Brand Routes */}
       <Route
         path="/brand"
