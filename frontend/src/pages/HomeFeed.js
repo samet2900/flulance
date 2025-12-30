@@ -239,23 +239,25 @@ const HomeFeed = () => {
                   <select
                     value={filterCategory}
                     onChange={(e) => setFilterCategory(e.target.value)}
-                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
+                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
                     data-testid="filter-category"
+                    style={{colorScheme: 'dark'}}
                   >
-                    <option value="">Tüm Kategoriler</option>
+                    <option value="" className="bg-gray-800 text-white">Tüm Kategoriler</option>
                     {categories.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
+                      <option key={cat} value={cat} className="bg-gray-800 text-white">{cat}</option>
                     ))}
                   </select>
                   <select
                     value={filterPlatform}
                     onChange={(e) => setFilterPlatform(e.target.value)}
-                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
+                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
                     data-testid="filter-platform"
+                    style={{colorScheme: 'dark'}}
                   >
-                    <option value="">Tüm Platformlar</option>
+                    <option value="" className="bg-gray-800 text-white">Tüm Platformlar</option>
                     {platforms.map((platform) => (
-                      <option key={platform} value={platform} className="capitalize">{platform}</option>
+                      <option key={platform} value={platform} className="capitalize bg-gray-800 text-white">{platform}</option>
                     ))}
                   </select>
                 </div>
