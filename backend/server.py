@@ -275,6 +275,23 @@ async def require_role(request: Request, allowed_roles: List[str]) -> User:
         raise HTTPException(status_code=403, detail="Insufficient permissions")
     return user
 
+async def create_notification(user_id: str, type: str, title: str, message: str, link: Optional[str] = None):
+    """Helper function to create notifications"""
+    notification_id = f"notif_{uuid.uuid4().hex[:12]}"
+    
+    notification_doc = {
+        "notification_id": notification_id,
+        "user_id": user_id,
+        "type": type,
+        "title": title,
+        "message": message,
+        "link": link,
+        "is_read": False,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.notifications.insert_one(notification_doc)
+
 # ============= AUTH ROUTES =============
 
 @api_router.post("/auth/register")
