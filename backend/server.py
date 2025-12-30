@@ -770,6 +770,15 @@ async def accept_application(request: Request, application_id: str):
     
     await db.matches.insert_one(match_doc)
     
+    # Create notification for influencer
+    await create_notification(
+        user_id=app_doc["influencer_user_id"],
+        type="match",
+        title="Başvurunuz Kabul Edildi!",
+        message=f"{user.name} başvurunuzu kabul etti: {job_doc['title']}",
+        link=f"/influencer#matches"
+    )
+    
     # Update job status
     await db.job_posts.update_one(
         {"job_id": app_doc["job_id"]},
