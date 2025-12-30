@@ -91,6 +91,36 @@ class InfluencerProfile(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+# Brand Profile Models
+class BrandProfileCreate(BaseModel):
+    company_name: str
+    industry: str
+    founded_year: Optional[int] = None
+    employee_count: Optional[str] = None  # "1-10", "11-50", "51-200", "200+"
+    website: Optional[str] = None
+    logo_url: Optional[str] = None
+    bio: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    social_media: Optional[dict] = None
+
+class BrandProfile(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    profile_id: str
+    user_id: str
+    company_name: str
+    industry: str
+    founded_year: Optional[int] = None
+    employee_count: Optional[str] = None
+    website: Optional[str] = None
+    logo_url: Optional[str] = None
+    bio: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    social_media: Optional[dict] = None
+    created_at: datetime
+    updated_at: datetime
+
 # Job Post Models
 class JobPostCreate(BaseModel):
     title: str
@@ -98,6 +128,14 @@ class JobPostCreate(BaseModel):
     category: str
     budget: float
     platforms: List[str]  # ['instagram', 'tiktok', etc.]
+    deadline_days: Optional[int] = None  # Teslim süresi (gün)
+    start_date: Optional[str] = None
+    content_requirements: Optional[dict] = None  # {"videos": 3, "images": 5}
+    revision_rounds: Optional[int] = 1  # Revizyon hakkı
+    experience_level: Optional[str] = None  # "beginner", "intermediate", "expert"
+    min_followers: Optional[int] = None  # Minimum takipçi sayısı
+    target_audience: Optional[dict] = None  # {"age_range": "18-24", "location": "Turkey"}
+    copyright: Optional[str] = None  # "brand", "influencer", "shared"
 
 class JobPost(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -109,6 +147,14 @@ class JobPost(BaseModel):
     category: str
     budget: float
     platforms: List[str]
+    deadline_days: Optional[int] = None
+    start_date: Optional[str] = None
+    content_requirements: Optional[dict] = None
+    revision_rounds: Optional[int] = 1
+    experience_level: Optional[str] = None
+    min_followers: Optional[int] = None
+    target_audience: Optional[dict] = None
+    copyright: Optional[str] = None
     status: str  # 'open', 'closed', 'filled'
     created_at: datetime
 
