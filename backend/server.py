@@ -940,6 +940,184 @@ async def admin_get_contacts(request: Request):
     contacts = await db.contacts.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
     return [Contact(**c) for c in contacts]
 
+# ============= NOTIFICATION ROUTES =============
+
+@api_router.get("/notifications", response_model=List[Notification])
+async def get_notifications(request: Request):
+    user = await require_auth(request)
+    
+    notifications = await db.notifications.find(
+        {"user_id": user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).limit(50).to_list(50)
+    
+    return [Notification(**n) for n in notifications]
+
+@api_router.get("/notifications/unread-count")
+async def get_unread_count(request: Request):
+    user = await require_auth(request)
+    
+    count = await db.notifications.count_documents({
+        "user_id": user.user_id,
+        "is_read": False
+    })
+    
+    return {"count": count}
+
+@api_router.patch("/notifications/{notification_id}/read")
+async def mark_notification_read(request: Request, notification_id: str):
+    user = await require_auth(request)
+    
+    result = await db.notifications.update_one(
+        {"notification_id": notification_id, "user_id": user.user_id},
+        {"$set": {"is_read": True}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    
+    return {"message": "Marked as read"}
+
+@api_router.post("/notifications/mark-all-read")
+async def mark_all_read(request: Request):
+    user = await require_auth(request)
+    
+    await db.notifications.update_many(
+        {"user_id": user.user_id, "is_read": False},
+        {"$set": {"is_read": True}}
+    )
+    
+    return {"message": "All notifications marked as read"}
+
+# ============= ANNOUNCEMENT ROUTES =============
+
+@api_router.get("/announcements", response_model=List[Announcement])
+async def get_announcements():
+    announcements = await db.announcements.find({}, {"_id": 0}).sort("created_at", -1).limit(10).to_list(10)
+    return [Announcement(**a) for a in announcements]
+
+@api_router.post("/admin/announcements", response_model=Announcement)
+async def create_announcement(request: Request, announcement_data: AnnouncementCreate):
+    await require_role(request, ["admin"])
+    
+    announcement_id = f"announcement_{uuid.uuid4().hex[:12]}"
+    
+    announcement_doc = {
+        "announcement_id": announcement_id,
+        **announcement_data.model_dump(),
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.announcements.insert_one(announcement_doc)
+    
+    announcement_doc.pop("_id")
+    return Announcement(**announcement_doc)
+
+# ============= FAVORITE ROUTES =============
+
+@api_router.post("/favorites/{job_id}")
+async def add_favorite(request: Request, job_id: str):
+    user = await require_auth(request)
+    
+    # Check if already favorited
+    existing = await db.favorites.find_one({
+        "user_id": user.user_id,
+        "job_id": job_id
+    })
+    
+    if existing:
+        raise HTTPException(status_code=400, detail="Already favorited")
+    
+    favorite_id = f"fav_{uuid.uuid4().hex[:12]}"
+    
+    favorite_doc = {
+        "favorite_id": favorite_id,
+        "user_id": user.user_id,
+        "job_id": job_id,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.favorites.insert_one(favorite_doc)
+    
+    return {"message": "Added to favorites"}
+
+@api_router.delete("/favorites/{job_id}")
+async def remove_favorite(request: Request, job_id: str):
+    user = await require_auth(request)
+    
+    result = await db.favorites.delete_one({
+        "user_id": user.user_id,
+        "job_id": job_id
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Favorite not found")
+    
+    return {"message": "Removed from favorites"}
+
+@api_router.get("/favorites")
+async def get_favorites(request: Request):
+    user = await require_auth(request)
+    
+    favorites = await db.favorites.find(
+        {"user_id": user.user_id},
+        {"_id": 0}
+    ).to_list(100)
+    
+    # Get job details for each favorite
+    job_ids = [fav["job_id"] for fav in favorites]
+    jobs = await db.job_posts.find({"job_id": {"$in": job_ids}}, {"_id": 0}).to_list(100)
+    
+    return jobs
+
+@api_router.get("/favorites/check/{job_id}")
+async def check_favorite(request: Request, job_id: str):
+    user = await require_auth(request)
+    
+    favorite = await db.favorites.find_one({
+        "user_id": user.user_id,
+        "job_id": job_id
+    })
+    
+    return {"is_favorite": favorite is not None}
+
+# ============= TRENDING & RECOMMENDATIONS =============
+
+@api_router.get("/trending/categories")
+async def get_trending_categories():
+    # Aggregate jobs by category
+    pipeline = [
+        {"$match": {"status": "open"}},
+        {"$group": {"_id": "$category", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 6}
+    ]
+    
+    results = await db.job_posts.aggregate(pipeline).to_list(6)
+    
+    return [{"category": r["_id"], "count": r["count"]} for r in results]
+
+@api_router.get("/recommendations")
+async def get_recommendations(request: Request):
+    user = await require_auth(request)
+    
+    if user.user_type == "influencer":
+        # Get influencer's specialties
+        profile = await db.influencer_profiles.find_one({"user_id": user.user_id})
+        
+        if profile and profile.get("specialties"):
+            # Find jobs matching specialties
+            jobs = await db.job_posts.find({
+                "status": "open",
+                "category": {"$in": profile["specialties"]}
+            }, {"_id": 0}).sort("created_at", -1).limit(6).to_list(6)
+            
+            return jobs
+    
+    # Default: return recent jobs
+    jobs = await db.job_posts.find({"status": "open"}, {"_id": 0}).sort("created_at", -1).limit(6).to_list(6)
+    return jobs
+
 # ============= PUBLIC ROUTES =============
 
 @api_router.get("/")
