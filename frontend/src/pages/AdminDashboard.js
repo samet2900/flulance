@@ -14,9 +14,18 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [matches, setMatches] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
   const [commission, setCommission] = useState(null);
   const [newCommission, setNewCommission] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
+  const [editingAnnouncement, setEditingAnnouncement] = useState(null);
+  const [announcementForm, setAnnouncementForm] = useState({
+    title: '',
+    content: '',
+    type: 'news',
+    is_pinned: false
+  });
 
   useEffect(() => {
     fetchUser();
