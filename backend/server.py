@@ -634,6 +634,56 @@ async def get_profile(profile_id: str):
     
     return InfluencerProfile(**profile_doc)
 
+# ============= BRAND PROFILE ROUTES =============
+
+@api_router.post("/brand-profile", response_model=BrandProfile)
+async def create_brand_profile(request: Request, profile_data: BrandProfileCreate):
+    user = await require_role(request, ["marka"])
+    
+    # Check if profile exists
+    existing = await db.brand_profiles.find_one({"user_id": user.user_id})
+    
+    profile_id = existing["profile_id"] if existing else f"brand_profile_{uuid.uuid4().hex[:12]}"
+    
+    profile_doc = {
+        "profile_id": profile_id,
+        "user_id": user.user_id,
+        **profile_data.model_dump(),
+        "created_at": existing.get("created_at") if existing else datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    if existing:
+        await db.brand_profiles.update_one(
+            {"user_id": user.user_id},
+            {"$set": profile_doc}
+        )
+    else:
+        await db.brand_profiles.insert_one(profile_doc)
+    
+    profile_doc.pop("_id", None)
+    return BrandProfile(**profile_doc)
+
+@api_router.get("/brand-profile/me", response_model=Optional[BrandProfile])
+async def get_my_brand_profile(request: Request):
+    user = await require_role(request, ["marka"])
+    
+    profile_doc = await db.brand_profiles.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not profile_doc:
+        return None
+    
+    return BrandProfile(**profile_doc)
+
+@api_router.get("/brand-profile/{profile_id}", response_model=BrandProfile)
+async def get_brand_profile(profile_id: str):
+    profile_doc = await db.brand_profiles.find_one({"profile_id": profile_id}, {"_id": 0})
+    
+    if not profile_doc:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    return BrandProfile(**profile_doc)
+
 # ============= JOB POST ROUTES =============
 
 @api_router.post("/jobs", response_model=JobPost)
