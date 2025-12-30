@@ -700,6 +700,15 @@ async def create_application(request: Request, app_data: ApplicationCreate):
     
     await db.applications.insert_one(app_doc)
     
+    # Create notification for brand
+    await create_notification(
+        user_id=job_doc["brand_user_id"],
+        type="application",
+        title="Yeni Başvuru!",
+        message=f"{user.name} iş ilanınıza başvurdu: {job_doc['title']}",
+        link=f"/brand#jobs"
+    )
+    
     app_doc.pop("_id")
     return Application(**app_doc)
 
