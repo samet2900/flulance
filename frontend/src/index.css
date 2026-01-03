@@ -264,3 +264,102 @@ html {
 .light nav.bg-black\/80 {
     border-color: #e2e8f0 !important;
 }
+
+/* ============= RESPONSIVE STYLES ============= */
+
+/* Mobile-first responsive utilities */
+@media (max-width: 640px) {
+    /* Stack navigation items vertically on mobile */
+    .mobile-stack {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    /* Full width buttons on mobile */
+    .mobile-full {
+        width: 100%;
+    }
+    
+    /* Hide sidebar on mobile */
+    .mobile-hide-sidebar {
+        display: none;
+    }
+    
+    /* Reduce padding on mobile */
+    .mobile-padding {
+        padding: 1rem;
+    }
+    
+    /* Smaller text on mobile */
+    .mobile-text-sm {
+        font-size: 0.875rem;
+    }
+    
+    /* Reduce gap on mobile */
+    .mobile-gap-2 {
+        gap: 0.5rem;
+    }
+}
+
+/* Tablet responsive */
+@media (max-width: 768px) {
+    /* Two column grid becomes single column */
+    .tablet-single-col {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Hide desktop-only elements */
+    .tablet-hide {
+        display: none;
+    }
+}
+
+/* Smooth scrolling for all devices */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Better touch targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+    button, a, input, select, textarea {
+        min-height: 44px;
+    }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+    .safe-area-inset {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Custom scrollbar for desktop */
+@media (min-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: rgba(217, 70, 239, 0.3);
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(217, 70, 239, 0.5);
+    }
+}
+
