@@ -1537,6 +1537,64 @@ const AdminDashboard = () => {
         )}
       </div>
 
+      {/* Dispute Resolution Modal */}
+      {showDisputeModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowDisputeModal(null)}>
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="dispute-modal">
+            <h2 className="text-2xl font-bold mb-2">Anlaşmazlığı Çöz</h2>
+            <p className="text-gray-400 mb-6">{showDisputeModal.reason}</p>
+            
+            <div className="bg-gray-800/50 rounded-xl p-4 mb-6">
+              <p className="text-sm text-gray-400 mb-2">Açıklama:</p>
+              <p className="text-gray-300">{showDisputeModal.description}</p>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Çözüm Kararı *</label>
+                <textarea
+                  value={disputeResolution.resolution}
+                  onChange={(e) => setDisputeResolution({ ...disputeResolution, resolution: e.target.value })}
+                  required
+                  rows={3}
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
+                  placeholder="Anlaşmazlık nasıl çözüldü?"
+                  data-testid="dispute-resolution-input"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Admin Notları (iç kullanım)</label>
+                <textarea
+                  value={disputeResolution.admin_notes}
+                  onChange={(e) => setDisputeResolution({ ...disputeResolution, admin_notes: e.target.value })}
+                  rows={2}
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
+                  placeholder="İç notlar..."
+                />
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowDisputeModal(null)}
+                  className="flex-1 px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-xl font-semibold transition-colors"
+                >
+                  İptal
+                </button>
+                <button
+                  onClick={() => handleResolveDispute(showDisputeModal.dispute_id)}
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  data-testid="confirm-dispute-resolution-btn"
+                >
+                  Çöz
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Announcement Modal */}
       {showAnnouncementModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowAnnouncementModal(false)}>
