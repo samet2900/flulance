@@ -1260,6 +1260,7 @@ const BrandDashboard = () => {
                 </button>
               </div>
             </form>
+            </div>
           </div>
         </div>
       )}
