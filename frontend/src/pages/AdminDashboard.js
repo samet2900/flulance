@@ -44,6 +44,7 @@ const AdminDashboard = () => {
       if (activeTab === 'stats') {
         fetchStats();
         fetchCommission();
+        fetchDetailedStats();
       } else if (activeTab === 'users') {
         fetchUsers();
       } else if (activeTab === 'jobs') {
@@ -56,6 +57,7 @@ const AdminDashboard = () => {
         fetchUsers();
         fetchBadges();
       }
+      // 'content' tab uses its own component with internal state
     }
   }, [user, activeTab, jobFilter]);
 
