@@ -474,90 +474,467 @@ const BrandDashboard = () => {
         )}
       </div>
 
-      {/* Create Job Modal */}
-      {showCreateJob && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreateJob(false)}>
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="create-job-modal">
-            <h2 className="text-3xl font-bold mb-6">Yeni İş İlanı Oluştur</h2>
-            <form onSubmit={handleCreateJob} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-2">İlan Başlığı</label>
-                <input
-                  type="text"
-                  value={newJob.title}
-                  onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
-                  required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
-                  placeholder="Örn: Yeni Ürün Lansmanı için Story Serisi"
-                  data-testid="job-title-input"
-                />
+      {/* Edit Profile Modal */}
+      {showEditProfile && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto" onClick={() => setShowEditProfile(false)}>
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full my-8 border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="edit-profile-modal">
+            <h2 className="text-3xl font-bold mb-6">{brandProfile ? 'Firma Profili Düzenle' : 'Firma Profili Oluştur'}</h2>
+            <form onSubmit={handleSaveProfile} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Firma Adı *</label>
+                  <input
+                    type="text"
+                    value={profileForm.company_name}
+                    onChange={(e) => setProfileForm({ ...profileForm, company_name: e.target.value })}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    placeholder="Örn: ABC Teknoloji"
+                    data-testid="company-name-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Sektör *</label>
+                  <input
+                    type="text"
+                    value={profileForm.industry}
+                    onChange={(e) => setProfileForm({ ...profileForm, industry: e.target.value })}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    placeholder="Örn: Teknoloji, Moda, Gıda"
+                    data-testid="industry-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Kuruluş Yılı</label>
+                  <input
+                    type="number"
+                    value={profileForm.founded_year}
+                    onChange={(e) => setProfileForm({ ...profileForm, founded_year: e.target.value })}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    placeholder="2020"
+                    min="1900"
+                    max={new Date().getFullYear()}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Çalışan Sayısı</label>
+                  <select
+                    value={profileForm.employee_count}
+                    onChange={(e) => setProfileForm({ ...profileForm, employee_count: e.target.value })}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    style={{colorScheme: 'dark'}}
+                  >
+                    <option value="" className="bg-gray-800">Seçiniz</option>
+                    <option value="1-10" className="bg-gray-800">1-10</option>
+                    <option value="11-50" className="bg-gray-800">11-50</option>
+                    <option value="51-200" className="bg-gray-800">51-200</option>
+                    <option value="200+" className="bg-gray-800">200+</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Website</label>
+                  <input
+                    type="url"
+                    value={profileForm.website}
+                    onChange={(e) => setProfileForm({ ...profileForm, website: e.target.value })}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    placeholder="https://example.com"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Logo URL</label>
+                  <input
+                    type="url"
+                    value={profileForm.logo_url}
+                    onChange={(e) => setProfileForm({ ...profileForm, logo_url: e.target.value })}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    placeholder="https://..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Telefon</label>
+                  <input
+                    type="tel"
+                    value={profileForm.phone}
+                    onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    placeholder="+90 555 123 45 67"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Adres</label>
+                  <input
+                    type="text"
+                    value={profileForm.address}
+                    onChange={(e) => setProfileForm({ ...profileForm, address: e.target.value })}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    placeholder="İstanbul, Türkiye"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Açıklama</label>
+                <label className="block text-sm font-medium mb-2">Firma Hakkında</label>
                 <textarea
-                  value={newJob.description}
-                  onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
-                  required
-                  rows={4}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none"
-                  placeholder="İşin detaylarını yazın..."
-                  data-testid="job-description-input"
+                  value={profileForm.bio}
+                  onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
+                  rows={3}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none text-white"
+                  placeholder="Firmanızı tanıtın..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Kategori</label>
-                <select
-                  value={newJob.category}
-                  onChange={(e) => setNewJob({ ...newJob, category: e.target.value })}
-                  required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
-                  data-testid="job-category-select"
-                >
-                  <option value="">Kategori Seçin</option>
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Bütçe (₺)</label>
-                <input
-                  type="number"
-                  value={newJob.budget}
-                  onChange={(e) => setNewJob({ ...newJob, budget: e.target.value })}
-                  required
-                  min="0"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
-                  placeholder="5000"
-                  data-testid="job-budget-input"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-3">Platformlar</label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {platforms.map((platform) => (
-                    <button
-                      key={platform}
-                      type="button"
-                      onClick={() => togglePlatform(platform)}
-                      className={`px-4 py-3 rounded-xl font-semibold transition-colors capitalize ${
-                        newJob.platforms.includes(platform)
-                          ? 'bg-gradient-to-r from-purple-500 to-pink-500'
-                          : 'bg-white/5 hover:bg-white/10'
-                      }`}
-                      data-testid={`platform-${platform}`}
-                    >
-                      {platform}
-                    </button>
-                  ))}
+                <label className="block text-sm font-medium mb-3">Sosyal Medya Hesapları</label>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">Instagram</label>
+                    <input
+                      type="text"
+                      value={profileForm.social_media.instagram}
+                      onChange={(e) => setProfileForm({
+                        ...profileForm,
+                        social_media: { ...profileForm.social_media, instagram: e.target.value }
+                      })}
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-sm text-white"
+                      placeholder="@firmaadi"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">LinkedIn</label>
+                    <input
+                      type="text"
+                      value={profileForm.social_media.linkedin}
+                      onChange={(e) => setProfileForm({
+                        ...profileForm,
+                        social_media: { ...profileForm.social_media, linkedin: e.target.value }
+                      })}
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-sm text-white"
+                      placeholder="/company/firmaadi"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">Facebook</label>
+                    <input
+                      type="text"
+                      value={profileForm.social_media.facebook}
+                      onChange={(e) => setProfileForm({
+                        ...profileForm,
+                        social_media: { ...profileForm.social_media, facebook: e.target.value }
+                      })}
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-sm text-white"
+                      placeholder="@firmaadi"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">Twitter</label>
+                    <input
+                      type="text"
+                      value={profileForm.social_media.twitter}
+                      onChange={(e) => setProfileForm({
+                        ...profileForm,
+                        social_media: { ...profileForm.social_media, twitter: e.target.value }
+                      })}
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-sm text-white"
+                      placeholder="@firmaadi"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => setShowEditProfile(false)}
+                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                >
+                  İptal
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  data-testid="save-profile-btn"
+                >
+                  Kaydet
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Create Job Modal - Genişletilmiş */}
+      {showCreateJob && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto" onClick={() => setShowCreateJob(false)}>
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full my-8 border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="create-job-modal">
+            <h2 className="text-3xl font-bold mb-6">Yeni İş İlanı Oluştur</h2>
+            <form onSubmit={handleCreateJob} className="space-y-6">
+              {/* Temel Bilgiler */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-purple-400">Temel Bilgiler</h3>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">İlan Başlığı *</label>
+                  <input
+                    type="text"
+                    value={newJob.title}
+                    onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    placeholder="Örn: Yeni Ürün Lansmanı için Story Serisi"
+                    data-testid="job-title-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Açıklama *</label>
+                  <textarea
+                    value={newJob.description}
+                    onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
+                    required
+                    rows={4}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none text-white"
+                    placeholder="İşin detaylarını yazın..."
+                    data-testid="job-description-input"
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Kategori *</label>
+                    <select
+                      value={newJob.category}
+                      onChange={(e) => setNewJob({ ...newJob, category: e.target.value })}
+                      required
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      style={{colorScheme: 'dark'}}
+                      data-testid="job-category-select"
+                    >
+                      <option value="" className="bg-gray-800">Kategori Seçin</option>
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat} className="bg-gray-800">{cat}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Bütçe (₺) *</label>
+                    <input
+                      type="number"
+                      value={newJob.budget}
+                      onChange={(e) => setNewJob({ ...newJob, budget: e.target.value })}
+                      required
+                      min="0"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="5000"
+                      data-testid="job-budget-input"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-3">Platformlar *</label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {platforms.map((platform) => (
+                      <button
+                        key={platform}
+                        type="button"
+                        onClick={() => togglePlatform(platform)}
+                        className={`px-4 py-3 rounded-xl font-semibold transition-colors capitalize ${
+                          newJob.platforms.includes(platform)
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                            : 'bg-white/5 hover:bg-white/10'
+                        }`}
+                        data-testid={`platform-${platform}`}
+                      >
+                        {platform}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Zaman Çizelgesi */}
+              <div className="space-y-4 border-t border-white/10 pt-6">
+                <h3 className="text-xl font-semibold text-purple-400">Zaman Çizelgesi</h3>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Başlangıç Tarihi</label>
+                    <input
+                      type="date"
+                      value={newJob.start_date}
+                      onChange={(e) => setNewJob({ ...newJob, start_date: e.target.value })}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      style={{colorScheme: 'dark'}}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Teslim Süresi (Gün)</label>
+                    <input
+                      type="number"
+                      value={newJob.deadline_days}
+                      onChange={(e) => setNewJob({ ...newJob, deadline_days: e.target.value })}
+                      min="1"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="7"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* İçerik Gereksinimleri */}
+              <div className="space-y-4 border-t border-white/10 pt-6">
+                <h3 className="text-xl font-semibold text-purple-400">İçerik Gereksinimleri</h3>
+                
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Video Sayısı</label>
+                    <input
+                      type="number"
+                      value={newJob.content_requirements.videos}
+                      onChange={(e) => setNewJob({
+                        ...newJob,
+                        content_requirements: { ...newJob.content_requirements, videos: e.target.value }
+                      })}
+                      min="0"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Görsel Sayısı</label>
+                    <input
+                      type="number"
+                      value={newJob.content_requirements.images}
+                      onChange={(e) => setNewJob({
+                        ...newJob,
+                        content_requirements: { ...newJob.content_requirements, images: e.target.value }
+                      })}
+                      min="0"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Story Sayısı</label>
+                    <input
+                      type="number"
+                      value={newJob.content_requirements.stories}
+                      onChange={(e) => setNewJob({
+                        ...newJob,
+                        content_requirements: { ...newJob.content_requirements, stories: e.target.value }
+                      })}
+                      min="0"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Revizyon Hakkı</label>
+                  <input
+                    type="number"
+                    value={newJob.revision_rounds}
+                    onChange={(e) => setNewJob({ ...newJob, revision_rounds: e.target.value })}
+                    min="0"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    placeholder="1"
+                  />
+                </div>
+              </div>
+
+              {/* Influencer Gereksinimleri */}
+              <div className="space-y-4 border-t border-white/10 pt-6">
+                <h3 className="text-xl font-semibold text-purple-400">Influencer Gereksinimleri</h3>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Deneyim Seviyesi</label>
+                    <select
+                      value={newJob.experience_level}
+                      onChange={(e) => setNewJob({ ...newJob, experience_level: e.target.value })}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      style={{colorScheme: 'dark'}}
+                    >
+                      <option value="" className="bg-gray-800">Seçiniz</option>
+                      <option value="beginner" className="bg-gray-800">Başlangıç</option>
+                      <option value="intermediate" className="bg-gray-800">Orta</option>
+                      <option value="expert" className="bg-gray-800">İleri</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Minimum Takipçi Sayısı</label>
+                    <input
+                      type="number"
+                      value={newJob.min_followers}
+                      onChange={(e) => setNewJob({ ...newJob, min_followers: e.target.value })}
+                      min="0"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="10000"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Hedef Yaş Grubu</label>
+                    <input
+                      type="text"
+                      value={newJob.target_audience.age_range}
+                      onChange={(e) => setNewJob({
+                        ...newJob,
+                        target_audience: { ...newJob.target_audience, age_range: e.target.value }
+                      })}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="18-25"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Hedef Lokasyon</label>
+                    <input
+                      type="text"
+                      value={newJob.target_audience.location}
+                      onChange={(e) => setNewJob({
+                        ...newJob,
+                        target_audience: { ...newJob.target_audience, location: e.target.value }
+                      })}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="Türkiye"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Telif Hakları</label>
+                  <select
+                    value={newJob.copyright}
+                    onChange={(e) => setNewJob({ ...newJob, copyright: e.target.value })}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    style={{colorScheme: 'dark'}}
+                  >
+                    <option value="shared" className="bg-gray-800">Paylaşımlı</option>
+                    <option value="brand" className="bg-gray-800">Marka</option>
+                    <option value="influencer" className="bg-gray-800">Influencer</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-4 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowCreateJob(false)}
