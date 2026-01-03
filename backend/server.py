@@ -471,6 +471,19 @@ class UserSettings(BaseModel):
     privacy: PrivacySettings = PrivacySettings()
     updated_at: datetime
 
+class Favorite(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    favorite_id: str
+    user_id: str
+    job_id: str
+    title: str
+    description: Optional[str] = None
+    category: str
+    budget: Optional[float] = None
+    is_featured: bool = False
+    is_urgent: bool = False
+    favorited_at: datetime
+
 # ============= HELPER FUNCTIONS =============
 
 def hash_password(password: str) -> str:
