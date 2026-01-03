@@ -180,3 +180,67 @@ html {
 .theme-border {
     border-color: var(--fl-border) !important;
 }
+
+/* Global theme overrides for light mode */
+.light .bg-black {
+    background-color: #ffffff !important;
+}
+
+.light .bg-gray-900,
+.light .bg-gray-900\/50 {
+    background-color: #f8fafc !important;
+}
+
+.light .bg-gray-800,
+.light .bg-gray-800\/50 {
+    background-color: #e2e8f0 !important;
+}
+
+.light .text-white {
+    color: #1e293b !important;
+}
+
+.light .text-gray-100,
+.light .text-gray-200,
+.light .text-gray-300 {
+    color: #374151 !important;
+}
+
+.light .text-gray-400 {
+    color: #6b7280 !important;
+}
+
+.light .text-gray-500 {
+    color: #9ca3af !important;
+}
+
+.light .border-gray-700,
+.light .border-gray-800 {
+    border-color: #e2e8f0 !important;
+}
+
+.light .hover\:bg-gray-800:hover,
+.light .hover\:bg-gray-800\/50:hover {
+    background-color: #e2e8f0 !important;
+}
+
+.light .bg-black\/50,
+.light .bg-black\/30 {
+    background-color: rgba(241, 245, 249, 0.8) !important;
+}
+
+/* Keep accent colors and gradients the same */
+.light .bg-gradient-to-br.from-fuchsia-500,
+.light .bg-gradient-to-r.from-fuchsia-500 {
+    /* Keep gradient colors */
+}
+
+/* Settings page specific overrides */
+.light .bg-fuchsia-500\/20 {
+    background-color: rgba(217, 70, 239, 0.15) !important;
+}
+
+/* Modal overlays */
+.light .bg-black\/70 {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
