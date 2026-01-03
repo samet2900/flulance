@@ -829,9 +829,9 @@ const BrandDashboard = () => {
 
       {/* Create Job Modal - Genişletilmiş */}
       {showCreateJob && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full my-8 border border-gray-800" data-testid="create-job-modal">
-            <div className="flex justify-between items-center mb-6">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full my-8 border border-gray-800 max-h-[90vh] overflow-y-auto" data-testid="create-job-modal">
+            <div className="flex justify-between items-center mb-6 sticky top-0 bg-gray-900 pb-4 -mt-2 pt-2 z-10">
               <h2 className="text-3xl font-bold">Yeni İş İlanı Oluştur</h2>
               <button
                 type="button"
