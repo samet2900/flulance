@@ -162,6 +162,16 @@ const Navbar = ({ user, onLogout }) => {
                     <Briefcase className="w-4 h-4" />
                     İş İlanları
                   </button>
+                  {user.user_type === 'marka' && (
+                    <button
+                      onClick={() => navigate('/influencers')}
+                      className="px-4 py-2 text-white hover:text-cyan-400 transition-colors flex items-center gap-2"
+                      data-testid="nav-influencers"
+                    >
+                      <User className="w-4 h-4" />
+                      Influencer Bul
+                    </button>
+                  )}
                   <button
                     onClick={() => navigate('/announcements')}
                     className="px-4 py-2 text-white hover:text-cyan-400 transition-colors flex items-center gap-2"
