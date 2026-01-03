@@ -60,6 +60,16 @@ function AppRouter() {
         }
       />
       
+      {/* Favorites Page */}
+      <Route
+        path="/favorites"
+        element={
+          <ProtectedRoute allowedRoles={['marka', 'influencer']}>
+            <FavoritesPage />
+          </ProtectedRoute>
+        }
+      />
+      
       {/* Brand Routes */}
       <Route
         path="/brand"
