@@ -138,12 +138,20 @@
   - Profil görünürlüğü
   - İstatistik paylaşımı
   - Aramada görünürlük
-- [x] **Görünüm**
-  - Tema seçimi (Koyu/Açık)
-  - Dil seçimi (Türkçe/English)
+- [x] **Görünüm** ✅ ÇALIŞIYOR (3 Ocak 2026 - Düzeltildi)
+  - Tema seçimi (Koyu/Açık) - ThemeContext ile global yönetim
+  - Tema tercihinin localStorage'da saklanması
+  - Tüm sayfalarda tema değişikliğinin anında uygulanması
+  - Dil seçimi (Türkçe/English) - Henüz uygulanmadı
 - [x] **Hesap İşlemleri**
   - Hesabı dondurma
   - Hesabı kalıcı silme
+
+### Tema Sistemi Detayları:
+- `ThemeContext.js`: Global tema state yönetimi
+- `index.css`: CSS override'ları ile light theme stilleri
+- Theme butonları: `data-testid="theme-light-btn"` ve `data-testid="theme-dark-btn"`
+- Tema tercihini localStorage ve backend API'ye kaydeder
 
 ### Yeni API Endpoint'leri:
 - `GET /api/settings` - Tüm ayarları getir
