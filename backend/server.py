@@ -1355,6 +1355,341 @@ async def get_recommendations(request: Request):
 async def root():
     return {"message": "FLULANCE API", "status": "active"}
 
+# ============= REVIEW ROUTES (FAZ 2) =============
+
+@api_router.post("/reviews", response_model=Review)
+async def create_review(request: Request, review_data: ReviewCreate):
+    user = await require_auth(request)
+    
+    # Rating validation
+    if review_data.rating < 1 or review_data.rating > 5:
+        raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+    
+    # Get match
+    match_doc = await db.matches.find_one({"match_id": review_data.match_id})
+    if not match_doc:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+    # Verify user is part of this match
+    if match_doc["brand_user_id"] != user.user_id and match_doc["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your match")
+    
+    # Determine reviewed user
+    if user.user_id == match_doc["brand_user_id"]:
+        reviewed_user_id = match_doc["influencer_user_id"]
+        reviewed_name = match_doc["influencer_name"]
+        review_type = "brand_to_influencer"
+    else:
+        reviewed_user_id = match_doc["brand_user_id"]
+        reviewed_name = match_doc["brand_name"]
+        review_type = "influencer_to_brand"
+    
+    # Check if already reviewed
+    existing = await db.reviews.find_one({
+        "match_id": review_data.match_id,
+        "reviewer_user_id": user.user_id
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="You already reviewed this match")
+    
+    review_id = f"review_{uuid.uuid4().hex[:12]}"
+    
+    review_doc = {
+        "review_id": review_id,
+        "match_id": review_data.match_id,
+        "reviewer_user_id": user.user_id,
+        "reviewer_name": user.name,
+        "reviewed_user_id": reviewed_user_id,
+        "reviewed_name": reviewed_name,
+        "rating": review_data.rating,
+        "comment": review_data.comment,
+        "review_type": review_type,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.reviews.insert_one(review_doc)
+    
+    # Update influencer stats if reviewed is influencer
+    if review_type == "brand_to_influencer":
+        await update_influencer_rating(reviewed_user_id)
+    
+    # Create notification
+    await create_notification(
+        user_id=reviewed_user_id,
+        type="review",
+        title="Yeni Değerlendirme!",
+        message=f"{user.name} sizi değerlendirdi: {review_data.rating} yıldız",
+        link="/reviews"
+    )
+    
+    review_doc.pop("_id", None)
+    return Review(**review_doc)
+
+async def update_influencer_rating(user_id: str):
+    """Update influencer's average rating and total reviews"""
+    pipeline = [
+        {"$match": {"reviewed_user_id": user_id, "review_type": "brand_to_influencer"}},
+        {"$group": {
+            "_id": "$reviewed_user_id",
+            "average_rating": {"$avg": "$rating"},
+            "total_reviews": {"$sum": 1}
+        }}
+    ]
+    
+    results = await db.reviews.aggregate(pipeline).to_list(1)
+    
+    if results:
+        await db.influencer_stats.update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "average_rating": round(results[0]["average_rating"], 1),
+                "total_reviews": results[0]["total_reviews"],
+                "updated_at": datetime.now(timezone.utc)
+            }},
+            upsert=True
+        )
+
+@api_router.get("/reviews/user/{user_id}", response_model=List[Review])
+async def get_user_reviews(user_id: str):
+    """Get all reviews for a user"""
+    reviews = await db.reviews.find(
+        {"reviewed_user_id": user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    return [Review(**r) for r in reviews]
+
+@api_router.get("/reviews/my-reviews", response_model=List[Review])
+async def get_my_reviews(request: Request):
+    """Get reviews about me"""
+    user = await require_auth(request)
+    
+    reviews = await db.reviews.find(
+        {"reviewed_user_id": user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    return [Review(**r) for r in reviews]
+
+@api_router.get("/reviews/given", response_model=List[Review])
+async def get_given_reviews(request: Request):
+    """Get reviews I've given"""
+    user = await require_auth(request)
+    
+    reviews = await db.reviews.find(
+        {"reviewer_user_id": user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    return [Review(**r) for r in reviews]
+
+@api_router.get("/reviews/match/{match_id}")
+async def get_match_reviews(request: Request, match_id: str):
+    """Get reviews for a specific match"""
+    user = await require_auth(request)
+    
+    # Verify access
+    match_doc = await db.matches.find_one({"match_id": match_id})
+    if not match_doc:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+    if match_doc["brand_user_id"] != user.user_id and match_doc["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your match")
+    
+    reviews = await db.reviews.find({"match_id": match_id}, {"_id": 0}).to_list(10)
+    
+    # Check if current user has reviewed
+    user_reviewed = any(r["reviewer_user_id"] == user.user_id for r in reviews)
+    
+    return {
+        "reviews": [Review(**r) for r in reviews],
+        "user_has_reviewed": user_reviewed
+    }
+
+# ============= INFLUENCER STATS ROUTES (FAZ 2) =============
+
+@api_router.post("/influencer-stats", response_model=InfluencerStats)
+async def create_update_stats(request: Request, stats_data: InfluencerStatsCreate):
+    user = await require_role(request, ["influencer"])
+    
+    # Check if stats exist
+    existing = await db.influencer_stats.find_one({"user_id": user.user_id})
+    
+    stats_id = existing["stats_id"] if existing else f"stats_{uuid.uuid4().hex[:12]}"
+    
+    # Calculate total reach
+    total_reach = 0
+    if stats_data.instagram_followers:
+        total_reach += stats_data.instagram_followers
+    if stats_data.tiktok_followers:
+        total_reach += stats_data.tiktok_followers
+    if stats_data.youtube_subscribers:
+        total_reach += stats_data.youtube_subscribers
+    if stats_data.twitter_followers:
+        total_reach += stats_data.twitter_followers
+    
+    stats_doc = {
+        "stats_id": stats_id,
+        "user_id": user.user_id,
+        **stats_data.model_dump(),
+        "total_reach": total_reach,
+        "completed_jobs": existing.get("completed_jobs", 0) if existing else 0,
+        "average_rating": existing.get("average_rating", 0.0) if existing else 0.0,
+        "total_reviews": existing.get("total_reviews", 0) if existing else 0,
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    if existing:
+        await db.influencer_stats.update_one(
+            {"user_id": user.user_id},
+            {"$set": stats_doc}
+        )
+    else:
+        await db.influencer_stats.insert_one(stats_doc)
+    
+    stats_doc.pop("_id", None)
+    return InfluencerStats(**stats_doc)
+
+@api_router.get("/influencer-stats/me", response_model=Optional[InfluencerStats])
+async def get_my_stats(request: Request):
+    user = await require_role(request, ["influencer"])
+    
+    stats_doc = await db.influencer_stats.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not stats_doc:
+        return None
+    
+    return InfluencerStats(**stats_doc)
+
+@api_router.get("/influencer-stats/{user_id}", response_model=Optional[InfluencerStats])
+async def get_influencer_stats(user_id: str):
+    """Public endpoint to get influencer stats"""
+    stats_doc = await db.influencer_stats.find_one({"user_id": user_id}, {"_id": 0})
+    
+    if not stats_doc:
+        return None
+    
+    return InfluencerStats(**stats_doc)
+
+@api_router.get("/influencer-stats/top-influencers")
+async def get_top_influencers():
+    """Get top influencers by rating and reach"""
+    pipeline = [
+        {"$match": {"total_reach": {"$gt": 0}}},
+        {"$sort": {"average_rating": -1, "total_reach": -1}},
+        {"$limit": 10}
+    ]
+    
+    stats = await db.influencer_stats.aggregate(pipeline).to_list(10)
+    
+    # Get user info for each
+    result = []
+    for stat in stats:
+        user_doc = await db.users.find_one({"user_id": stat["user_id"]}, {"_id": 0, "password_hash": 0})
+        profile_doc = await db.influencer_profiles.find_one({"user_id": stat["user_id"]}, {"_id": 0})
+        
+        if user_doc:
+            result.append({
+                "user": user_doc,
+                "profile": profile_doc,
+                "stats": {k: v for k, v in stat.items() if k != "_id"}
+            })
+    
+    return result
+
+# ============= BADGE/VERIFICATION ROUTES (FAZ 2) =============
+
+@api_router.post("/admin/badges/{user_id}")
+async def award_badge(request: Request, user_id: str, badge_data: BadgeRequest):
+    admin = await require_role(request, ["admin"])
+    
+    # Validate badge type
+    valid_badges = ["verified", "top", "rising", "new"]
+    if badge_data.badge_type not in valid_badges:
+        raise HTTPException(status_code=400, detail=f"Invalid badge type. Must be one of: {valid_badges}")
+    
+    # Check if user exists
+    user_doc = await db.users.find_one({"user_id": user_id})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Update user badge
+    await db.users.update_one(
+        {"user_id": user_id},
+        {"$set": {"badge": badge_data.badge_type}}
+    )
+    
+    # Store badge record
+    badge_id = f"badge_{uuid.uuid4().hex[:12]}"
+    badge_doc = {
+        "badge_id": badge_id,
+        "user_id": user_id,
+        "badge_type": badge_data.badge_type,
+        "awarded_at": datetime.now(timezone.utc),
+        "awarded_by": admin.user_id,
+        "reason": badge_data.reason
+    }
+    
+    await db.badges.insert_one(badge_doc)
+    
+    # Create notification
+    badge_names = {
+        "verified": "Doğrulanmış ✓",
+        "top": "Top Influencer ⭐",
+        "rising": "Yükselen Yıldız 🚀",
+        "new": "Yeni Üye 🆕"
+    }
+    
+    await create_notification(
+        user_id=user_id,
+        type="badge",
+        title="Yeni Rozet Kazandınız!",
+        message=f"Tebrikler! {badge_names.get(badge_data.badge_type, badge_data.badge_type)} rozetini kazandınız!",
+        link="/profile"
+    )
+    
+    return {"message": f"Badge '{badge_data.badge_type}' awarded to user"}
+
+@api_router.delete("/admin/badges/{user_id}")
+async def remove_badge(request: Request, user_id: str):
+    await require_role(request, ["admin"])
+    
+    await db.users.update_one(
+        {"user_id": user_id},
+        {"$set": {"badge": None}}
+    )
+    
+    return {"message": "Badge removed"}
+
+@api_router.get("/admin/badges")
+async def get_all_badges(request: Request):
+    await require_role(request, ["admin"])
+    
+    badges = await db.badges.find({}, {"_id": 0}).sort("awarded_at", -1).to_list(100)
+    
+    # Get user names
+    result = []
+    for badge in badges:
+        user_doc = await db.users.find_one({"user_id": badge["user_id"]}, {"_id": 0, "password_hash": 0})
+        if user_doc:
+            badge["user_name"] = user_doc.get("name", "Unknown")
+            result.append(badge)
+    
+    return result
+
+@api_router.get("/badges/user/{user_id}")
+async def get_user_badges(user_id: str):
+    """Get all badges for a user"""
+    badges = await db.badges.find({"user_id": user_id}, {"_id": 0}).sort("awarded_at", -1).to_list(10)
+    
+    user_doc = await db.users.find_one({"user_id": user_id}, {"_id": 0, "password_hash": 0})
+    current_badge = user_doc.get("badge") if user_doc else None
+    
+    return {
+        "current_badge": current_badge,
+        "badge_history": badges
+    }
+
 # Include router in app
 app.include_router(api_router)
 
