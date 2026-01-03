@@ -324,10 +324,18 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-4 border-t border-white/10">
-        <div className="container mx-auto text-center text-gray-400">
-          <p className="mb-4">© 2025 FLULANCE. Ajanslar kadar pahalı değiliz.</p>
-          <p className="text-sm">Markalar ve influencer'lar için özgür platform.</p>
+      <footer className="py-12 px-4 border-t border-gray-800 bg-black">
+        <div className="container mx-auto text-center">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <img 
+              src="https://customer-assets.emergentagent.com/job_freelance-hub-216/artifacts/er3uz3pj_WhatsApp%20Image%202026-01-03%20at%2015.54.27.jpeg" 
+              alt="FLULANCE Logo" 
+              className="h-8 w-8 object-contain"
+            />
+            <span className="text-xl font-bold bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text">FLULANCE</span>
+          </div>
+          <p className="mb-4 text-gray-400">© 2025 FLULANCE. Ajanslar kadar pahalı değiliz.</p>
+          <p className="text-sm text-gray-500">Markalar ve influencer'lar için özgür platform.</p>
         </div>
       </footer>
     </div>
