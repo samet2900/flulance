@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Users, Briefcase, TrendingUp, DollarSign, LogOut, Trash2, Settings, Bell, Edit, Plus, Star, Award, Check, X } from 'lucide-react';
+import { Users, Briefcase, TrendingUp, DollarSign, LogOut, Trash2, Settings, Bell, Edit, Plus, Star, Award, Check, X, Eye, Clock, Zap, RefreshCw, AlertTriangle } from 'lucide-react';
 import Navbar from '../components/Navbar';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
@@ -23,6 +23,9 @@ const AdminDashboard = () => {
   const [showBadgeModal, setShowBadgeModal] = useState(null);
   const [badgeForm, setBadgeForm] = useState({ badge_type: 'verified', reason: '' });
   const [editingAnnouncement, setEditingAnnouncement] = useState(null);
+  const [jobFilter, setJobFilter] = useState('pending'); // 'all', 'pending', 'approved', 'rejected'
+  const [showRejectModal, setShowRejectModal] = useState(null);
+  const [rejectionReason, setRejectionReason] = useState('');
   const [announcementForm, setAnnouncementForm] = useState({
     title: '',
     content: '',
