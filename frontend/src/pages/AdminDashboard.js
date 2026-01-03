@@ -27,6 +27,7 @@ const AdminDashboard = () => {
   const [jobFilter, setJobFilter] = useState('pending'); // 'all', 'pending', 'approved', 'rejected'
   const [showRejectModal, setShowRejectModal] = useState(null);
   const [rejectionReason, setRejectionReason] = useState('');
+  const [detailedStats, setDetailedStats] = useState(null);
   const [announcementForm, setAnnouncementForm] = useState({
     title: '',
     content: '',
