@@ -28,6 +28,12 @@ const AdminDashboard = () => {
   const [showRejectModal, setShowRejectModal] = useState(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [detailedStats, setDetailedStats] = useState(null);
+  const [verifications, setVerifications] = useState([]);
+  const [disputes, setDisputes] = useState([]);
+  const [socialAccounts, setSocialAccounts] = useState([]);
+  const [disputeFilter, setDisputeFilter] = useState('open');
+  const [showDisputeModal, setShowDisputeModal] = useState(null);
+  const [disputeResolution, setDisputeResolution] = useState({ resolution: '', admin_notes: '' });
   const [announcementForm, setAnnouncementForm] = useState({
     title: '',
     content: '',
