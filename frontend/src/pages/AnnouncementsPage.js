@@ -80,20 +80,20 @@ const AnnouncementsPage = () => {
   };
 
   if (!user) {
-    return <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500"></div>
+    return <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-fuchsia-500"></div>
     </div>;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       <Navbar user={user} onLogout={handleLogout} />
 
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 flex items-center gap-3">
-            <Bell className="w-10 h-10 text-purple-400" />
+            <Bell className="w-10 h-10 text-fuchsia-400" />
             Duyurular
           </h1>
           <p className="text-gray-400">Platform haberler
@@ -103,7 +103,7 @@ i ve güncellemeleri</p>
         {/* Announcements Grid */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
           </div>
         ) : announcements.length === 0 ? (
           <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
@@ -130,7 +130,7 @@ i ve güncellemeleri</p>
                         {getTypeLabel(announcement.type)}
                       </span>
                       {announcement.is_pinned && (
-                        <span className="px-3 py-1 bg-purple-500/30 text-purple-300 rounded-full text-xs font-semibold flex items-center gap-1">
+                        <span className="px-3 py-1 bg-fuchsia-500/30 text-fuchsia-300 rounded-full text-xs font-semibold flex items-center gap-1">
                           <Star className="w-3 h-3 fill-current" />
                           Önemli
                         </span>

@@ -370,13 +370,13 @@ const InfluencerDashboard = () => {
   };
 
   if (!user) {
-    return <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500"></div>
+    return <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-fuchsia-500"></div>
     </div>;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       <Navbar user={user} onLogout={handleLogout} />
 
       <div className="container mx-auto px-4 py-8">
@@ -386,7 +386,7 @@ const InfluencerDashboard = () => {
             onClick={() => setActiveTab('profile')}
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'profile'
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
             data-testid="tab-profile"
@@ -398,7 +398,7 @@ const InfluencerDashboard = () => {
             onClick={() => setActiveTab('stats')}
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'stats'
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
             data-testid="tab-stats"
@@ -410,7 +410,7 @@ const InfluencerDashboard = () => {
             onClick={() => setActiveTab('reviews')}
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'reviews'
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
             data-testid="tab-reviews"
@@ -427,7 +427,7 @@ const InfluencerDashboard = () => {
             onClick={() => setActiveTab('jobs')}
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'jobs'
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
             data-testid="tab-jobs"
@@ -439,7 +439,7 @@ const InfluencerDashboard = () => {
             onClick={() => setActiveTab('applications')}
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'applications'
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
             data-testid="tab-applications"
@@ -451,7 +451,7 @@ const InfluencerDashboard = () => {
             onClick={() => setActiveTab('matches')}
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'matches'
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
             data-testid="tab-matches"
@@ -463,7 +463,7 @@ const InfluencerDashboard = () => {
             onClick={() => setActiveTab('media')}
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'media'
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
             data-testid="tab-media"
@@ -480,7 +480,7 @@ const InfluencerDashboard = () => {
               <h2 className="text-3xl font-bold">Profilim</h2>
               <button
                 onClick={() => setShowEditProfile(true)}
-                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center gap-2"
                 data-testid="edit-profile-btn"
               >
                 {profile ? <Edit className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
@@ -499,7 +499,7 @@ const InfluencerDashboard = () => {
                     <p className="text-gray-300 mb-4">{profile.bio}</p>
                     <div className="flex flex-wrap gap-2 mb-4">
                       {profile.specialties.map((specialty) => (
-                        <span key={specialty} className="px-3 py-1 bg-purple-500/30 rounded-full text-sm">
+                        <span key={specialty} className="px-3 py-1 bg-fuchsia-500/30 rounded-full text-sm">
                           {specialty}
                         </span>
                       ))}
@@ -529,7 +529,7 @@ const InfluencerDashboard = () => {
                 <p className="text-gray-400 mb-4">Henüz profilinizi oluşturmadınız</p>
                 <button
                   onClick={() => setShowEditProfile(true)}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  className="px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform"
                 >
                   Profil Oluştur
                 </button>
@@ -548,7 +548,7 @@ const InfluencerDashboard = () => {
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="px-4 py-3 bg-white/10 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
+                className="px-4 py-3 bg-white/10 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500"
                 data-testid="filter-category"
               >
                 <option value="">Tüm Kategoriler</option>
@@ -559,7 +559,7 @@ const InfluencerDashboard = () => {
               <select
                 value={filterPlatform}
                 onChange={(e) => setFilterPlatform(e.target.value)}
-                className="px-4 py-3 bg-white/10 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
+                className="px-4 py-3 bg-white/10 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500"
                 data-testid="filter-platform"
               >
                 <option value="">Tüm Platformlar</option>
@@ -571,7 +571,7 @@ const InfluencerDashboard = () => {
 
             {loading ? (
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : jobs.length === 0 ? (
               <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
@@ -587,7 +587,7 @@ const InfluencerDashboard = () => {
                         <h3 className="text-2xl font-bold mb-2">{job.title}</h3>
                         <p className="text-gray-400 mb-2">Marka: {job.brand_name}</p>
                         <div className="flex flex-wrap gap-2">
-                          <span className="px-3 py-1 bg-purple-500/30 rounded-full text-sm">{job.category}</span>
+                          <span className="px-3 py-1 bg-fuchsia-500/30 rounded-full text-sm">{job.category}</span>
                           <span className="px-3 py-1 bg-green-500/30 rounded-full text-sm font-semibold">{job.budget.toLocaleString('tr-TR')} ₺</span>
                         </div>
                       </div>
@@ -602,7 +602,7 @@ const InfluencerDashboard = () => {
                     </div>
                     <button
                       onClick={() => setSelectedJob(job)}
-                      className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                      className="px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform"
                       data-testid={`apply-job-${job.job_id}`}
                     >
                       Başvur
@@ -621,7 +621,7 @@ const InfluencerDashboard = () => {
             
             {loading ? (
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : applications.length === 0 ? (
               <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
@@ -662,7 +662,7 @@ const InfluencerDashboard = () => {
             
             {loading ? (
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : matches.length === 0 ? (
               <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
@@ -678,7 +678,7 @@ const InfluencerDashboard = () => {
                     <div className="flex gap-3">
                       <button
                         onClick={() => setSelectedMatch(match)}
-                        className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center justify-center gap-2"
+                        className="flex-1 px-4 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center justify-center gap-2"
                         data-testid={`open-chat-${match.match_id}`}
                       >
                         <MessageCircle className="w-5 h-5" />
@@ -707,7 +707,7 @@ const InfluencerDashboard = () => {
               <h2 className="text-3xl font-bold">İstatistiklerim</h2>
               <button
                 onClick={() => setShowEditStats(true)}
-                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center gap-2"
                 data-testid="edit-stats-btn"
               >
                 <Edit className="w-5 h-5" />
@@ -719,9 +719,9 @@ const InfluencerDashboard = () => {
               <div className="space-y-6">
                 {/* Summary Cards */}
                 <div className="grid md:grid-cols-4 gap-4">
-                  <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
+                  <div className="bg-gradient-to-br from-fuchsia-500/20 to-cyan-500/20 backdrop-blur-sm rounded-2xl p-6 border border-fuchsia-500/30">
                     <div className="flex items-center gap-3 mb-2">
-                      <Users className="w-8 h-8 text-purple-400" />
+                      <Users className="w-8 h-8 text-fuchsia-400" />
                       <span className="text-gray-400">Toplam Erişim</span>
                     </div>
                     <p className="text-3xl font-bold">{(stats.total_reach || 0).toLocaleString('tr-TR')}</p>
@@ -756,9 +756,9 @@ const InfluencerDashboard = () => {
                   <div className="grid md:grid-cols-2 gap-6">
                     {/* Instagram */}
                     {(stats.instagram_followers || stats.instagram_engagement) && (
-                      <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-xl p-4 border border-pink-500/20">
+                      <div className="bg-gradient-to-r from-cyan-500/10 to-fuchsia-500/10 rounded-xl p-4 border border-cyan-500/20">
                         <div className="flex items-center gap-2 mb-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg flex items-center justify-center">
+                          <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-fuchsia-500 rounded-lg flex items-center justify-center">
                             <span className="text-lg font-bold">IG</span>
                           </div>
                           <span className="font-semibold">Instagram</span>
@@ -778,9 +778,9 @@ const InfluencerDashboard = () => {
 
                     {/* TikTok */}
                     {(stats.tiktok_followers || stats.tiktok_engagement) && (
-                      <div className="bg-gradient-to-r from-cyan-500/10 to-pink-500/10 rounded-xl p-4 border border-cyan-500/20">
+                      <div className="bg-gradient-to-r from-cyan-500/10 to-cyan-500/10 rounded-xl p-4 border border-cyan-500/20">
                         <div className="flex items-center gap-2 mb-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-pink-500 rounded-lg flex items-center justify-center">
+                          <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-lg flex items-center justify-center">
                             <span className="text-lg font-bold">TT</span>
                           </div>
                           <span className="font-semibold">TikTok</span>
@@ -845,7 +845,7 @@ const InfluencerDashboard = () => {
                 <p className="text-sm text-gray-500 mb-6">Sosyal medya istatistiklerinizi ekleyerek markaların sizi daha iyi tanımasını sağlayın</p>
                 <button
                   onClick={() => setShowEditStats(true)}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  className="px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform"
                 >
                   İstatistik Ekle
                 </button>
@@ -939,7 +939,7 @@ const InfluencerDashboard = () => {
               <h2 className="text-3xl font-bold">Medya Kütüphanem</h2>
               <button
                 onClick={() => setShowUploadModal(true)}
-                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center gap-2"
                 data-testid="upload-media-btn"
               >
                 <Upload className="w-5 h-5" />
@@ -960,7 +960,7 @@ const InfluencerDashboard = () => {
                   onClick={() => { setMediaFilter(key); fetchMediaLibrary(); }}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
                     mediaFilter === key
-                      ? 'bg-purple-500'
+                      ? 'bg-fuchsia-500'
                       : 'bg-white/10 hover:bg-white/20'
                   }`}
                 >
@@ -972,7 +972,7 @@ const InfluencerDashboard = () => {
 
             {loading ? (
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : mediaLibrary.length === 0 ? (
               <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
@@ -1055,7 +1055,7 @@ const InfluencerDashboard = () => {
                       {media.tags && media.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-2">
                           {media.tags.slice(0, 3).map((tag, i) => (
-                            <span key={i} className="text-xs bg-purple-500/30 px-2 py-0.5 rounded-full">{tag}</span>
+                            <span key={i} className="text-xs bg-fuchsia-500/30 px-2 py-0.5 rounded-full">{tag}</span>
                           ))}
                         </div>
                       )}
@@ -1081,7 +1081,7 @@ const InfluencerDashboard = () => {
                   onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
                   required
                   rows={3}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none"
                   placeholder="Kendinizi tanıtın..."
                   data-testid="profile-bio-input"
                 />
@@ -1097,7 +1097,7 @@ const InfluencerDashboard = () => {
                       onClick={() => toggleSpecialty(specialty)}
                       className={`px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
                         profileForm.specialties.includes(specialty)
-                          ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                          ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
                           : 'bg-white/5 hover:bg-white/10'
                       }`}
                       data-testid={`specialty-${specialty}`}
@@ -1116,7 +1116,7 @@ const InfluencerDashboard = () => {
                   onChange={(e) => setProfileForm({ ...profileForm, starting_price: e.target.value })}
                   required
                   min="0"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500"
                   placeholder="5000"
                   data-testid="profile-price-input"
                 />
@@ -1128,7 +1128,7 @@ const InfluencerDashboard = () => {
                   type="url"
                   value={profileForm.image_url}
                   onChange={(e) => setProfileForm({ ...profileForm, image_url: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500"
                   placeholder="https://..."
                   data-testid="profile-image-input"
                 />
@@ -1147,7 +1147,7 @@ const InfluencerDashboard = () => {
                           ...profileForm,
                           social_media: { ...profileForm.social_media, [platform]: e.target.value }
                         })}
-                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-sm"
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm"
                         placeholder={`@kullaniciadi`}
                         data-testid={`social-${platform}`}
                       />
@@ -1166,7 +1166,7 @@ const InfluencerDashboard = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform"
                   data-testid="save-profile-btn"
                 >
                   Kaydet
@@ -1199,7 +1199,7 @@ const InfluencerDashboard = () => {
                   name="message"
                   required
                   rows={4}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none"
                   placeholder="Neden bu iş için uygun olduğunuzu anlatın..."
                   data-testid="application-message-input"
                 />
@@ -1214,7 +1214,7 @@ const InfluencerDashboard = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform"
                   data-testid="submit-application-btn"
                 >
                   Başvuru Gönder
@@ -1241,9 +1241,9 @@ const InfluencerDashboard = () => {
             <h2 className="text-3xl font-bold mb-6">İstatistikleri Düzenle</h2>
             <form onSubmit={handleSaveStats} className="space-y-6">
               {/* Instagram */}
-              <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-xl p-4 border border-pink-500/20">
+              <div className="bg-gradient-to-r from-cyan-500/10 to-fuchsia-500/10 rounded-xl p-4 border border-cyan-500/20">
                 <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg flex items-center justify-center text-sm font-bold">IG</div>
+                  <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-fuchsia-500 rounded-lg flex items-center justify-center text-sm font-bold">IG</div>
                   Instagram
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -1253,7 +1253,7 @@ const InfluencerDashboard = () => {
                       type="number"
                       value={statsForm.instagram_followers}
                       onChange={(e) => setStatsForm({ ...statsForm, instagram_followers: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="150000"
                     />
                   </div>
@@ -1264,7 +1264,7 @@ const InfluencerDashboard = () => {
                       step="0.1"
                       value={statsForm.instagram_engagement}
                       onChange={(e) => setStatsForm({ ...statsForm, instagram_engagement: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="4.5"
                     />
                   </div>
@@ -1272,9 +1272,9 @@ const InfluencerDashboard = () => {
               </div>
 
               {/* TikTok */}
-              <div className="bg-gradient-to-r from-cyan-500/10 to-pink-500/10 rounded-xl p-4 border border-cyan-500/20">
+              <div className="bg-gradient-to-r from-cyan-500/10 to-cyan-500/10 rounded-xl p-4 border border-cyan-500/20">
                 <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-pink-500 rounded-lg flex items-center justify-center text-sm font-bold">TT</div>
+                  <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-lg flex items-center justify-center text-sm font-bold">TT</div>
                   TikTok
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -1284,7 +1284,7 @@ const InfluencerDashboard = () => {
                       type="number"
                       value={statsForm.tiktok_followers}
                       onChange={(e) => setStatsForm({ ...statsForm, tiktok_followers: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="500000"
                     />
                   </div>
@@ -1295,7 +1295,7 @@ const InfluencerDashboard = () => {
                       step="0.1"
                       value={statsForm.tiktok_engagement}
                       onChange={(e) => setStatsForm({ ...statsForm, tiktok_engagement: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="8.2"
                     />
                   </div>
@@ -1315,7 +1315,7 @@ const InfluencerDashboard = () => {
                       type="number"
                       value={statsForm.youtube_subscribers}
                       onChange={(e) => setStatsForm({ ...statsForm, youtube_subscribers: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="100000"
                     />
                   </div>
@@ -1325,7 +1325,7 @@ const InfluencerDashboard = () => {
                       type="number"
                       value={statsForm.youtube_avg_views}
                       onChange={(e) => setStatsForm({ ...statsForm, youtube_avg_views: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="25000"
                     />
                   </div>
@@ -1344,7 +1344,7 @@ const InfluencerDashboard = () => {
                     type="number"
                     value={statsForm.twitter_followers}
                     onChange={(e) => setStatsForm({ ...statsForm, twitter_followers: e.target.value })}
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="50000"
                   />
                 </div>
@@ -1360,7 +1360,7 @@ const InfluencerDashboard = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform"
                   data-testid="save-stats-btn"
                 >
                   Kaydet
@@ -1454,7 +1454,7 @@ const ReviewModal = ({ match, onClose, onSubmit }) => {
               onChange={(e) => setComment(e.target.value)}
               required
               rows={4}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none text-white"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
               placeholder="Marka ile çalışma deneyiminizi paylaşın..."
               data-testid="review-comment-input"
             />
@@ -1537,7 +1537,7 @@ const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
             {!file ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-white/20 rounded-xl p-8 text-center cursor-pointer hover:border-purple-500 transition-colors"
+                className="border-2 border-dashed border-white/20 rounded-xl p-8 text-center cursor-pointer hover:border-fuchsia-500 transition-colors"
               >
                 <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400 mb-2">Dosya seçmek için tıklayın</p>
@@ -1580,7 +1580,7 @@ const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
               placeholder="moda, güzellik, yaşam tarzı"
             />
           </div>
@@ -1592,7 +1592,7 @@ const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none text-white"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
               placeholder="Bu içerik hakkında bir açıklama yazın..."
             />
           </div>
@@ -1608,7 +1608,7 @@ const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
             <button
               type="submit"
               disabled={!file || uploading}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
               data-testid="confirm-upload-btn"
             >
               {uploading ? (
