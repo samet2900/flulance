@@ -376,6 +376,19 @@ const Navbar = ({ user, onLogout }) => {
                   İş İlanları
                 </button>
                 
+                {user.user_type === 'marka' && (
+                  <button
+                    onClick={() => {
+                      navigate('/influencers');
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full px-4 py-3 text-left hover:bg-fuchsia-500/20 rounded-lg transition-colors flex items-center gap-3"
+                  >
+                    <User className="w-5 h-5" />
+                    Influencer Bul
+                  </button>
+                )}
+                
                 <button
                   onClick={() => {
                     navigate('/announcements');
