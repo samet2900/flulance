@@ -561,14 +561,32 @@ const BrandDashboard = () => {
                         </span>
                       ))}
                     </div>
-                    <button
-                      onClick={() => fetchApplications(job.job_id)}
-                      className="px-4 py-2 bg-gray-900/50 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-2"
-                      data-testid={`view-applications-${job.job_id}`}
-                    >
-                      <Users className="w-4 h-4" />
-                      Başvuruları Gör
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => fetchApplications(job.job_id)}
+                        className="px-4 py-2 bg-gray-900/50 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-2"
+                        data-testid={`view-applications-${job.job_id}`}
+                      >
+                        <Users className="w-4 h-4" />
+                        Başvuruları Gör
+                      </button>
+                      <button
+                        onClick={() => openEditJobModal(job)}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-colors flex items-center gap-2"
+                        data-testid={`edit-job-${job.job_id}`}
+                      >
+                        <Edit className="w-4 h-4" />
+                        Düzenle
+                      </button>
+                      <button
+                        onClick={() => handleDeleteJob(job.job_id)}
+                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors flex items-center gap-2"
+                        data-testid={`delete-job-${job.job_id}`}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Sil
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
