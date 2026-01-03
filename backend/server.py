@@ -991,13 +991,17 @@ async def get_my_jobs(request: Request):
     for j in jobs:
         # Check if expired
         expires_at = j.get("expires_at")
-        if expires_at and expires_at < now and j.get("status") == "open":
-            j["status"] = "expired"
-            # Update in DB
-            await db.job_posts.update_one(
-                {"job_id": j["job_id"]},
-                {"$set": {"status": "expired"}}
-            )
+        if expires_at:
+            # Ensure timezone-aware comparison
+            if expires_at.tzinfo is None:
+                expires_at = expires_at.replace(tzinfo=timezone.utc)
+            if expires_at < now and j.get("status") == "open":
+                j["status"] = "expired"
+                # Update in DB
+                await db.job_posts.update_one(
+                    {"job_id": j["job_id"]},
+                    {"$set": {"status": "expired"}}
+                )
         
         j.setdefault("is_featured", False)
         j.setdefault("is_urgent", False)
