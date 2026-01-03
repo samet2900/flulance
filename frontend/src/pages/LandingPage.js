@@ -86,13 +86,13 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
         <div className="container mx-auto text-center">
-          <div className="inline-block mb-6 px-4 py-2 bg-purple-500/20 rounded-full border border-purple-400/30">
-            <span className="text-purple-300 text-sm font-medium">İşbirliği Platformu</span>
+          <div className="inline-block mb-6 px-4 py-2 bg-fuchsia-500/20 rounded-full border border-fuchsia-400/30">
+            <span className="text-fuchsia-300 text-sm font-medium">İşbirliği Platformu</span>
           </div>
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
             Ajanslara veda etmeye
             <br />
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">hazır mısınız?</span>
+            <span className="bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text">hazır mısınız?</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto">
             Markalar ve influencer'lar doğrudan buluşuyor. Komisyon ödüyoruz, komisyon alıyoruz. Bu kadar basit.
@@ -100,14 +100,14 @@ const LandingPage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => navigate('/auth')}
-              className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-lg font-bold hover:scale-105 transition-transform"
+              className="px-8 py-4 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-full text-lg font-bold hover:scale-105 transition-transform hover:shadow-lg hover:shadow-fuchsia-500/25"
               data-testid="hero-start-btn"
             >
               Hemen Başla
             </button>
             <button
               onClick={() => document.getElementById('nasil-calisir').scrollIntoView({ behavior: 'smooth' })}
-              className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-lg font-bold hover:bg-white/20 transition-colors"
+              className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-gray-700 rounded-full text-lg font-bold hover:bg-white/20 hover:border-cyan-500/50 transition-colors"
             >
               Nasıl Çalışır?
             </button>
@@ -116,26 +116,26 @@ const LandingPage = () => {
       </section>
 
       {/* Nasıl Çalışır */}
-      <section id="nasil-calisir" className="py-20 px-4 bg-black/30">
+      <section id="nasil-calisir" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">Nasıl Çalışır?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text">Nasıl Çalışır?</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-purple-500/50 transition-colors" data-testid="step-1">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+            <div className="text-center p-8 bg-black/50 backdrop-blur-sm rounded-2xl border border-gray-800 hover:border-fuchsia-500/50 transition-colors group" data-testid="step-1">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-fuchsia-500 to-cyan-500 rounded-full flex items-center justify-center group-hover:shadow-lg group-hover:shadow-fuchsia-500/25 transition-shadow">
                 <Users className="w-8 h-8" />
               </div>
               <h3 className="text-2xl font-bold mb-4">1. Kayıt Ol</h3>
               <p className="text-gray-400">Marka mısın, influencer mısın? Seç, hesap aç. 30 saniye.</p>
             </div>
-            <div className="text-center p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-purple-500/50 transition-colors" data-testid="step-2">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+            <div className="text-center p-8 bg-black/50 backdrop-blur-sm rounded-2xl border border-gray-800 hover:border-cyan-500/50 transition-colors group" data-testid="step-2">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-cyan-500 to-fuchsia-500 rounded-full flex items-center justify-center group-hover:shadow-lg group-hover:shadow-cyan-500/25 transition-shadow">
                 <Zap className="w-8 h-8" />
               </div>
               <h3 className="text-2xl font-bold mb-4">2. Eşleş</h3>
               <p className="text-gray-400">Markalar ilan açar, influencer'lar başvurur. Beğendiysen kabul et.</p>
             </div>
-            <div className="text-center p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-purple-500/50 transition-colors" data-testid="step-3">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+            <div className="text-center p-8 bg-black/50 backdrop-blur-sm rounded-2xl border border-gray-800 hover:border-fuchsia-500/50 transition-colors group" data-testid="step-3">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-fuchsia-500 to-cyan-500 rounded-full flex items-center justify-center group-hover:shadow-lg group-hover:shadow-fuchsia-500/25 transition-shadow">
                 <MessageCircle className="w-8 h-8" />
               </div>
               <h3 className="text-2xl font-bold mb-4">3. Anlaş</h3>
@@ -146,7 +146,7 @@ const LandingPage = () => {
       </section>
 
       {/* Freelancer'lar İçin */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-black">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -156,7 +156,7 @@ const LandingPage = () => {
               </p>
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start gap-3">
-                  <DollarSign className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
+                  <DollarSign className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
                   <span className="text-gray-300">Kendi fiyatını belirle, komisyon bizden</span>
                 </li>
                 <li className="flex items-start gap-3">
