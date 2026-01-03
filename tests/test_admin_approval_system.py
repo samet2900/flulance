@@ -19,7 +19,7 @@ import os
 import time
 from datetime import datetime, timezone
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://influmarket-11.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://influencer-hub-110.preview.emergentagent.com')
 
 # Test credentials
 ADMIN_EMAIL = "admin@flulance.com"

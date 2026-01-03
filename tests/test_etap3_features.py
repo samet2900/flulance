@@ -11,7 +11,7 @@ import requests
 import os
 import uuid
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://influmarket-11.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://influencer-hub-110.preview.emergentagent.com')
 
 class TestAdminDashboardStats:
     """Test /api/admin/dashboard-stats endpoint"""

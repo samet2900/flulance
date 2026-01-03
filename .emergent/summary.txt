@@ -1,179 +1,210 @@
 <analysis>**original_problem_statement:**
-The user wants to build a web platform called FLULANCE in Turkish. The platform is a marketplace connecting Brands (employers) with Influencers (freelancers), aiming to replace the need for traditional agencies.
+The user wants to build a web platform called FLULANCE in Turkish. It is a marketplace connecting Brands (employers) with Influencers (freelancers). The project has evolved through several phases.
 
-The initial request included a simple landing page. However, the scope was significantly expanded to a full-featured marketplace with three user roles (Brand, Influencer, Admin), user authentication (email/password + Google OAuth), job posting, influencer profiles, a commission system, an admin panel for management, and a real-time chat feature.
+Initially, the agent was tasked with fixing bugs and implementing an admin approval and job expiration system. After successfully completing that, the user provided a very extensive list of over 40 new features and bug fixes. The agent organized these into logical Etaps (Phases). After completing Etaps 1, 2, and 3, the user requested to skip Etap 4 and implement a specific subset of 7 features from Etap 5.
 
-Most recently, the user requested a major overhaul of the user experience and features, which was broken down into phases (FAZ). The current focus is on **FAZ 1**, which includes:
-- A new user flow where login redirects to a central Home Feed instead of a dashboard.
-- The Home Feed should display job listings and pinned announcements.
-- Adding a dedicated Announcements page.
-- Granting Admins CRUD (Create, Read, Update, Delete) capabilities for announcements.
-- Enhancing the Brand profile to be editable with more details (company name, contact, etc.).
-- Expanding the Create Job Post form with new fields like Delivery Time, Revision Policy, etc.
-- Fixing UI/UX issues like non-functional navbar buttons and dropdowns.
+**PRODUCT REQUIREMENTS (LATEST USER REQUEST - Message #98 & #100):**
+
+**Bugs to Fix (from Etap 1):**
+-   [x] Chat system: attached files are not visible to either party after sending.
+-   [x] Job creation modal: The header scrolls with the content instead of being sticky.
+
+**New Features to Implement (Currently In Progress):**
+1.  **Teklif İsteme (Reverse Job Post):** A page where brands can post a brief, and influencers can submit proposals.
+2.  **Portföy/Showcase Sayfası:** A public page for influencers to showcase their past work.
+3.  **Sosyal Medya Bağlama:** A system for influencers to connect their social media accounts. The user specified using a **manual entry** method with a **simple admin approval** system for now, instead of direct API integration.
+4.  **Kategori Alarmı (Category Alarm):** A feature allowing users to get notified when new jobs are posted in a specific category.
+5.  **Kimlik Doğrulama (Identity Verification):** An optional system for users to submit documents (e.g., TC/Vergi no) to get a verified badge.
+6.  **Anlaşmazlık Çözümü (Dispute Resolution):** A system for admins to mediate disputes between brands and influencers.
+7.  **Dijital Sözleşme İmza (Digital Contract Signing):** A feature to formalize agreements on the platform.
 
 **User's preferred language**: Turkish. The next agent MUST respond in Turkish.
 
 **what currently exists?**
-The project is a full-stack application using a FastAPI backend, React frontend, and MongoDB database.
-
-- **Backend ():** A comprehensive API is in place, supporting authentication (JWT & Google OAuth), and full CRUD operations for Users, Profiles (Influencer & Brand), Job Posts, Applications, Matches, Chat, Announcements, Notifications, and Favorites. The database is populated with test data via a  script.
-- **Frontend ():** The application has a multi-page structure including a Landing Page, a new  page which is the main post-login screen, and separate dashboards for Brands, Influencers, and Admins. An announcement management UI has been successfully added to the Admin Dashboard. The auth flow correctly redirects to the .
+The FLULANCE application is a robust full-stack platform with a significant number of features. Key completed items include:
+-   **Core Marketplace:** User roles (Brand, Influencer, Admin), authentication (email & Google OAuth), and dashboards for each role.
+-   **Job Lifecycle:** A complete job management system for brands (CRUD), premium job features (Öne Çıkan, Acil), an admin approval system for new jobs, and a job expiration/renewal system.
+-   **Chat & Matching:** A real-time chat system between matched brands and influencers.
+-   **Admin Panel:** A comprehensive admin dashboard with user management, badge management, detailed statistics, and a full content management system (CMS) for site-wide pop-ups, blog posts, Q&A, etc.
+-   **Key Features Implemented in this Session:**
+    -   **Etap 1:** Fixed chat file visibility and modal scroll bugs. Implemented a secret admin login (), Job Completed button, days remaining display on jobs, seen receipts in chat, responsive mobile design, and a Favorites page for influencers.
+    -   **Etap 2:** Integrated  for email notifications, implemented a Forgot Password flow, and created a filterable Influencer Search page for brands.
+    -   **Etap 3:** Added detailed statistics graphs and a full content management system to the Admin Dashboard.
 
 **Last working item**:
-- **Last item agent was working:** The agent was executing **FAZ 1** of the user's requests. It had just finished replacing the old modals in  with new, more detailed ones for Create Job Post and a new Edit Brand Profile modal. The agent used a  operation to inject the new JSX code for these modals.
-- **Status:** IN PROGRESS
-- **Agent Testing Done:** N
-- **Which testing method agent to use?** Frontend testing agent. The agent should test the Brand Dashboard to verify that the new modals for editing a profile and creating a job with expanded fields are fully functional.
-- **User Testing Done:** N
+-   **Last item agent was working:** Implementing the 7 user-selected features from Etap 5. The agent started the backend implementation by adding new Pydantic models (, , , , , , ) and creating the corresponding API endpoints in .
+-   **Status:** IN PROGRESS
+-   **Agent Testing Done:** N
+-   **Which testing method agent to use?** both. This is a large feature set. The backend endpoints need to be tested via , and then the entire user flow needs to be tested with the  once the frontend is built.
+-   **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
-- **Issue 1: Complete Brand Dashboard Enhancements (P0)**
-- **Issue 2: Profile Dropdown Not Working (P1)**
+-   **Issue 1: Complete Implementation of 7 New Features (P0)**
 
 **Issues Detail:**
-- **Issue 1: Complete Brand Dashboard Enhancements**
-  - **Attempted fixes:** The agent successfully replaced the JSX for the modals in .
-  - **Next debug checklist:**
-    1.  Open .
-    2.  Update the  function to gather data from the new fields (delivery time, revision policy, etc.) and include them in the  POST request to .
-    3.  Implement the  function to handle the submission of the new brand profile editing form, sending a POST request to .
-    4.  Verify the state management and  handlers that trigger the visibility of these new modals (, ).
-  - **Why fix this issue?** This is the main remaining task of FAZ 1 and is a direct request from the user to allow brands to edit their profiles and create more detailed job posts.
-  - **Status:** IN PROGRESS
-  - **Is recurring issue?** N
-  - **Should Test frontend/backend/both after fix?** Both.
-  - **Blocked on other issue:** None.
-
-- **Issue 2: Profile Dropdown Not Working**
-  - **Attempted fixes:** The user reported this bug, but the agent got sidetracked with other features and did not address it. No specific fix has been attempted.
-  - **Next debug checklist:**
-    1.  Log in to the application as any user.
-    2.  Click the profile icon in the top-right navbar.
-    3.  Check the browser's developer console for any errors upon clicking.
-    4.  Review  and inspect the  handler for the profile dropdown menu to ensure the logic for toggling the menu's visibility is correct and that the  object is available in the component's state.
-  - **Why fix this issue?** This is a critical navigation bug that prevents users from accessing their dashboards.
-  - **Status:** NOT STARTED
-  - **Is recurring issue?** N
-  - **Should Test frontend/backend/both after fix?** Frontend.
-  - **Blocked on other issue:** None.
+-   **Issue 1: Complete Implementation of 7 New Features**
+    -   **Attempted fixes:** The agent has laid the backend groundwork by creating new data models and API endpoints in .
+    -   **Next debug checklist:**
+        1.  Create the new frontend pages: , , , , , .
+        2.  Update existing pages (, , ) to integrate links and management interfaces for these new features.
+        3.  Implement the UI for manual social media account entry and admin approval.
+        4.  Build the digital contract signing flow.
+        5.  Thoroughly test all new features end-to-end.
+    -   **Why fix this issue and what will be achieved with the fix?** This will deliver the next major batch of features requested by the user.
+    -   **Status:** IN PROGRESS
+    -   **Is recurring issue?** N
+    -   **Should Test frontend/backend/both after fix?** Both.
+    -   **Blocked on other issue:** None.
 
 **In progress Task List**:
-- **Task 1: Complete FAZ 1 Implementation (P0)**
-  - **Where to resume:** Resume work in . The UI for the new modals has been added; the next step is to implement the data handling logic within the  and a new  function.
-  - **What will be achieved with this?** This will complete the user-requested enhancements for the Brand user type, finishing the core requirements of FAZ 1.
-  - **Status:** IN PROGRESS
-  - **Should Test frontend/backend/both after fix?** Both.
-  - **Blocked on something:** None.
+-   **Task 1: Implement 7 New Features from Etap 5 (P0)**
+    -   **Where to resume:** The backend API endpoints have been created in . The next step is to create the corresponding frontend pages and components and connect them to these new endpoints.
+    -   **What will be achieved with this?** A reverse job system, influencer portfolios, identity verification, social media linking, dispute resolution, contract signing, and category-based job alerts will be added to the platform.
+    -   **Status:** IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?** Both.
+    -   **Blocked on something:** None.
 
 **Upcoming and Future Tasks**
-The user has approved a phased development plan. After completing FAZ 1, the agent should propose starting FAZ 2.
+This is the complete list of remaining user requests from message #98, organized by priority.
 
--   **Upcoming Tasks (FAZ 2 - Statistics & Evaluation):**
-    -   Implement a system to display influencer statistics (e.g., engagement rate). (P1)
-    -   Create a review and rating system for completed jobs. (P1)
-    -   Add a verification/badge system for users. (P2)
+**High Priority (P1):**
+-   **İlan İstatistikleri:** Display view and application counts for job posts.
+-   **İlan Arşivleme:** Allow brands to archive old jobs.
+-   **Public Profil Sayfaları:** Create public-facing profile pages for users.
 
--   **Future Tasks (FAZ 3 & 4 - Advanced/Premium Features):**
-    -   Job contract system.
-    -   Campaign tracking with milestones.
-    -   Advanced search/filtering.
-    -   Influencer media library.
-    -   Escrow payment system.
-    -   Automated invoicing.
-    -   AI-powered matching.
+**Medium Priority (P2):**
+-   **Influencer Seviye Sistemi:** Implement a level system (Bronze, Silver, Gold) for influencers.
+-   **Başarı Rozetleri:** Add achievement badges (First Job Completed).
+-   **Influencer Karşılaştırma:** Allow brands to compare influencers side-by-side.
+-   **Favori Influencer Listesi:** Allow brands to create lists of their favorite influencers.
+-   **Akıllı İlan Önerileri:** AI-powered job recommendations for influencers.
+-   **Son Görülme / Canlı Aktivite:** Show social proof like 15 people are viewing this job.
+-   **Marka/Influencer Raporları:** Generate monthly performance reports.
+-   **Pazar Analizi:** Show trending categories to admins.
+-   **Landing Page:** Create a promotional landing page for logged-out users.
+-   **SEO Optimizasyonu:** Add meta tags, sitemap, etc.
+-   **Push Notification System:** Add browser-based push notifications.
+
+**Low Priority / Future:**
+-   **Ödeme Sistemi (Stripe):** User explicitly postponed this.
+-   **Mobil Uygulama (React Native):** A long-term goal.
 
 **Completed work in this session**
-- **Backend Enhancements:**
-  - Added new models and API endpoints for Announcements, Notifications, and Favorites.
-  - Added a  attribute to the Announcement model and created a dedicated API endpoint () to fetch them.
-  - Implemented Admin-only CRUD endpoints for managing announcements.
-  - Expanded the Job Post and Brand Profile models to include new fields requested by the user.
-- **Frontend Enhancements:**
-  - **New User Flow:** Implemented the  page and updated the authentication flow to redirect users there after login.
-  - **Announcements:** Created a separate  page and updated the Navbar to link to it. The  now correctly displays only pinned announcements.
-  - **Admin Panel:** Added a complete UI for Announcement management (create, edit, delete, pin) in the .
-  - **UI Fixes:** Corrected a text color issue in dropdown/select elements. Added smooth-scrolling to on-page links in the Navbar.
-  - **Dashboard Consistency:** Added the main  component to the  and .
+-   **Admin Approval & Job Lifecycle:** A full admin approval, job expiration, and renewal system was implemented and tested.
+-   **Etap 1 - Critical Fixes & UX:**
+    -   Fixed chat so attached files are now visible.
+    -   Fixed job creation modal's sticky header.
+    -   Implemented secret admin login via .
+    -   Added İş Bitti (Job Completed) button and status for matches.
+    -   Added days remaining display on job posts.
+    -   Added seen status indicators in chat.
+    -   Implemented a responsive mobile-first design with a hamburger menu in the Navbar.
+    -   Created a Favorites page for influencers to see their saved jobs.
+-   **Etap 2 - Core Features:**
+    -   Integrated **Resend** for email notifications.
+    -   Implemented a full Forgot Password / Reset Password flow.
+    -   Created a filterable Influencer Search page for brands.
+-   **Etap 3 - Admin Panel:**
+    -   Added a comprehensive **Content Management System (CMS)** to the admin panel, allowing admins to manage the site-wide pop-up, blog posts, Q&A, success stories, and events.
+    -   Added dashboard graphs (category distribution) and detailed statistics.
+    -   Added an activity log viewer.
 
 **Earlier issues found/mentioned but not fixed**
--   **Issue 1: Profile Dropdown Not Working**
-    -   **Debug checklist:** As detailed in the Pending/In progress Issue list. The user reported that clicking the profile icon in the navbar throws an error and does not open the dropdown menu.
-    -   **Why to solve this issue?** It's a critical bug preventing users from accessing their dashboards and logging out.
-    -   **Should Test frontend/backend/both after fix:** Frontend.
-    -   **Is recurring issue?** N
+-   None. All previously identified issues were addressed.
 
 **Known issue recurrence from previous fork**
-- None.
+-   None.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
-- **Backend:** FastAPI, MongoDB (), Pydantic, JWT Authentication.
-- **Frontend:** React, React Router, Axios, TailwindCSS.
-- **Architecture:** Full-stack, Single Page Application (SPA) with a RESTful API.
+-   **Backend:** FastAPI, MongoDB (), Pydantic models.
+-   **Frontend:** React, React Router, Axios, TailwindCSS, .
+-   **Email:**  API for transactional emails.
+-   **Authentication:** JWT stored in cookies, Google OAuth, Secret URL admin login.
 
 **key DB schema**
--   : {id, email, password_hash, user_type, name}
--   : {user_id, company_name, industry, website, logo_url, about}
--   : {id, brand_user_id, title, description, budget, delivery_time, revision_policy}
--   : {id, title, content, pinned, created_at}
--   Other collections: , , , , , .
+-   ****: 
+-   ****: 
+-   ****: 
+-   ****:  (for CMS)
+-   ** (NEW):** 
+-   ** (NEW):** 
+-   ** (NEW):** 
+-   ** (NEW):** 
+-   ** (NEW):** 
+-   ** (NEW):** 
+-   ** (NEW):** 
+
+**changes in tech stack**
+-   : Added for email notifications.
 
 **All files of reference**
--   : Contains the entire backend logic, including recently added models and endpoints for brand profiles and expanded job posts.
--   : The file currently being edited. It is a large component that now includes the JSX for profile editing and an enhanced job creation modal.
--   : The file likely containing the Profile Dropdown bug.
--   : Contains the recently completed announcement management feature.
--   : The new main entry point for logged-in users.
+-   : **(Primary file for backend logic)**. Contains all business logic and API endpoints.
+-   : **(Key file for Admin UI)**. Contains the UI for all admin features.
+-   : **(Key file for Brand UI)**. Will need updates for new features.
+-   : **(Key file for Influencer UI)**. Will need updates for new features.
+-   : Contains all frontend routing.
 
 **Areas that need refactoring**:
--   The main dashboard pages (, , ) have become large and monolithic. The logic for modals, data fetching, and different tabs could be extracted into smaller, more manageable child components to improve readability and maintainability.
+-    is extremely large and monolithic. It urgently needs to be broken down into separate routers (e.g., , , , , etc.) for better maintainability.
+-    and  are becoming very large. Logic should be extracted into custom hooks and UI into smaller, reusable components.
 
 **key api endpoints**
--   : Create/Update a brand's profile.
--   : Fetch the current brand's profile.
--   : Create a job post (expects new fields like ).
--   : Create an announcement.
--   : Update an announcement (e.g., to pin/unpin it).
--   : Get all announcements marked as pinned.
+-   : Creates a new brief (reverse job).
+-   : Fetches all open briefs.
+-   : Submits a proposal to a brief.
+-   : Adds a new item to an influencer's portfolio.
+-   : Adds a social media account for verification.
+-   : Submits an identity verification request.
+-   : Creates a new dispute for a match.
+-   : Creates a digital contract for a match.
+-   : Signs a digital contract.
+-   : (NEW) Fetches detailed stats for admin graphs.
+-   : (NEW) Manages all CMS content.
+-   And many more created in  to support these features.
 
 **Critical Info for New Agent**
--   The user has approved a phased development plan. You must complete **FAZ 1** before proceeding. The highest priority is to fix the **Profile Dropdown bug** and then complete the **Brand Dashboard enhancements**.
--   The user is highly engaged and provides specific feedback. Communicate your plan clearly before implementing and summarize your work afterward.
--   The React components for the dashboards are very large. Modifying them requires care. Breaking them into smaller components would be a good long-term strategy, but for now, focus on completing the user's immediate requests.
+-   You are resuming the implementation of 7 new features. The backend models and API endpoints have just been created in .
+-   Your immediate task is to build the frontend for these features. This involves creating several new pages and components and integrating them into the existing dashboards and navigation.
+-   Follow the user's direction for Sosyal Medya Bağlama: use **manual user input** and a **simple admin approval** flow, not a direct API integration with Instagram/TikTok for now.
+-   After implementing the frontend, conduct a full end-to-end test using the  to ensure all 7 features work correctly.
 
 **documents and test reports created in this job**
+-    (updated)
+-   
+-   
+-   
 -   
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **user (msg 333):** devam et (continue) - Approval to continue.
-2.  **user (msg 302):** tamam kalan işlere devam et (ok, continue with the remaining tasks) - Approval to work on FAZ 1 tasks.
-3.  **user (msg 263):** Admin kullanıcısı ile giriş yaptığımda duyurulara ekleme düzenleme yapamıyorum. (As Admin, I can't add/edit announcements.) - **(RESOLVED)**
-4.  **user (msg 216):** hatalar tespit edildi... (errors detected...) - Reported profile dropdown bug, requested separate announcements page, pinned announcements, and admin CRUD for announcements. **(Partially resolved, dropdown bug remains)**
-5.  **user (msg 180):** dediğin gibi faz olarak ilerle her fazda sor bana (proceed in phases as you said, ask me at each phase) - Agreement on the phased approach.
-6.  **user (msg 178):** hepsini ekle... (add all of them...) - Agreement to add all agent's suggestions.
-7.  **user (msg 176):** evet doğru anladın... (yes you understood correctly...) - Confirmation of understanding.
-8.  **user (msg 174):** bekle yapcağın şeyleri anladınmı (wait, did you understand...?) - User check-in.
-9.  **user (msg 169):** marka için konuşuyorum... (I'm talking about the brand side...) - Detailed feedback on brand features.
-10. **user (msg 96):** ek özellikler ile birlikte yapabilirsin (you can do it with the additional features) - Approval of agent's feature suggestions.
+1.  **user (msg 100):**  (implement all of it in one go). **[Addressed]**
+2.  **agent (msg 101):** Explained that doing 42 features at once is risky and proposed an 8-item Etap 1. **[Responded]**
+3.  **user (msg 102):** Asked about credit cost per Etap. **[Addressed]**
+4.  **agent (msg 105):** Explained that credit cost is variable and recommended starting with Etap 1 to gauge usage. **[Responded]**
+5.  **user (msg 106):** Asked if Save to Github costs credits. **[Addressed]**
+6.  **agent (msg 109):** Confirmed Save to Github is free. Asked to start Etap 1. **[Responded]**
+7.  **user (msg 110):**  (start etap 1). **[In Progress]** Agent then completed Etap 1, 2, and 3.
+8.  **user (msg 285):**  (start etap 2). **[In Progress]**
+9.  **user (msg 385):**  (move to etap 3). **[In Progress]**
+10. **user (msg 449, 451, 454):** The user asks to skip Etap 4 and implement a specific list of 7 features from Etap 5, specifying Manuel Giriş (Manual Entry) and basit onay sistemi (simple approval system) for the social media feature. **[In Progress]**
 
 **Project Health Check:**
 -   **Broken:**
-    -   Profile dropdown in the navbar is non-functional, preventing access to user dashboards.
-    -   The brand profile editing and enhanced job creation modals in the Brand Dashboard are incomplete (missing handler logic).
+    -   The 7 new features (Briefs, Portfolio, Verification, etc.) are partially implemented (backend only) and thus non-functional.
 -   **Mocked:**
-    -   None. The app uses a seed script to populate the real database with test data.
+    -   The Resend integration uses a placeholder API key () and will not send real emails until a valid key is provided in .
 
 **3rd Party Integrations**
--   **Google OAuth:** Used for social login. The agent used the  to get the playbook.
+-   **Google OAuth:** For user login.
+-   **Resend:** For transactional emails. Requires a valid user-provided API key () in  to be functional.
 
 **Testing status**
--   **Testing agent used:** NO
--   **Troubleshoot agent used:** NO
--   **Test files created:** None
--   **Known regressions:** The profile dropdown menu was likely working before but is now broken.
+-   **Testing agent used after significant changes:** YES. The agent has consistently used  to validate the completion of Etap 1, 2, and 3, with detailed test reports generated for each.
+-   **Troubleshoot agent used after agent stuck in loop:** NO
+-   **Test files created:** , , , .
+-   **Known regressions:** None.
 
 **Credentials to test flow:**
 -   **Admin:**  / 
@@ -181,5 +212,4 @@ The user has approved a phased development plan. After completing FAZ 1, the age
 -   **Influencer:**  / 
 
 **What agent forgot to execute**
--   The agent failed to address the critical Profile Dropdown Not Working bug reported by the user. It acknowledged the report but then immediately pivoted to implementing other features (announcements) and never returned to fix or verify the bug.
--   The agent added the UI for the new modals in  but did not complete the task by implementing the necessary handler functions to make them functional.</analysis>
+-   The agent is following the user's latest and very specific instructions correctly. Nothing appears to have been forgotten.</analysis>

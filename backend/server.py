@@ -24,7 +24,7 @@ load_dotenv(ROOT_DIR / '.env')
 # Configure Resend
 resend.api_key = os.environ.get('RESEND_API_KEY', '')
 SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'noreply@flulance.com')
-FRONTEND_URL = os.environ.get('FRONTEND_URL', 'https://influmarket-11.preview.emergentagent.com')
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'https://influencer-hub-110.preview.emergentagent.com')
 
 # Create uploads directory
 UPLOAD_DIR = ROOT_DIR / "uploads"
