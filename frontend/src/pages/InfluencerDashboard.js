@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { User, Briefcase, Send, MessageCircle, Plus, Edit, Star, TrendingUp, BarChart3, Award, Users, Eye } from 'lucide-react';
+import { User, Briefcase, Send, MessageCircle, Plus, Edit, Star, TrendingUp, BarChart3, Award, Users, Eye, Image, Video, FileText, Trash2, Upload, X, Loader2, FileIcon } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import Navbar from '../components/Navbar';
 
@@ -20,11 +20,15 @@ const InfluencerDashboard = () => {
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showEditStats, setShowEditStats] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filterCategory, setFilterCategory] = useState('');
   const [filterPlatform, setFilterPlatform] = useState('');
   const [stats, setStats] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [mediaLibrary, setMediaLibrary] = useState([]);
+  const [mediaFilter, setMediaFilter] = useState('all');
+  const [uploading, setUploading] = useState(false);
 
   const [statsForm, setStatsForm] = useState({
     instagram_followers: '',
