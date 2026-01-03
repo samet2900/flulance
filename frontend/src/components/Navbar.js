@@ -96,9 +96,9 @@ const Navbar = ({ user, onLogout }) => {
   };
 
   const getDashboardLink = () => {
-    if (user.user_type === 'marka') return '/brand';
-    if (user.user_type === 'influencer') return '/influencer';
-    if (user.user_type === 'admin') return '/admin';
+    if (user.user_type === 'marka') return '/brand-dashboard';
+    if (user.user_type === 'influencer') return '/influencer-dashboard';
+    if (user.user_type === 'admin') return '/admin-dashboard';
     return '/home';
   };
 
