@@ -244,7 +244,7 @@ const Navbar = ({ user, onLogout }) => {
                 {user.picture ? (
                   <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full object-cover" />
                 ) : (
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-fuchsia-500 to-cyan-500 rounded-full flex items-center justify-center">
                     <User className="w-4 h-4" />
                   </div>
                 )}
@@ -265,8 +265,8 @@ const Navbar = ({ user, onLogout }) => {
 
               {/* Profile Dropdown */}
               {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-56 bg-gray-900 border border-white/20 rounded-xl shadow-2xl overflow-hidden" data-testid="profile-dropdown">
-                  <div className="p-4 border-b border-white/10">
+                <div className="absolute right-0 mt-2 w-56 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden" data-testid="profile-dropdown">
+                  <div className="p-4 border-b border-gray-700">
                     <p className="font-semibold">{user.name}</p>
                     <p className="text-xs text-gray-400">{user.email}</p>
                   </div>
@@ -276,7 +276,7 @@ const Navbar = ({ user, onLogout }) => {
                         navigate(getDashboardLink());
                         setShowProfileMenu(false);
                       }}
-                      className="w-full px-4 py-2 text-left hover:bg-white/10 transition-colors flex items-center gap-3"
+                      className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
                       data-testid="nav-dashboard"
                     >
                       <Briefcase className="w-4 h-4" />
@@ -288,7 +288,7 @@ const Navbar = ({ user, onLogout }) => {
                           navigate('/home#favorites');
                           setShowProfileMenu(false);
                         }}
-                        className="w-full px-4 py-2 text-left hover:bg-white/10 transition-colors flex items-center gap-3"
+                        className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
                       >
                         <Star className="w-4 h-4" />
                         Favorilerim
@@ -299,13 +299,13 @@ const Navbar = ({ user, onLogout }) => {
                         navigate('/settings');
                         setShowProfileMenu(false);
                       }}
-                      className="w-full px-4 py-2 text-left hover:bg-white/10 transition-colors flex items-center gap-3"
+                      className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
                     >
                       <Settings className="w-4 h-4" />
                       Ayarlar
                     </button>
                   </div>
-                  <div className="border-t border-white/10">
+                  <div className="border-t border-gray-700">
                     <button
                       onClick={() => {
                         onLogout();
