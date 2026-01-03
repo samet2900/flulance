@@ -952,7 +952,8 @@ async def get_jobs(
         "approval_status": "approved",
         "$or": [
             {"expires_at": {"$gt": now}},
-            {"expires_at": None}
+            {"expires_at": None},
+            {"expires_at": {"$exists": False}}
         ]
     }
     if category:
