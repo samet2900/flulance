@@ -915,7 +915,18 @@ async def get_jobs(
         query["platforms"] = platform
     
     jobs = await db.job_posts.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
-    return [JobPost(**j) for j in jobs]
+    
+    # Get application counts
+    result = []
+    for j in jobs:
+        app_count = await db.applications.count_documents({"job_id": j["job_id"]})
+        j["application_count"] = app_count
+        # Set defaults for new fields if not present
+        j.setdefault("is_featured", False)
+        j.setdefault("is_urgent", False)
+        result.append(JobPost(**j))
+    
+    return result
 
 @api_router.get("/jobs/my-jobs", response_model=List[JobPost])
 async def get_my_jobs(request: Request):
