@@ -14,7 +14,7 @@ const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const SettingsPage = () => {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { theme: currentTheme, changeTheme } = useTheme();
   const [user, setUser] = useState(null);
   const [settings, setSettings] = useState(null);
@@ -23,7 +23,6 @@ const SettingsPage = () => {
   const [saving, setSaving] = useState(false);
   const [activeSection, setActiveSection] = useState('profile');
   const fileInputRef = useRef(null);
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language || 'tr');
 
   // Form states
   const [profileForm, setProfileForm] = useState({ name: '', bio: '' });
