@@ -6,6 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import asyncio
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
@@ -15,9 +16,15 @@ import bcrypt
 import httpx
 import shutil
 import mimetypes
+import resend
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
+
+# Configure Resend
+resend.api_key = os.environ.get('RESEND_API_KEY', '')
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'noreply@flulance.com')
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'https://influmarket-11.preview.emergentagent.com')
 
 # Create uploads directory
 UPLOAD_DIR = ROOT_DIR / "uploads"
