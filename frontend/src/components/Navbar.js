@@ -15,13 +15,18 @@ const Navbar = ({ user, onLogout }) => {
   const notifRef = useRef(null);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.user_id) {
       fetchUnreadCount();
       // Poll for new notifications every 30 seconds
       const interval = setInterval(fetchUnreadCount, 30000);
       return () => clearInterval(interval);
     }
   }, [user]);
+
+  // If no user, don't render the navbar
+  if (!user || !user.user_id) {
+    return null;
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {

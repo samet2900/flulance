@@ -179,10 +179,30 @@ const BrandDashboard = () => {
   const handleCreateJob = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/api/jobs`, {
-        ...newJob,
-        budget: parseFloat(newJob.budget)
-      }, {
+      const jobPayload = {
+        title: newJob.title,
+        description: newJob.description,
+        category: newJob.category,
+        budget: parseFloat(newJob.budget),
+        platforms: newJob.platforms,
+        deadline_days: newJob.deadline_days ? parseInt(newJob.deadline_days) : null,
+        start_date: newJob.start_date || null,
+        revision_rounds: newJob.revision_rounds ? parseInt(newJob.revision_rounds) : 1,
+        experience_level: newJob.experience_level || null,
+        min_followers: newJob.min_followers ? parseInt(newJob.min_followers) : null,
+        content_requirements: {
+          videos: newJob.content_requirements.videos ? parseInt(newJob.content_requirements.videos) : 0,
+          images: newJob.content_requirements.images ? parseInt(newJob.content_requirements.images) : 0,
+          stories: newJob.content_requirements.stories ? parseInt(newJob.content_requirements.stories) : 0
+        },
+        target_audience: {
+          age_range: newJob.target_audience.age_range || null,
+          location: newJob.target_audience.location || null
+        },
+        copyright: newJob.copyright || 'shared'
+      };
+      
+      await axios.post(`${API_URL}/api/jobs`, jobPayload, {
         withCredentials: true
       });
       
@@ -192,11 +212,21 @@ const BrandDashboard = () => {
         description: '',
         category: '',
         budget: '',
-        platforms: []
+        platforms: [],
+        deadline_days: '',
+        start_date: '',
+        revision_rounds: '1',
+        experience_level: '',
+        min_followers: '',
+        content_requirements: { videos: '', images: '', stories: '' },
+        target_audience: { age_range: '', location: '' },
+        copyright: 'shared'
       });
       fetchJobs();
+      alert('İş ilanı başarıyla oluşturuldu!');
     } catch (error) {
       console.error('Error creating job:', error);
+      alert('İş ilanı oluşturulurken bir hata oluştu');
     }
   };
 
