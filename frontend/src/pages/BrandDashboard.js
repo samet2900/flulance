@@ -352,6 +352,19 @@ const BrandDashboard = () => {
     }
   };
 
+  const handleRenewJob = async (jobId) => {
+    try {
+      await axios.post(`${API_URL}/api/jobs/${jobId}/renew`, {}, {
+        withCredentials: true
+      });
+      fetchJobs();
+      alert('İlan 15 gün daha yenilendi! Admin onayı bekleniyor.');
+    } catch (error) {
+      console.error('Error renewing job:', error);
+      alert(error.response?.data?.detail || 'İlan yenilenirken bir hata oluştu');
+    }
+  };
+
   if (!user) {
     return <div className="min-h-screen bg-black flex items-center justify-center">
       <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-fuchsia-500"></div>
