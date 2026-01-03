@@ -75,6 +75,16 @@ function AppRouter() {
         }
       />
       
+      {/* Influencer Search - For brands */}
+      <Route
+        path="/influencers"
+        element={
+          <ProtectedRoute allowedRoles={['marka']}>
+            <InfluencerSearchPage />
+          </ProtectedRoute>
+        }
+      />
+      
       {/* Brand Routes */}
       <Route
         path="/brand"
