@@ -120,9 +120,49 @@
 
 ---
 
-## FAZ 4 - Gelecek Özellikler
+## FAZ 4 - Ayarlar Sayfası ✅ TAMAMLANDI (3 Ocak 2026)
 
-### Planlanan Özellikler:
+### Tamamlanan Özellikler:
+- [x] **Profil Ayarları**
+  - İsim değiştirme
+  - Profil fotoğrafı yükleme
+  - Bio/Açıklama düzenleme
+- [x] **Hesap Güvenliği**
+  - Şifre değiştirme
+  - E-posta değiştirme
+  - Oturum geçmişi görüntüleme
+- [x] **Bildirim Tercihleri**
+  - E-posta bildirimleri (yeni iş, başvuru durumu, mesajlar, pazarlama)
+  - Uygulama bildirimleri
+- [x] **Gizlilik Ayarları**
+  - Profil görünürlüğü
+  - İstatistik paylaşımı
+  - Aramada görünürlük
+- [x] **Görünüm**
+  - Tema seçimi (Koyu/Açık)
+  - Dil seçimi (Türkçe/English)
+- [x] **Hesap İşlemleri**
+  - Hesabı dondurma
+  - Hesabı kalıcı silme
+
+### Yeni API Endpoint'leri:
+- `GET /api/settings` - Tüm ayarları getir
+- `PUT /api/settings/profile` - Profil güncelle
+- `POST /api/settings/profile-photo` - Profil fotoğrafı yükle
+- `PUT /api/settings/password` - Şifre değiştir
+- `PUT /api/settings/email` - E-posta değiştir
+- `PUT /api/settings/notifications` - Bildirim ayarları
+- `PUT /api/settings/privacy` - Gizlilik ayarları
+- `PUT /api/settings/theme` - Tema değiştir
+- `PUT /api/settings/language` - Dil değiştir
+- `POST /api/settings/deactivate` - Hesabı dondur
+- `DELETE /api/settings/delete-account` - Hesabı sil
+
+---
+
+## Gelecek Özellikler
+
+### Planlanan:
 - [ ] AI destekli eşleştirme
 
 ---
