@@ -212,20 +212,20 @@ const HomeFeed = () => {
   };
 
   if (!user) {
-    return <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500"></div>
+    return <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-fuchsia-500"></div>
     </div>;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       <Navbar user={user} onLogout={handleLogout} />
 
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">
-            Hoş geldin, <span className="bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">{user.name}</span>! 👋
+            Hoş geldin, <span className="bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text">{user.name}</span>! 👋
           </h1>
           <p className="text-gray-400">Platform'da neler oluyor, hemen keşfet!</p>
         </div>
@@ -257,7 +257,7 @@ const HomeFeed = () => {
 
             {/* Search & Filter */}
             <section id="jobs">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 mb-6">
+              <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800 mb-6">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex-1 relative">
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -266,18 +266,18 @@ const HomeFeed = () => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="İlan ara (başlık, açıklama, marka)"
-                      className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
+                      className="w-full pl-12 pr-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       data-testid="search-input"
                     />
                   </div>
                   <select
                     value={filterCategory}
                     onChange={(e) => setFilterCategory(e.target.value)}
-                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    className="px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     data-testid="filter-category"
                     style={{colorScheme: 'dark'}}
                   >
-                    <option value="" className="bg-gray-800 text-white">Tüm Kategoriler</option>
+                    <option value="" className="bg-gray-900 text-white">Tüm Kategoriler</option>
                     {categories.map((cat) => (
                       <option key={cat} value={cat} className="bg-gray-800 text-white">{cat}</option>
                     ))}
