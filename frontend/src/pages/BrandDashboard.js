@@ -365,6 +365,31 @@ const BrandDashboard = () => {
     }
   };
 
+  const handleCompleteMatch = async (matchId) => {
+    if (!window.confirm('Bu işi tamamlandı olarak işaretlemek istediğinize emin misiniz?')) return;
+    
+    try {
+      await axios.put(`${API_URL}/api/matches/${matchId}/complete`, {}, {
+        withCredentials: true
+      });
+      fetchMatches();
+      alert('İş başarıyla tamamlandı olarak işaretlendi!');
+    } catch (error) {
+      console.error('Error completing match:', error);
+      alert(error.response?.data?.detail || 'İş tamamlanırken bir hata oluştu');
+    }
+  };
+
+  // Calculate remaining days for a job
+  const getRemainingDays = (expiresAt) => {
+    if (!expiresAt) return null;
+    const now = new Date();
+    const expiry = new Date(expiresAt);
+    const diffTime = expiry - now;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
   if (!user) {
     return <div className="min-h-screen bg-black flex items-center justify-center">
       <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-fuchsia-500"></div>
