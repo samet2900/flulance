@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Plus, Briefcase, Users, MessageCircle, TrendingUp, User, Building } from 'lucide-react';
+import { Plus, Briefcase, Users, MessageCircle, TrendingUp, User, Building, Zap, Clock, Star, Crown } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import Navbar from '../components/Navbar';
 
