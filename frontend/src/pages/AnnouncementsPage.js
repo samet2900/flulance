@@ -76,7 +76,7 @@ const AnnouncementsPage = () => {
     if (type === 'news') return 'bg-blue-500/20 border-blue-500/50';
     if (type === 'update') return 'bg-green-500/20 border-green-500/50';
     if (type === 'promotion') return 'bg-yellow-500/20 border-yellow-500/50';
-    return 'bg-white/10 border-white/20';
+    return 'bg-gray-900/50 border-gray-800';
   };
 
   if (!user) {
@@ -106,7 +106,7 @@ i ve güncellemeleri</p>
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
           </div>
         ) : announcements.length === 0 ? (
-          <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+          <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
             <Bell className="w-16 h-16 mx-auto mb-4 text-gray-400" />
             <p className="text-gray-400">Henüz duyuru yok</p>
           </div>

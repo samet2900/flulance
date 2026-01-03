@@ -387,7 +387,7 @@ const InfluencerDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'profile'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-profile"
           >
@@ -399,7 +399,7 @@ const InfluencerDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'stats'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-stats"
           >
@@ -411,7 +411,7 @@ const InfluencerDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'reviews'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-reviews"
           >
@@ -428,7 +428,7 @@ const InfluencerDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'jobs'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-jobs"
           >
@@ -440,7 +440,7 @@ const InfluencerDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'applications'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-applications"
           >
@@ -452,7 +452,7 @@ const InfluencerDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'matches'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-matches"
           >
@@ -464,7 +464,7 @@ const InfluencerDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'media'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-media"
           >
@@ -489,7 +489,7 @@ const InfluencerDashboard = () => {
             </div>
 
             {profile ? (
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20" data-testid="profile-card">
+              <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-800" data-testid="profile-card">
                 <div className="flex items-start gap-6 mb-6">
                   {profile.image_url && (
                     <img src={profile.image_url} alt={user.name} className="w-32 h-32 rounded-full object-cover" />
@@ -509,7 +509,7 @@ const InfluencerDashboard = () => {
                     </p>
                   </div>
                 </div>
-                <div className="border-t border-white/10 pt-6">
+                <div className="border-t border-gray-700 pt-6">
                   <h4 className="text-lg font-semibold mb-4">Sosyal Medya</h4>
                   <div className="grid md:grid-cols-2 gap-3">
                     {Object.entries(profile.social_media).map(([platform, handle]) => (
@@ -524,7 +524,7 @@ const InfluencerDashboard = () => {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <User className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400 mb-4">Henüz profilinizi oluşturmadınız</p>
                 <button
@@ -548,7 +548,7 @@ const InfluencerDashboard = () => {
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="px-4 py-3 bg-white/10 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500"
+                className="px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500"
                 data-testid="filter-category"
               >
                 <option value="">Tüm Kategoriler</option>
@@ -559,7 +559,7 @@ const InfluencerDashboard = () => {
               <select
                 value={filterPlatform}
                 onChange={(e) => setFilterPlatform(e.target.value)}
-                className="px-4 py-3 bg-white/10 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500"
+                className="px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500"
                 data-testid="filter-platform"
               >
                 <option value="">Tüm Platformlar</option>
@@ -574,14 +574,14 @@ const InfluencerDashboard = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : jobs.length === 0 ? (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <Briefcase className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400">Şu anda açık iş ilanı yok</p>
               </div>
             ) : (
               <div className="grid gap-6" data-testid="jobs-list">
                 {jobs.map((job) => (
-                  <div key={job.job_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div key={job.job_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-2xl font-bold mb-2">{job.title}</h3>
@@ -624,14 +624,14 @@ const InfluencerDashboard = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : applications.length === 0 ? (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <Send className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400">Henüz başvurunuz yok</p>
               </div>
             ) : (
               <div className="grid gap-6" data-testid="applications-list">
                 {applications.map((app) => (
-                  <div key={app.application_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div key={app.application_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-xl font-bold mb-2">İş ID: {app.job_id}</h3>
@@ -665,14 +665,14 @@ const InfluencerDashboard = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : matches.length === 0 ? (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <MessageCircle className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400">Henüz eşleşmeniz yok</p>
               </div>
             ) : (
               <div className="grid md:grid-cols-2 gap-6">
                 {matches.map((match) => (
-                  <div key={match.match_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20" data-testid={`match-${match.match_id}`}>
+                  <div key={match.match_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800" data-testid={`match-${match.match_id}`}>
                     <h3 className="text-xl font-bold mb-2">{match.job_title}</h3>
                     <p className="text-gray-400 mb-4">Marka: <span className="text-white font-semibold">{match.brand_name}</span></p>
                     <div className="flex gap-3">
@@ -751,7 +751,7 @@ const InfluencerDashboard = () => {
                 </div>
 
                 {/* Platform Stats */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-800">
                   <h3 className="text-xl font-bold mb-6">Platform İstatistikleri</h3>
                   <div className="grid md:grid-cols-2 gap-6">
                     {/* Instagram */}
@@ -839,7 +839,7 @@ const InfluencerDashboard = () => {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400 mb-4">Henüz istatistik eklemediniz</p>
                 <p className="text-sm text-gray-500 mb-6">Sosyal medya istatistiklerinizi ekleyerek markaların sizi daha iyi tanımasını sağlayın</p>
@@ -883,7 +883,7 @@ const InfluencerDashboard = () => {
                         <div key={rating} className="flex items-center gap-2">
                           <span className="text-sm w-6">{rating}</span>
                           <Star className="w-4 h-4 text-yellow-400" />
-                          <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                          <div className="flex-1 h-2 bg-gray-900/50 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-yellow-400 rounded-full"
                               style={{ width: `${percentage}%` }}
@@ -899,7 +899,7 @@ const InfluencerDashboard = () => {
             )}
 
             {reviews.length === 0 ? (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <Star className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400">Henüz değerlendirme almadınız</p>
                 <p className="text-sm text-gray-500 mt-2">İşleri tamamladıkça markalardan değerlendirme alacaksınız</p>
@@ -907,7 +907,7 @@ const InfluencerDashboard = () => {
             ) : (
               <div className="space-y-4">
                 {reviews.map((review) => (
-                  <div key={review.review_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div key={review.review_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
                     <div className="flex items-start justify-between mb-4">
                       <div>
                         <p className="font-semibold text-lg">{review.reviewer_name}</p>
@@ -961,7 +961,7 @@ const InfluencerDashboard = () => {
                   className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
                     mediaFilter === key
                       ? 'bg-fuchsia-500'
-                      : 'bg-white/10 hover:bg-white/20'
+                      : 'bg-gray-900/50 hover:bg-white/20'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -975,7 +975,7 @@ const InfluencerDashboard = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : mediaLibrary.length === 0 ? (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <Image className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400 mb-2">Henüz medya dosyanız yok</p>
                 <p className="text-sm text-gray-500">Portföyünüzü oluşturmak için resim ve video yükleyin</p>
@@ -983,7 +983,7 @@ const InfluencerDashboard = () => {
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {mediaLibrary.map((media) => (
-                  <div key={media.media_id} className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden group">
+                  <div key={media.media_id} className="bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-800 overflow-hidden group">
                     {media.file_type === 'image' ? (
                       <div className="aspect-square relative">
                         <img
@@ -1071,7 +1071,7 @@ const InfluencerDashboard = () => {
       {/* Edit Profile Modal */}
       {showEditProfile && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto" onClick={() => setShowEditProfile(false)}>
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-3xl w-full my-8 border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="edit-profile-modal">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-3xl w-full my-8 border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="edit-profile-modal">
             <h2 className="text-3xl font-bold mb-6">Profil {profile ? 'Düzenle' : 'Oluştur'}</h2>
             <form onSubmit={handleSaveProfile} className="space-y-6">
               <div>
@@ -1081,7 +1081,7 @@ const InfluencerDashboard = () => {
                   onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
                   required
                   rows={3}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none"
                   placeholder="Kendinizi tanıtın..."
                   data-testid="profile-bio-input"
                 />
@@ -1098,7 +1098,7 @@ const InfluencerDashboard = () => {
                       className={`px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
                         profileForm.specialties.includes(specialty)
                           ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                          : 'bg-white/5 hover:bg-white/10'
+                          : 'bg-black/50 hover:bg-gray-900/50'
                       }`}
                       data-testid={`specialty-${specialty}`}
                     >
@@ -1116,7 +1116,7 @@ const InfluencerDashboard = () => {
                   onChange={(e) => setProfileForm({ ...profileForm, starting_price: e.target.value })}
                   required
                   min="0"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500"
                   placeholder="5000"
                   data-testid="profile-price-input"
                 />
@@ -1128,7 +1128,7 @@ const InfluencerDashboard = () => {
                   type="url"
                   value={profileForm.image_url}
                   onChange={(e) => setProfileForm({ ...profileForm, image_url: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500"
                   placeholder="https://..."
                   data-testid="profile-image-input"
                 />
@@ -1147,7 +1147,7 @@ const InfluencerDashboard = () => {
                           ...profileForm,
                           social_media: { ...profileForm.social_media, [platform]: e.target.value }
                         })}
-                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm"
+                        className="w-full px-3 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm"
                         placeholder={`@kullaniciadi`}
                         data-testid={`social-${platform}`}
                       />
@@ -1160,7 +1160,7 @@ const InfluencerDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowEditProfile(false)}
-                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
                 >
                   İptal
                 </button>
@@ -1180,9 +1180,9 @@ const InfluencerDashboard = () => {
       {/* Apply to Job Modal */}
       {selectedJob && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setSelectedJob(null)}>
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="apply-job-modal">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="apply-job-modal">
             <h2 className="text-3xl font-bold mb-6">İşe Başvur</h2>
-            <div className="bg-white/5 rounded-xl p-6 mb-6">
+            <div className="bg-black/50 rounded-xl p-6 mb-6">
               <h3 className="text-xl font-bold mb-2">{selectedJob.title}</h3>
               <p className="text-gray-400 mb-2">Marka: {selectedJob.brand_name}</p>
               <p className="text-gray-300">{selectedJob.description}</p>
@@ -1199,7 +1199,7 @@ const InfluencerDashboard = () => {
                   name="message"
                   required
                   rows={4}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none"
                   placeholder="Neden bu iş için uygun olduğunuzu anlatın..."
                   data-testid="application-message-input"
                 />
@@ -1208,7 +1208,7 @@ const InfluencerDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedJob(null)}
-                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
                 >
                   İptal
                 </button>
@@ -1237,7 +1237,7 @@ const InfluencerDashboard = () => {
       {/* Edit Stats Modal */}
       {showEditStats && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto" onClick={() => setShowEditStats(false)}>
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-3xl w-full my-8 border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="edit-stats-modal">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-3xl w-full my-8 border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="edit-stats-modal">
             <h2 className="text-3xl font-bold mb-6">İstatistikleri Düzenle</h2>
             <form onSubmit={handleSaveStats} className="space-y-6">
               {/* Instagram */}
@@ -1253,7 +1253,7 @@ const InfluencerDashboard = () => {
                       type="number"
                       value={statsForm.instagram_followers}
                       onChange={(e) => setStatsForm({ ...statsForm, instagram_followers: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="150000"
                     />
                   </div>
@@ -1264,7 +1264,7 @@ const InfluencerDashboard = () => {
                       step="0.1"
                       value={statsForm.instagram_engagement}
                       onChange={(e) => setStatsForm({ ...statsForm, instagram_engagement: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="4.5"
                     />
                   </div>
@@ -1284,7 +1284,7 @@ const InfluencerDashboard = () => {
                       type="number"
                       value={statsForm.tiktok_followers}
                       onChange={(e) => setStatsForm({ ...statsForm, tiktok_followers: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="500000"
                     />
                   </div>
@@ -1295,7 +1295,7 @@ const InfluencerDashboard = () => {
                       step="0.1"
                       value={statsForm.tiktok_engagement}
                       onChange={(e) => setStatsForm({ ...statsForm, tiktok_engagement: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="8.2"
                     />
                   </div>
@@ -1315,7 +1315,7 @@ const InfluencerDashboard = () => {
                       type="number"
                       value={statsForm.youtube_subscribers}
                       onChange={(e) => setStatsForm({ ...statsForm, youtube_subscribers: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="100000"
                     />
                   </div>
@@ -1325,7 +1325,7 @@ const InfluencerDashboard = () => {
                       type="number"
                       value={statsForm.youtube_avg_views}
                       onChange={(e) => setStatsForm({ ...statsForm, youtube_avg_views: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="25000"
                     />
                   </div>
@@ -1344,7 +1344,7 @@ const InfluencerDashboard = () => {
                     type="number"
                     value={statsForm.twitter_followers}
                     onChange={(e) => setStatsForm({ ...statsForm, twitter_followers: e.target.value })}
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="50000"
                   />
                 </div>
@@ -1354,7 +1354,7 @@ const InfluencerDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowEditStats(false)}
-                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
                 >
                   İptal
                 </button>
@@ -1409,7 +1409,7 @@ const ReviewModal = ({ match, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="review-modal">
+      <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="review-modal">
         <h2 className="text-2xl font-bold mb-2">Markayı Değerlendir</h2>
         <p className="text-gray-400 mb-6">{match.brand_name} - {match.job_title}</p>
         
@@ -1454,7 +1454,7 @@ const ReviewModal = ({ match, onClose, onSubmit }) => {
               onChange={(e) => setComment(e.target.value)}
               required
               rows={4}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
+              className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
               placeholder="Marka ile çalışma deneyiminizi paylaşın..."
               data-testid="review-comment-input"
             />
@@ -1464,7 +1464,7 @@ const ReviewModal = ({ match, onClose, onSubmit }) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+              className="flex-1 px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
             >
               İptal
             </button>
@@ -1520,7 +1520,7 @@ const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="upload-media-modal">
+      <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="upload-media-modal">
         <h2 className="text-2xl font-bold mb-6">Dosya Yükle</h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -1537,18 +1537,18 @@ const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
             {!file ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-white/20 rounded-xl p-8 text-center cursor-pointer hover:border-fuchsia-500 transition-colors"
+                className="border-2 border-dashed border-gray-800 rounded-xl p-8 text-center cursor-pointer hover:border-fuchsia-500 transition-colors"
               >
                 <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400 mb-2">Dosya seçmek için tıklayın</p>
                 <p className="text-sm text-gray-500">Resim, video veya PDF (max 50MB)</p>
               </div>
             ) : (
-              <div className="bg-white/5 rounded-xl p-4">
+              <div className="bg-black/50 rounded-xl p-4">
                 {preview ? (
                   <img src={preview} alt="Preview" className="w-full h-48 object-cover rounded-lg mb-4" />
                 ) : (
-                  <div className="w-full h-48 bg-white/10 rounded-lg mb-4 flex items-center justify-center">
+                  <div className="w-full h-48 bg-gray-900/50 rounded-lg mb-4 flex items-center justify-center">
                     {file.type.startsWith('video/') ? (
                       <Video className="w-16 h-16 text-gray-400" />
                     ) : (
@@ -1564,7 +1564,7 @@ const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
                   <button
                     type="button"
                     onClick={() => { setFile(null); setPreview(null); }}
-                    className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                    className="p-2 hover:bg-gray-900/50 rounded-lg transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -1580,7 +1580,7 @@ const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+              className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
               placeholder="moda, güzellik, yaşam tarzı"
             />
           </div>
@@ -1592,7 +1592,7 @@ const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
+              className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
               placeholder="Bu içerik hakkında bir açıklama yazın..."
             />
           </div>
@@ -1601,7 +1601,7 @@ const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+              className="flex-1 px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
             >
               İptal
             </button>

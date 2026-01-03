@@ -282,7 +282,7 @@ const BrandDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'profile'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-profile"
           >
@@ -294,7 +294,7 @@ const BrandDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'jobs'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-jobs"
           >
@@ -306,7 +306,7 @@ const BrandDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'matches'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-matches"
           >
@@ -331,7 +331,7 @@ const BrandDashboard = () => {
             </div>
 
             {brandProfile ? (
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20" data-testid="brand-profile-card">
+              <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-800" data-testid="brand-profile-card">
                 <div className="flex items-start gap-6 mb-6">
                   {brandProfile.logo_url && (
                     <img src={brandProfile.logo_url} alt={brandProfile.company_name} className="w-24 h-24 rounded-lg object-cover" />
@@ -383,7 +383,7 @@ const BrandDashboard = () => {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <Building className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400 mb-4">Henüz firma profilinizi oluşturmadınız</p>
                 <button
@@ -417,7 +417,7 @@ const BrandDashboard = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : jobs.length === 0 ? (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <Briefcase className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400 mb-4">Henüz iş ilanı oluşturmadınız</p>
                 <button
@@ -430,7 +430,7 @@ const BrandDashboard = () => {
             ) : (
               <div className="grid gap-6" data-testid="jobs-list">
                 {jobs.map((job) => (
-                  <div key={job.job_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div key={job.job_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-2xl font-bold mb-2">{job.title}</h3>
@@ -455,7 +455,7 @@ const BrandDashboard = () => {
                     </div>
                     <button
                       onClick={() => fetchApplications(job.job_id)}
-                      className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-2"
+                      className="px-4 py-2 bg-gray-900/50 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-2"
                       data-testid={`view-applications-${job.job_id}`}
                     >
                       <Users className="w-4 h-4" />
@@ -478,14 +478,14 @@ const BrandDashboard = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : matches.length === 0 ? (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <MessageCircle className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400">Henüz eşleşmeniz yok</p>
               </div>
             ) : (
               <div className="grid md:grid-cols-2 gap-6">
                 {matches.map((match) => (
-                  <div key={match.match_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20" data-testid={`match-${match.match_id}`}>
+                  <div key={match.match_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800" data-testid={`match-${match.match_id}`}>
                     <h3 className="text-xl font-bold mb-2">{match.job_title}</h3>
                     <p className="text-gray-400 mb-4">Influencer: <span className="text-white font-semibold">{match.influencer_name}</span></p>
                     <button
@@ -507,7 +507,7 @@ const BrandDashboard = () => {
       {/* Edit Profile Modal */}
       {showEditProfile && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto" onClick={() => setShowEditProfile(false)}>
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full my-8 border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="edit-profile-modal">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full my-8 border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="edit-profile-modal">
             <h2 className="text-3xl font-bold mb-6">{brandProfile ? 'Firma Profili Düzenle' : 'Firma Profili Oluştur'}</h2>
             <form onSubmit={handleSaveProfile} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
@@ -518,7 +518,7 @@ const BrandDashboard = () => {
                     value={profileForm.company_name}
                     onChange={(e) => setProfileForm({ ...profileForm, company_name: e.target.value })}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="Örn: ABC Teknoloji"
                     data-testid="company-name-input"
                   />
@@ -531,7 +531,7 @@ const BrandDashboard = () => {
                     value={profileForm.industry}
                     onChange={(e) => setProfileForm({ ...profileForm, industry: e.target.value })}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="Örn: Teknoloji, Moda, Gıda"
                     data-testid="industry-input"
                   />
@@ -543,7 +543,7 @@ const BrandDashboard = () => {
                     type="number"
                     value={profileForm.founded_year}
                     onChange={(e) => setProfileForm({ ...profileForm, founded_year: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="2020"
                     min="1900"
                     max={new Date().getFullYear()}
@@ -555,7 +555,7 @@ const BrandDashboard = () => {
                   <select
                     value={profileForm.employee_count}
                     onChange={(e) => setProfileForm({ ...profileForm, employee_count: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     style={{colorScheme: 'dark'}}
                   >
                     <option value="" className="bg-gray-800">Seçiniz</option>
@@ -572,7 +572,7 @@ const BrandDashboard = () => {
                     type="url"
                     value={profileForm.website}
                     onChange={(e) => setProfileForm({ ...profileForm, website: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="https://example.com"
                   />
                 </div>
@@ -583,7 +583,7 @@ const BrandDashboard = () => {
                     type="url"
                     value={profileForm.logo_url}
                     onChange={(e) => setProfileForm({ ...profileForm, logo_url: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="https://..."
                   />
                 </div>
@@ -594,7 +594,7 @@ const BrandDashboard = () => {
                     type="tel"
                     value={profileForm.phone}
                     onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="+90 555 123 45 67"
                   />
                 </div>
@@ -605,7 +605,7 @@ const BrandDashboard = () => {
                     type="text"
                     value={profileForm.address}
                     onChange={(e) => setProfileForm({ ...profileForm, address: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="İstanbul, Türkiye"
                   />
                 </div>
@@ -617,7 +617,7 @@ const BrandDashboard = () => {
                   value={profileForm.bio}
                   onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
                   rows={3}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
                   placeholder="Firmanızı tanıtın..."
                 />
               </div>
@@ -634,7 +634,7 @@ const BrandDashboard = () => {
                         ...profileForm,
                         social_media: { ...profileForm.social_media, instagram: e.target.value }
                       })}
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm text-white"
+                      className="w-full px-3 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm text-white"
                       placeholder="@firmaadi"
                     />
                   </div>
@@ -647,7 +647,7 @@ const BrandDashboard = () => {
                         ...profileForm,
                         social_media: { ...profileForm.social_media, linkedin: e.target.value }
                       })}
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm text-white"
+                      className="w-full px-3 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm text-white"
                       placeholder="/company/firmaadi"
                     />
                   </div>
@@ -660,7 +660,7 @@ const BrandDashboard = () => {
                         ...profileForm,
                         social_media: { ...profileForm.social_media, facebook: e.target.value }
                       })}
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm text-white"
+                      className="w-full px-3 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm text-white"
                       placeholder="@firmaadi"
                     />
                   </div>
@@ -673,7 +673,7 @@ const BrandDashboard = () => {
                         ...profileForm,
                         social_media: { ...profileForm.social_media, twitter: e.target.value }
                       })}
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm text-white"
+                      className="w-full px-3 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500 text-sm text-white"
                       placeholder="@firmaadi"
                     />
                   </div>
@@ -684,7 +684,7 @@ const BrandDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowEditProfile(false)}
-                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
                 >
                   İptal
                 </button>
@@ -704,7 +704,7 @@ const BrandDashboard = () => {
       {/* Create Job Modal - Genişletilmiş */}
       {showCreateJob && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto" onClick={() => setShowCreateJob(false)}>
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full my-8 border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="create-job-modal">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full my-8 border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="create-job-modal">
             <h2 className="text-3xl font-bold mb-6">Yeni İş İlanı Oluştur</h2>
             <form onSubmit={handleCreateJob} className="space-y-6">
               {/* Temel Bilgiler */}
@@ -718,7 +718,7 @@ const BrandDashboard = () => {
                     value={newJob.title}
                     onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="Örn: Yeni Ürün Lansmanı için Story Serisi"
                     data-testid="job-title-input"
                   />
@@ -731,7 +731,7 @@ const BrandDashboard = () => {
                     onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
                     required
                     rows={4}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
                     placeholder="İşin detaylarını yazın..."
                     data-testid="job-description-input"
                   />
@@ -744,7 +744,7 @@ const BrandDashboard = () => {
                       value={newJob.category}
                       onChange={(e) => setNewJob({ ...newJob, category: e.target.value })}
                       required
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       style={{colorScheme: 'dark'}}
                       data-testid="job-category-select"
                     >
@@ -763,7 +763,7 @@ const BrandDashboard = () => {
                       onChange={(e) => setNewJob({ ...newJob, budget: e.target.value })}
                       required
                       min="0"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="5000"
                       data-testid="job-budget-input"
                     />
@@ -781,7 +781,7 @@ const BrandDashboard = () => {
                         className={`px-4 py-3 rounded-xl font-semibold transition-colors capitalize ${
                           newJob.platforms.includes(platform)
                             ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                            : 'bg-white/5 hover:bg-white/10'
+                            : 'bg-black/50 hover:bg-gray-900/50'
                         }`}
                         data-testid={`platform-${platform}`}
                       >
@@ -793,7 +793,7 @@ const BrandDashboard = () => {
               </div>
 
               {/* Zaman Çizelgesi */}
-              <div className="space-y-4 border-t border-white/10 pt-6">
+              <div className="space-y-4 border-t border-gray-700 pt-6">
                 <h3 className="text-xl font-semibold text-fuchsia-400">Zaman Çizelgesi</h3>
                 
                 <div className="grid md:grid-cols-2 gap-4">
@@ -803,7 +803,7 @@ const BrandDashboard = () => {
                       type="date"
                       value={newJob.start_date}
                       onChange={(e) => setNewJob({ ...newJob, start_date: e.target.value })}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       style={{colorScheme: 'dark'}}
                     />
                   </div>
@@ -815,7 +815,7 @@ const BrandDashboard = () => {
                       value={newJob.deadline_days}
                       onChange={(e) => setNewJob({ ...newJob, deadline_days: e.target.value })}
                       min="1"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="7"
                     />
                   </div>
@@ -823,7 +823,7 @@ const BrandDashboard = () => {
               </div>
 
               {/* İçerik Gereksinimleri */}
-              <div className="space-y-4 border-t border-white/10 pt-6">
+              <div className="space-y-4 border-t border-gray-700 pt-6">
                 <h3 className="text-xl font-semibold text-fuchsia-400">İçerik Gereksinimleri</h3>
                 
                 <div className="grid grid-cols-3 gap-4">
@@ -837,7 +837,7 @@ const BrandDashboard = () => {
                         content_requirements: { ...newJob.content_requirements, videos: e.target.value }
                       })}
                       min="0"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="0"
                     />
                   </div>
@@ -852,7 +852,7 @@ const BrandDashboard = () => {
                         content_requirements: { ...newJob.content_requirements, images: e.target.value }
                       })}
                       min="0"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="0"
                     />
                   </div>
@@ -867,7 +867,7 @@ const BrandDashboard = () => {
                         content_requirements: { ...newJob.content_requirements, stories: e.target.value }
                       })}
                       min="0"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="0"
                     />
                   </div>
@@ -880,14 +880,14 @@ const BrandDashboard = () => {
                     value={newJob.revision_rounds}
                     onChange={(e) => setNewJob({ ...newJob, revision_rounds: e.target.value })}
                     min="0"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     placeholder="1"
                   />
                 </div>
               </div>
 
               {/* Influencer Gereksinimleri */}
-              <div className="space-y-4 border-t border-white/10 pt-6">
+              <div className="space-y-4 border-t border-gray-700 pt-6">
                 <h3 className="text-xl font-semibold text-fuchsia-400">Influencer Gereksinimleri</h3>
                 
                 <div className="grid md:grid-cols-2 gap-4">
@@ -896,7 +896,7 @@ const BrandDashboard = () => {
                     <select
                       value={newJob.experience_level}
                       onChange={(e) => setNewJob({ ...newJob, experience_level: e.target.value })}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       style={{colorScheme: 'dark'}}
                     >
                       <option value="" className="bg-gray-800">Seçiniz</option>
@@ -913,7 +913,7 @@ const BrandDashboard = () => {
                       value={newJob.min_followers}
                       onChange={(e) => setNewJob({ ...newJob, min_followers: e.target.value })}
                       min="0"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="10000"
                     />
                   </div>
@@ -929,7 +929,7 @@ const BrandDashboard = () => {
                         ...newJob,
                         target_audience: { ...newJob.target_audience, age_range: e.target.value }
                       })}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="18-25"
                     />
                   </div>
@@ -943,7 +943,7 @@ const BrandDashboard = () => {
                         ...newJob,
                         target_audience: { ...newJob.target_audience, location: e.target.value }
                       })}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                       placeholder="Türkiye"
                     />
                   </div>
@@ -954,7 +954,7 @@ const BrandDashboard = () => {
                   <select
                     value={newJob.copyright}
                     onChange={(e) => setNewJob({ ...newJob, copyright: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     style={{colorScheme: 'dark'}}
                   >
                     <option value="shared" className="bg-gray-800">Paylaşımlı</option>
@@ -968,7 +968,7 @@ const BrandDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowCreateJob(false)}
-                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
                 >
                   İptal
                 </button>
@@ -988,7 +988,7 @@ const BrandDashboard = () => {
       {/* Applications Modal */}
       {selectedJob && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setSelectedJob(null)}>
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="applications-modal">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="applications-modal">
             <h2 className="text-3xl font-bold mb-6">Başvurular</h2>
             
             {applications.length === 0 ? (
@@ -999,7 +999,7 @@ const BrandDashboard = () => {
             ) : (
               <div className="space-y-4">
                 {applications.map((app) => (
-                  <div key={app.application_id} className="bg-white/5 rounded-xl p-6 border border-white/10" data-testid={`application-${app.application_id}`}>
+                  <div key={app.application_id} className="bg-black/50 rounded-xl p-6 border border-gray-700" data-testid={`application-${app.application_id}`}>
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-xl font-bold mb-2">{app.influencer_name}</h3>
@@ -1029,7 +1029,7 @@ const BrandDashboard = () => {
             
             <button
               onClick={() => setSelectedJob(null)}
-              className="mt-6 w-full px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+              className="mt-6 w-full px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
             >
               Kapat
             </button>

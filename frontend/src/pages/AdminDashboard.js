@@ -320,7 +320,7 @@ const AdminDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'stats'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-stats"
           >
@@ -332,7 +332,7 @@ const AdminDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'users'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-users"
           >
@@ -344,7 +344,7 @@ const AdminDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'jobs'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-jobs"
           >
@@ -356,7 +356,7 @@ const AdminDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'matches'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-matches"
           >
@@ -368,7 +368,7 @@ const AdminDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'announcements'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-announcements"
           >
@@ -380,7 +380,7 @@ const AdminDashboard = () => {
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'badges'
                 ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-gray-900/50 hover:bg-white/20'
             }`}
             data-testid="tab-badges"
           >
@@ -424,7 +424,7 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
                     <h3 className="text-xl font-bold mb-4">Genel Bilgiler</h3>
                     <div className="space-y-3">
                       <div className="flex justify-between">
@@ -442,7 +442,7 @@ const AdminDashboard = () => {
                     </div>
                   </div>
 
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
                     <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                       <Settings className="w-5 h-5" />
                       Komisyon Ayarları
@@ -458,7 +458,7 @@ const AdminDashboard = () => {
                             min="0"
                             max="100"
                             step="0.1"
-                            className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-fuchsia-500"
+                            className="flex-1 px-4 py-2 bg-black/50 border border-gray-700 rounded-lg focus:outline-none focus:border-fuchsia-500"
                             data-testid="commission-input"
                           />
                           <button
@@ -488,10 +488,10 @@ const AdminDashboard = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : (
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden">
+              <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-800 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full" data-testid="users-table">
-                    <thead className="bg-white/5">
+                    <thead className="bg-black/50">
                       <tr>
                         <th className="px-6 py-4 text-left text-sm font-semibold">İsim</th>
                         <th className="px-6 py-4 text-left text-sm font-semibold">Email</th>
@@ -502,7 +502,7 @@ const AdminDashboard = () => {
                     </thead>
                     <tbody className="divide-y divide-white/10">
                       {users.map((u) => (
-                        <tr key={u.user_id} className="hover:bg-white/5">
+                        <tr key={u.user_id} className="hover:bg-black/50">
                           <td className="px-6 py-4">{u.name}</td>
                           <td className="px-6 py-4 text-gray-400">{u.email}</td>
                           <td className="px-6 py-4">
@@ -550,7 +550,7 @@ const AdminDashboard = () => {
             ) : (
               <div className="grid gap-6" data-testid="jobs-list">
                 {jobs.map((job) => (
-                  <div key={job.job_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div key={job.job_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-xl font-bold mb-2">{job.title}</h3>
@@ -593,7 +593,7 @@ const AdminDashboard = () => {
             ) : (
               <div className="grid gap-6" data-testid="matches-list">
                 {matches.map((match) => (
-                  <div key={match.match_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div key={match.match_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
                     <h3 className="text-xl font-bold mb-2">{match.job_title}</h3>
                     <div className="grid md:grid-cols-2 gap-4 mb-4">
                       <div>
@@ -648,14 +648,14 @@ const AdminDashboard = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : announcements.length === 0 ? (
-              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+              <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                 <Bell className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-400">Henüz duyuru yok</p>
               </div>
             ) : (
               <div className="grid gap-6" data-testid="announcements-list">
                 {announcements.map((announcement) => (
-                  <div key={announcement.announcement_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div key={announcement.announcement_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
@@ -735,9 +735,9 @@ const AdminDashboard = () => {
               {badges.length === 0 ? (
                 <p className="text-gray-400">Henüz rozet verilmemiş</p>
               ) : (
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
+                <div className="bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-800 overflow-hidden">
                   <table className="w-full">
-                    <thead className="bg-white/5">
+                    <thead className="bg-black/50">
                       <tr>
                         <th className="px-4 py-3 text-left">Kullanıcı</th>
                         <th className="px-4 py-3 text-left">Rozet</th>
@@ -748,7 +748,7 @@ const AdminDashboard = () => {
                       {badges.slice(0, 10).map((badge) => {
                         const info = getBadgeInfo(badge.badge_type);
                         return (
-                          <tr key={badge.badge_id} className="border-t border-white/10">
+                          <tr key={badge.badge_id} className="border-t border-gray-700">
                             <td className="px-4 py-3">{badge.user_name}</td>
                             <td className="px-4 py-3">
                               <span className="flex items-center gap-2">
@@ -774,9 +774,9 @@ const AdminDashboard = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
             ) : (
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
+              <div className="bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-800 overflow-hidden">
                 <table className="w-full">
-                  <thead className="bg-white/5">
+                  <thead className="bg-black/50">
                     <tr>
                       <th className="px-4 py-3 text-left">Kullanıcı</th>
                       <th className="px-4 py-3 text-left">Tip</th>
@@ -788,7 +788,7 @@ const AdminDashboard = () => {
                     {users.filter(u => u.user_type !== 'admin').map((userItem) => {
                       const badgeInfo = userItem.badge ? getBadgeInfo(userItem.badge) : null;
                       return (
-                        <tr key={userItem.user_id} className="border-t border-white/10 hover:bg-white/5">
+                        <tr key={userItem.user_id} className="border-t border-gray-700 hover:bg-black/50">
                           <td className="px-4 py-3">
                             <div>
                               <p className="font-semibold">{userItem.name}</p>
@@ -847,7 +847,7 @@ const AdminDashboard = () => {
       {/* Announcement Modal */}
       {showAnnouncementModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowAnnouncementModal(false)}>
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="announcement-modal">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="announcement-modal">
             <h2 className="text-3xl font-bold mb-6">{editingAnnouncement ? 'Duyuru Düzenle' : 'Yeni Duyuru Oluştur'}</h2>
             <form onSubmit={handleSaveAnnouncement} className="space-y-6">
               <div>
@@ -857,7 +857,7 @@ const AdminDashboard = () => {
                   value={announcementForm.title}
                   onChange={(e) => setAnnouncementForm({ ...announcementForm, title: e.target.value })}
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                   placeholder="Duyuru başlığı"
                   data-testid="announcement-title-input"
                 />
@@ -870,7 +870,7 @@ const AdminDashboard = () => {
                   onChange={(e) => setAnnouncementForm({ ...announcementForm, content: e.target.value })}
                   required
                   rows={4}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
                   placeholder="Duyuru içeriği"
                   data-testid="announcement-content-input"
                 />
@@ -881,7 +881,7 @@ const AdminDashboard = () => {
                 <select
                   value={announcementForm.type}
                   onChange={(e) => setAnnouncementForm({ ...announcementForm, type: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                   style={{colorScheme: 'dark'}}
                   data-testid="announcement-type-select"
                 >
@@ -897,7 +897,7 @@ const AdminDashboard = () => {
                   id="is_pinned"
                   checked={announcementForm.is_pinned}
                   onChange={(e) => setAnnouncementForm({ ...announcementForm, is_pinned: e.target.checked })}
-                  className="w-5 h-5 rounded bg-white/5 border-white/10"
+                  className="w-5 h-5 rounded bg-black/50 border-gray-700"
                   data-testid="announcement-pinned-checkbox"
                 />
                 <label htmlFor="is_pinned" className="text-sm font-medium flex items-center gap-2">
@@ -910,7 +910,7 @@ const AdminDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowAnnouncementModal(false)}
-                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
                 >
                   İptal
                 </button>
@@ -930,7 +930,7 @@ const AdminDashboard = () => {
       {/* Badge Modal */}
       {showBadgeModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowBadgeModal(null)}>
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-md w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="badge-modal">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-md w-full border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="badge-modal">
             <h2 className="text-2xl font-bold mb-2">Rozet Ver</h2>
             <p className="text-gray-400 mb-6">{showBadgeModal.name}</p>
             
@@ -948,7 +948,7 @@ const AdminDashboard = () => {
                         className={`p-3 rounded-xl font-medium transition-colors flex items-center gap-2 ${
                           badgeForm.badge_type === type
                             ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                            : 'bg-white/10 hover:bg-white/20'
+                            : 'bg-gray-900/50 hover:bg-white/20'
                         }`}
                       >
                         <span className="text-xl">{info.icon}</span>
@@ -965,7 +965,7 @@ const AdminDashboard = () => {
                   type="text"
                   value={badgeForm.reason}
                   onChange={(e) => setBadgeForm({ ...badgeForm, reason: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                   placeholder="Rozet verme sebebi..."
                 />
               </div>
@@ -974,7 +974,7 @@ const AdminDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowBadgeModal(null)}
-                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
                 >
                   İptal
                 </button>
