@@ -188,6 +188,31 @@
 - [x] **Arama**
   - Başlık, açıklama, marka adı ile arama
 
+## FAZ 5.1 - Premium İlan Özellikleri ✅ TAMAMLANDI (3 Ocak 2026)
+
+### Tamamlanan Özellikler:
+- [x] **Öne Çıkan İlan (is_featured)**
+  - Marka ilan oluştururken "Öne Çıkan İlan" seçeneği
+  - Sarı border ve ⚡ ikon ile görsel toggle
+  - "Vitrin" bölümünde gösterim
+  - Listelerde en üstte sıralama
+  - "ÖNE ÇIKAN" sarı rozet
+- [x] **Acil İlan (is_urgent)**
+  - Marka ilan oluştururken "Acil İlan" seçeneği
+  - Kırmızı border ve ⏰ ikon ile görsel toggle
+  - "ACİL" kırmızı rozet
+  - Dikkat çekici görünüm
+- [x] **Premium Özellikler Bölümü**
+  - 👑 Taç ikonu ile başlık
+  - "Daha Fazla Görünürlük" rozeti
+  - Açıklayıcı metinler
+- [x] **Marka Dashboard Entegrasyonu**
+  - İlanlarında premium rozetler görünüyor
+  - Form validasyonu ve API entegrasyonu
+
+### Test Dosyaları:
+- `/app/tests/test_premium_features.py` - 8 backend test
+
 ### Yeni API Endpoint'leri:
 - `GET /api/settings` - Tüm ayarları getir
 - `PUT /api/settings/profile` - Profil güncelle
