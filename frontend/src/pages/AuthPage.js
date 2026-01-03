@@ -145,6 +145,18 @@ const AuthPage = () => {
             >
               {loading ? 'Yükleniyor...' : isLogin ? 'Giriş Yap' : 'Kayıt Ol'}
             </button>
+            
+            {isLogin && (
+              <div className="mt-3 text-center">
+                <Link 
+                  to="/forgot-password" 
+                  className="text-sm text-fuchsia-400 hover:text-fuchsia-300"
+                  data-testid="forgot-password-link"
+                >
+                  Şifremi Unuttum
+                </Link>
+              </div>
+            )}
           </form>
 
           <div className="mt-6">
