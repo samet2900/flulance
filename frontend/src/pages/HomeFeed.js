@@ -285,7 +285,7 @@ const HomeFeed = () => {
                   <select
                     value={filterPlatform}
                     onChange={(e) => setFilterPlatform(e.target.value)}
-                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    className="px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     data-testid="filter-platform"
                     style={{colorScheme: 'dark'}}
                   >
@@ -307,7 +307,7 @@ const HomeFeed = () => {
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
                 </div>
               ) : filteredJobs.length === 0 ? (
-                <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+                <div className="text-center py-12 bg-black/50 rounded-2xl border border-gray-700">
                   <Briefcase className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                   <p className="text-gray-400">Kriterlere uygun ilan bulunamadı</p>
                 </div>
@@ -347,14 +347,14 @@ const HomeFeed = () => {
               </div>
               <div className="space-y-3">
                 {announcements.length === 0 ? (
-                  <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
+                  <div className="bg-black/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700 text-center">
                     <p className="text-sm text-gray-400">Henüz duyuru yok</p>
                   </div>
                 ) : (
                   announcements.map((announcement) => (
                     <div
                       key={announcement.announcement_id}
-                      className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-fuchsia-500/50 transition-colors cursor-pointer"
+                      className="bg-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-gray-800 hover:border-fuchsia-500/50 transition-colors cursor-pointer"
                       onClick={() => navigate('/announcements')}
                       data-testid={`announcement-${announcement.announcement_id}`}
                     >
@@ -388,7 +388,7 @@ const HomeFeed = () => {
                       setFilterCategory(item.category);
                       document.getElementById('jobs')?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="w-full bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20 hover:border-fuchsia-500/50 transition-colors text-left"
+                    className="w-full bg-gray-900/50 backdrop-blur-sm rounded-lg p-3 border border-gray-800 hover:border-fuchsia-500/50 transition-colors text-left"
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{item.category}</span>
@@ -433,7 +433,7 @@ const HomeFeed = () => {
       {/* Application Modal */}
       {selectedJob && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setSelectedJob(null)}>
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="application-modal">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full border border-gray-800" onClick={(e) => e.stopPropagation()} data-testid="application-modal">
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h2 className="text-2xl font-bold mb-2">İşe Başvur</h2>
@@ -442,14 +442,14 @@ const HomeFeed = () => {
               </div>
               <button
                 onClick={() => setSelectedJob(null)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-900/50 rounded-lg transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
             </div>
 
             {/* Job Details */}
-            <div className="bg-white/5 rounded-xl p-4 mb-6 border border-white/10">
+            <div className="bg-black/50 rounded-xl p-4 mb-6 border border-gray-700">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-gray-400">Bütçe:</span>
@@ -475,7 +475,7 @@ const HomeFeed = () => {
                   onChange={(e) => setApplicationMessage(e.target.value)}
                   required
                   rows={4}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
                   placeholder="Neden bu iş için uygun olduğunuzu anlatın..."
                   data-testid="application-message-input"
                 />
@@ -484,7 +484,7 @@ const HomeFeed = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedJob(null)}
-                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl font-semibold transition-colors"
                 >
                   İptal
                 </button>
@@ -511,7 +511,7 @@ const JobCard = ({ job, isFavorite, onToggleFavorite, userType, onApply, expande
 
   return (
     <div
-      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-fuchsia-500/50 transition-all ${
+      className={`bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800 hover:border-fuchsia-500/50 transition-all ${
         expanded ? '' : 'hover:scale-105'
       }`}
       data-testid={`job-card-${job.job_id}`}
@@ -558,7 +558,7 @@ const JobCard = ({ job, isFavorite, onToggleFavorite, userType, onApply, expande
               className={`p-2 rounded-lg transition-colors ${
                 isFavorite
                   ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
-                  : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                  : 'bg-gray-900/50 text-gray-400 hover:bg-white/20'
               }`}
               data-testid={`favorite-btn-${job.job_id}`}
             >
