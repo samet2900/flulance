@@ -1800,7 +1800,7 @@ def get_file_type(content_type: str) -> str:
 @api_router.post("/upload")
 async def upload_file(request: Request, file: UploadFile = File(...)):
     """Generic file upload endpoint"""
-    user = await require_auth(request)
+    await require_auth(request)
     
     # Validate file type
     content_type = file.content_type or 'application/octet-stream'
