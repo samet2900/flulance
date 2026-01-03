@@ -321,15 +321,48 @@
 
 ---
 
-## Gelecek Özellikler
+## Gelecek Özellikler (Kullanıcı İstek Listesi)
 
-### Yakın Gelecek (P1):
-- [ ] İlan İstatistikleri - view_count ve application_count gösterimi
-- [ ] İlan Arşivleme - Markaların eski ilanları arşivlemesi
-- [ ] Premium Özellikler Ödeme Sistemi (Stripe) - "Öne Çıkan" ve "Acil" için ücretlendirme
+### Etap 2 - Temel İletişim (P0):
+- [ ] E-posta Bildirimleri - Başvuru, onay, mesaj bildirimleri
+- [ ] Şifremi Unuttum - Şifre sıfırlama özelliği
+- [ ] Influencer Arama Sayfası - Markalar için filtreleme
 
-### Planlanan (P2):
-- [ ] AI destekli eşleştirme - Markalara otomatik influencer önerisi
+### Etap 3 - Admin Panel Geliştirmeleri (P1):
+- [ ] Dashboard Grafikleri - İstatistik grafikleri
+- [ ] Pop-up Bildirim Yönetimi - Girişteki pop-up içeriğini admin düzenlesin
+- [ ] Aktivite Logları - Kullanıcı aktivite takibi
+- [ ] Blog/Feed Yönetimi - Admin panelden kontrol
+- [ ] Q&A Bölümü Yönetimi - Soru-cevap ekleme/düzenleme
+- [ ] Başarı Hikayeleri - Admin panelden kontrol
+- [ ] Etkinlikler - Webinar/workshop duyuruları
+
+### Etap 4 - Gamification (P1):
+- [ ] Influencer Seviye Sistemi - Bronz → Gümüş → Altın → Elmas
+- [ ] Başarı Rozetleri - "İlk İşini Tamamladı" vb.
+- [ ] Marka/Influencer Raporları - Aylık özet raporları
+
+### Etap 5 - Gelişmiş Özellikler (P2):
+- [ ] Influencer Karşılaştırma - Yan yana karşılaştır
+- [ ] Teklif İsteme (Tersine İlan) - Marka brief paylaşır
+- [ ] Favori Influencer Listesi - Markaların favori listesi
+- [ ] Portföy/Showcase Sayfası - Influencer geçmiş işleri
+- [ ] Sosyal Medya Bağlama - Instagram/TikTok API
+- [ ] Akıllı İlan Önerileri - Kişiselleştirilmiş öneriler
+- [ ] Kategori Alarmı - "Yeni ilan çıkınca haber ver"
+- [ ] Son Görülme / Canlı Aktivite - "15 kişi bakıyor"
+- [ ] Kimlik Doğrulama - TC/Vergi no (opsiyonel)
+- [ ] Anlaşmazlık Çözümü - Admin arabuluculuğu
+- [ ] Dijital Sözleşme İmza - Yasal geçerlilik
+
+### Altyapı & SEO (P2):
+- [ ] SEO Optimizasyonu - Meta taglar, sitemap
+- [ ] Landing Page - Giriş yapmamış kullanıcılar için
+- [ ] Push Notification - Tarayıcı bildirimleri
+
+### Gelecek (P3):
+- [ ] Mobil Uygulama - React Native
+- [ ] Ödeme Sistemi (Stripe) - Premium özellikler için
 
 ---
 
