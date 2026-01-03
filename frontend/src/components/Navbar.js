@@ -334,6 +334,99 @@ const Navbar = ({ user, onLogout }) => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Drawer */}
+      {showMobileMenu && (
+        <div className="md:hidden border-t border-gray-800 bg-gray-900/95 backdrop-blur-lg">
+          <div className="px-4 py-4 space-y-2">
+            <button
+              onClick={() => {
+                navigate('/home');
+                setShowMobileMenu(false);
+              }}
+              className="w-full px-4 py-3 text-left hover:bg-fuchsia-500/20 rounded-lg transition-colors flex items-center gap-3"
+            >
+              <Home className="w-5 h-5" />
+              Ana Sayfa
+            </button>
+            
+            {user.user_type !== 'admin' && (
+              <>
+                <button
+                  onClick={() => {
+                    navigate('/home');
+                    setShowMobileMenu(false);
+                    setTimeout(() => {
+                      document.getElementById('jobs')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="w-full px-4 py-3 text-left hover:bg-fuchsia-500/20 rounded-lg transition-colors flex items-center gap-3"
+                >
+                  <Briefcase className="w-5 h-5" />
+                  İş İlanları
+                </button>
+                
+                <button
+                  onClick={() => {
+                    navigate('/announcements');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full px-4 py-3 text-left hover:bg-fuchsia-500/20 rounded-lg transition-colors flex items-center gap-3"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  Duyurular
+                </button>
+                
+                <button
+                  onClick={() => {
+                    navigate('/favorites');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full px-4 py-3 text-left hover:bg-fuchsia-500/20 rounded-lg transition-colors flex items-center gap-3"
+                >
+                  <Heart className="w-5 h-5" />
+                  Favorilerim
+                </button>
+              </>
+            )}
+            
+            <button
+              onClick={() => {
+                navigate(getDashboardLink());
+                setShowMobileMenu(false);
+              }}
+              className="w-full px-4 py-3 text-left hover:bg-fuchsia-500/20 rounded-lg transition-colors flex items-center gap-3"
+            >
+              <User className="w-5 h-5" />
+              Panelim
+            </button>
+            
+            <button
+              onClick={() => {
+                navigate('/settings');
+                setShowMobileMenu(false);
+              }}
+              className="w-full px-4 py-3 text-left hover:bg-fuchsia-500/20 rounded-lg transition-colors flex items-center gap-3"
+            >
+              <Settings className="w-5 h-5" />
+              Ayarlar
+            </button>
+            
+            <div className="border-t border-gray-700 pt-2 mt-2">
+              <button
+                onClick={() => {
+                  onLogout();
+                  setShowMobileMenu(false);
+                }}
+                className="w-full px-4 py-3 text-left hover:bg-red-500/20 rounded-lg transition-colors flex items-center gap-3 text-red-400"
+              >
+                <LogOut className="w-5 h-5" />
+                Çıkış Yap
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
