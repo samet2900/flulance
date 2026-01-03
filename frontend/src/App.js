@@ -32,6 +32,8 @@ function AppRouter() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/select-user-type" element={<UserTypeSelection />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       
       {/* Home Feed - All authenticated users */}
       <Route
