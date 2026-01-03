@@ -566,6 +566,42 @@ const AdminDashboard = () => {
             <FileText className="w-5 h-5" />
             İçerik Yönetimi
           </button>
+          <button
+            onClick={() => setActiveTab('verifications')}
+            className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'verifications'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
+                : 'bg-gray-900/50 hover:bg-white/20'
+            }`}
+            data-testid="tab-verifications"
+          >
+            <Shield className="w-5 h-5" />
+            Kimlik Doğrulama
+          </button>
+          <button
+            onClick={() => setActiveTab('disputes')}
+            className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'disputes'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
+                : 'bg-gray-900/50 hover:bg-white/20'
+            }`}
+            data-testid="tab-disputes"
+          >
+            <AlertTriangle className="w-5 h-5" />
+            Anlaşmazlıklar
+          </button>
+          <button
+            onClick={() => setActiveTab('social')}
+            className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'social'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
+                : 'bg-gray-900/50 hover:bg-white/20'
+            }`}
+            data-testid="tab-social"
+          >
+            <Instagram className="w-5 h-5" />
+            Sosyal Hesaplar
+          </button>
         </div>
 
         {/* Stats Tab */}
