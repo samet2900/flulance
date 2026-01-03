@@ -59,15 +59,22 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-lg border-b border-gray-800">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">FLULANCE</h1>
+            <div className="flex items-center gap-3">
+              <img 
+                src="https://customer-assets.emergentagent.com/job_freelance-hub-216/artifacts/er3uz3pj_WhatsApp%20Image%202026-01-03%20at%2015.54.27.jpeg" 
+                alt="FLULANCE Logo" 
+                className="h-10 w-10 object-contain"
+              />
+              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text">FLULANCE</h1>
+            </div>
             <button
               onClick={() => navigate('/auth')}
-              className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full font-semibold hover:scale-105 transition-transform"
+              className="px-6 py-2 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-full font-semibold hover:scale-105 transition-transform hover:shadow-lg hover:shadow-fuchsia-500/25"
               data-testid="nav-login-btn"
             >
               Giriş Yap
@@ -77,7 +84,7 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
+      <section className="pt-32 pb-20 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
         <div className="container mx-auto text-center">
           <div className="inline-block mb-6 px-4 py-2 bg-purple-500/20 rounded-full border border-purple-400/30">
             <span className="text-purple-300 text-sm font-medium">İşbirliği Platformu</span>
