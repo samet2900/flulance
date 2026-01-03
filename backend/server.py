@@ -1415,6 +1415,16 @@ async def get_messages(request: Request, match_id: str):
         {"_id": 0}
     ).sort("timestamp", 1).to_list(1000)
     
+    # Mark messages as read if they're not from the current user
+    await db.messages.update_many(
+        {
+            "match_id": match_id,
+            "sender_user_id": {"$ne": user.user_id},
+            "is_read": {"$ne": True}
+        },
+        {"$set": {"is_read": True, "read_at": datetime.now(timezone.utc)}}
+    )
+    
     return [Message(**m) for m in messages]
 
 @api_router.post("/matches/{match_id}/messages", response_model=Message)
