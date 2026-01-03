@@ -89,6 +89,9 @@ function AppRouter() {
         }
       />
       
+      {/* Admin Secret Login */}
+      <Route path="/osyo" element={<AdminSecretLogin />} />
+      
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
