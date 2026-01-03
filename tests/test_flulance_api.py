@@ -6,7 +6,7 @@ import pytest
 import requests
 import os
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://freelance-hub-216.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://influence-network.preview.emergentagent.com')
 
 # Test credentials
 BRAND_USER = {"email": "marka@test.com", "password": "test123"}
