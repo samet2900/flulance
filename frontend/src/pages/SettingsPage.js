@@ -305,7 +305,9 @@ const SettingsPage = () => {
                     className={`w-full px-4 py-3 flex items-center gap-3 transition-colors ${
                       activeSection === item.id
                         ? 'bg-fuchsia-500/20 text-fuchsia-400 border-l-2 border-fuchsia-500'
-                        : 'hover:bg-gray-800/50 text-gray-300'
+                        : currentTheme === 'light'
+                          ? 'hover:bg-gray-100 text-gray-700'
+                          : 'hover:bg-gray-800/50 text-gray-300'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
