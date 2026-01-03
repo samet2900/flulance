@@ -672,8 +672,19 @@ const InfluencerDashboard = () => {
             ) : (
               <div className="grid md:grid-cols-2 gap-6">
                 {matches.map((match) => (
-                  <div key={match.match_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800" data-testid={`match-${match.match_id}`}>
-                    <h3 className="text-xl font-bold mb-2">{match.job_title}</h3>
+                  <div key={match.match_id} className={`bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border ${match.status === 'completed' ? 'border-green-500/50' : 'border-gray-800'}`} data-testid={`match-${match.match_id}`}>
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className="text-xl font-bold">{match.job_title}</h3>
+                      {match.status === 'completed' ? (
+                        <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm flex items-center gap-1">
+                          ✅ Tamamlandı
+                        </span>
+                      ) : (
+                        <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm">
+                          🔄 Devam Ediyor
+                        </span>
+                      )}
+                    </div>
                     <p className="text-gray-400 mb-4">Marka: <span className="text-white font-semibold">{match.brand_name}</span></p>
                     <div className="flex gap-3">
                       <button
@@ -684,9 +695,18 @@ const InfluencerDashboard = () => {
                         <MessageCircle className="w-5 h-5" />
                         Sohbet
                       </button>
+                      {match.status === 'active' && (
+                        <button
+                          onClick={() => handleCompleteMatch(match.match_id)}
+                          className="px-4 py-3 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
+                          data-testid={`complete-match-${match.match_id}`}
+                        >
+                          ✓ İş Bitti
+                        </button>
+                      )}
                       <button
                         onClick={() => setShowReviewModal(match)}
-                        className="flex-1 px-4 py-3 bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
+                        className="px-4 py-3 bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
                         data-testid={`review-btn-${match.match_id}`}
                       >
                         <Star className="w-5 h-5" />
