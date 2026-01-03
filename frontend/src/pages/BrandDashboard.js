@@ -629,6 +629,17 @@ const BrandDashboard = () => {
                         <Trash2 className="w-4 h-4" />
                         Sil
                       </button>
+                      {/* Renew Button for Expired Jobs */}
+                      {job.status === 'expired' && (
+                        <button
+                          onClick={() => handleRenewJob(job.job_id)}
+                          className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-colors flex items-center gap-2"
+                          data-testid={`renew-job-${job.job_id}`}
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                          Yenile (15 Gün)
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
