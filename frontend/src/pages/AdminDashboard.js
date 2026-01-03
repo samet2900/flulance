@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Users, Briefcase, TrendingUp, DollarSign, LogOut, Trash2, Settings, Bell, Edit, Plus, Star, Award, Check, X, Eye, Clock, Zap, RefreshCw, AlertTriangle, FileText, BarChart3 } from 'lucide-react';
+import { Users, Briefcase, TrendingUp, DollarSign, LogOut, Trash2, Settings, Bell, Edit, Plus, Star, Award, Check, X, Eye, Clock, Zap, RefreshCw, AlertTriangle, FileText, BarChart3, Shield, MessageCircle, Instagram } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import AdminContentManager from '../components/AdminContentManager';
 
