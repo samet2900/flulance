@@ -2138,6 +2138,83 @@ async def get_user_badges(user_id: str):
         "badge_history": badges
     }
 
+# ============= FAVORITES ROUTES =============
+
+@api_router.get("/favorites", response_model=List[Favorite])
+async def get_favorites(request: Request):
+    """Get user's favorite jobs"""
+    user = await require_auth(request)
+    
+    favorites = await db.favorites.find(
+        {"user_id": user.user_id},
+        {"_id": 0}
+    ).sort("favorited_at", -1).to_list(100)
+    
+    return [Favorite(**f) for f in favorites]
+
+@api_router.post("/favorites/{job_id}")
+async def add_favorite(request: Request, job_id: str):
+    """Add a job to favorites"""
+    user = await require_auth(request)
+    
+    # Check if job exists
+    job = await db.job_posts.find_one({"job_id": job_id})
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    # Check if already favorited
+    existing = await db.favorites.find_one({
+        "user_id": user.user_id,
+        "job_id": job_id
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="Already in favorites")
+    
+    favorite_doc = {
+        "favorite_id": f"fav_{uuid.uuid4().hex[:12]}",
+        "user_id": user.user_id,
+        "job_id": job_id,
+        "title": job["title"],
+        "description": job.get("description", ""),
+        "category": job.get("category", ""),
+        "budget": job.get("budget"),
+        "is_featured": job.get("is_featured", False),
+        "is_urgent": job.get("is_urgent", False),
+        "favorited_at": datetime.now(timezone.utc)
+    }
+    
+    await db.favorites.insert_one(favorite_doc)
+    favorite_doc.pop("_id", None)
+    
+    return {"message": "Added to favorites", "favorite": favorite_doc}
+
+@api_router.delete("/favorites/{job_id}")
+async def remove_favorite(request: Request, job_id: str):
+    """Remove a job from favorites"""
+    user = await require_auth(request)
+    
+    result = await db.favorites.delete_one({
+        "user_id": user.user_id,
+        "job_id": job_id
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Favorite not found")
+    
+    return {"message": "Removed from favorites"}
+
+@api_router.get("/favorites/{job_id}/check")
+async def check_favorite(request: Request, job_id: str):
+    """Check if a job is in favorites"""
+    user = await require_auth(request)
+    
+    existing = await db.favorites.find_one({
+        "user_id": user.user_id,
+        "job_id": job_id
+    })
+    
+    return {"is_favorite": existing is not None}
+
 # ============= FAZ 3: FILE UPLOAD ROUTES =============
 
 ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
