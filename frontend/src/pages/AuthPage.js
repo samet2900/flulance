@@ -56,7 +56,7 @@ const AuthPage = () => {
           <p className="text-gray-400">{isLogin ? 'Hesabına giriş yap' : 'Yeni hesap oluştur'}</p>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
+        <div className="bg-gray-900/50 backdrop-blur-lg rounded-2xl p-8 border border-gray-800">
           {error && (
             <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm" data-testid="auth-error">
               {error}
@@ -74,7 +74,7 @@ const AuthPage = () => {
                     className={`px-4 py-3 rounded-xl font-semibold transition-colors ${
                       userType === 'marka'
                         ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                        : 'bg-white/5 hover:bg-white/10'
+                        : 'bg-black/50 hover:bg-gray-900/50'
                     }`}
                     data-testid="user-type-marka"
                   >
@@ -86,7 +86,7 @@ const AuthPage = () => {
                     className={`px-4 py-3 rounded-xl font-semibold transition-colors ${
                       userType === 'influencer'
                         ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
-                        : 'bg-white/5 hover:bg-white/10'
+                        : 'bg-black/50 hover:bg-gray-900/50'
                     }`}
                     data-testid="user-type-influencer"
                   >
@@ -104,7 +104,7 @@ const AuthPage = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
                   placeholder="Adınız"
                   data-testid="auth-name-input"
                 />
@@ -118,7 +118,7 @@ const AuthPage = () => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
+                className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
                 placeholder="ornek@email.com"
                 data-testid="auth-email-input"
               />
@@ -131,7 +131,7 @@ const AuthPage = () => {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
+                className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
                 placeholder="••••••••"
                 data-testid="auth-password-input"
               />
@@ -150,7 +150,7 @@ const AuthPage = () => {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10"></div>
+                <div className="w-full border-t border-gray-700"></div>
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-gray-900/50 text-gray-400">veya</span>
