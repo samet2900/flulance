@@ -247,13 +247,13 @@ const LandingPage = () => {
       </section>
 
       {/* İletişim */}
-      <section className="py-20 px-4 bg-black/30" data-testid="contact-section">
+      <section className="py-20 px-4 bg-gray-900/50" data-testid="contact-section">
         <div className="container mx-auto max-w-2xl">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8">Sorularınız mı var?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text">Sorularınız mı var?</h2>
           <p className="text-center text-gray-400 mb-12">Bize yazın, hızlıca dönelim.</p>
           
           {submitStatus === 'success' && (
-            <div className="mb-6 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400">
+            <div className="mb-6 p-4 bg-cyan-500/20 border border-cyan-500/50 rounded-lg text-cyan-400">
               Mesajınız alındı! Yakında dönüş yapacağız.
             </div>
           )}
@@ -272,7 +272,7 @@ const LandingPage = () => {
                 value={contact.name}
                 onChange={(e) => setContact({ ...contact, name: e.target.value })}
                 required
-                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full px-6 py-4 bg-black/50 border border-gray-800 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors text-white"
                 data-testid="contact-name-input"
               />
             </div>
@@ -283,7 +283,7 @@ const LandingPage = () => {
                 value={contact.email}
                 onChange={(e) => setContact({ ...contact, email: e.target.value })}
                 required
-                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full px-6 py-4 bg-black/50 border border-gray-800 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors text-white"
                 data-testid="contact-email-input"
               />
             </div>
@@ -291,12 +291,13 @@ const LandingPage = () => {
               <select
                 value={contact.userType}
                 onChange={(e) => setContact({ ...contact, userType: e.target.value })}
-                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full px-6 py-4 bg-black/50 border border-gray-800 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors text-white"
+                style={{colorScheme: 'dark'}}
                 data-testid="contact-usertype-select"
               >
-                <option value="">Kimsin sen?</option>
-                <option value="marka">Marka</option>
-                <option value="influencer">Influencer</option>
+                <option value="" className="bg-gray-900">Kimsin sen?</option>
+                <option value="marka" className="bg-gray-900">Marka</option>
+                <option value="influencer" className="bg-gray-900">Influencer</option>
               </select>
             </div>
             <div>
@@ -306,13 +307,13 @@ const LandingPage = () => {
                 onChange={(e) => setContact({ ...contact, message: e.target.value })}
                 required
                 rows={4}
-                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 transition-colors resize-none"
+                className="w-full px-6 py-4 bg-black/50 border border-gray-800 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors resize-none text-white"
                 data-testid="contact-message-input"
               />
             </div>
             <button
               type="submit"
-              className="w-full px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-lg font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2"
+              className="w-full px-8 py-4 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl text-lg font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-fuchsia-500/25"
               data-testid="contact-submit-btn"
             >
               <Send className="w-5 h-5" />
