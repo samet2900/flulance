@@ -705,6 +705,143 @@ const AdminDashboard = () => {
             )}
           </div>
         )}
+
+        {/* Badges Tab */}
+        {activeTab === 'badges' && (
+          <div>
+            <h2 className="text-3xl font-bold mb-6">Rozet Yönetimi</h2>
+            
+            {/* Badge Stats */}
+            <div className="grid md:grid-cols-4 gap-4 mb-8">
+              {['verified', 'top', 'rising', 'new'].map((badgeType) => {
+                const info = getBadgeInfo(badgeType);
+                const count = users.filter(u => u.badge === badgeType).length;
+                return (
+                  <div key={badgeType} className={`bg-${info.color}-500/20 backdrop-blur-sm rounded-xl p-4 border border-${info.color}-500/30`}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">{info.icon}</span>
+                      <span className="font-semibold">{info.name}</span>
+                    </div>
+                    <p className="text-3xl font-bold">{count}</p>
+                    <p className="text-sm text-gray-400">kullanıcı</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Recent Badges */}
+            <div className="mb-8">
+              <h3 className="text-xl font-bold mb-4">Son Verilen Rozetler</h3>
+              {badges.length === 0 ? (
+                <p className="text-gray-400">Henüz rozet verilmemiş</p>
+              ) : (
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
+                  <table className="w-full">
+                    <thead className="bg-white/5">
+                      <tr>
+                        <th className="px-4 py-3 text-left">Kullanıcı</th>
+                        <th className="px-4 py-3 text-left">Rozet</th>
+                        <th className="px-4 py-3 text-left">Tarih</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {badges.slice(0, 10).map((badge) => {
+                        const info = getBadgeInfo(badge.badge_type);
+                        return (
+                          <tr key={badge.badge_id} className="border-t border-white/10">
+                            <td className="px-4 py-3">{badge.user_name}</td>
+                            <td className="px-4 py-3">
+                              <span className="flex items-center gap-2">
+                                {info.icon} {info.name}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-gray-400">
+                              {new Date(badge.awarded_at).toLocaleDateString('tr-TR')}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* User List for Badge Assignment */}
+            <h3 className="text-xl font-bold mb-4">Kullanıcılara Rozet Ver</h3>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
+              </div>
+            ) : (
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
+                <table className="w-full">
+                  <thead className="bg-white/5">
+                    <tr>
+                      <th className="px-4 py-3 text-left">Kullanıcı</th>
+                      <th className="px-4 py-3 text-left">Tip</th>
+                      <th className="px-4 py-3 text-left">Mevcut Rozet</th>
+                      <th className="px-4 py-3 text-right">İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.filter(u => u.user_type !== 'admin').map((userItem) => {
+                      const badgeInfo = userItem.badge ? getBadgeInfo(userItem.badge) : null;
+                      return (
+                        <tr key={userItem.user_id} className="border-t border-white/10 hover:bg-white/5">
+                          <td className="px-4 py-3">
+                            <div>
+                              <p className="font-semibold">{userItem.name}</p>
+                              <p className="text-sm text-gray-400">{userItem.email}</p>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className={`px-3 py-1 rounded-full text-sm ${
+                              userItem.user_type === 'marka' ? 'bg-blue-500/30' : 'bg-pink-500/30'
+                            }`}>
+                              {userItem.user_type === 'marka' ? 'Marka' : 'Influencer'}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3">
+                            {badgeInfo ? (
+                              <span className="flex items-center gap-2">
+                                {badgeInfo.icon} {badgeInfo.name}
+                              </span>
+                            ) : (
+                              <span className="text-gray-400">-</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <div className="flex gap-2 justify-end">
+                              <button
+                                onClick={() => setShowBadgeModal(userItem)}
+                                className="px-3 py-1 bg-purple-500/30 hover:bg-purple-500/50 rounded-lg text-sm font-medium transition-colors flex items-center gap-1"
+                                data-testid={`award-badge-${userItem.user_id}`}
+                              >
+                                <Award className="w-4 h-4" />
+                                Rozet Ver
+                              </button>
+                              {userItem.badge && (
+                                <button
+                                  onClick={() => handleRemoveBadge(userItem.user_id)}
+                                  className="px-3 py-1 bg-red-500/30 hover:bg-red-500/50 rounded-lg text-sm font-medium transition-colors flex items-center gap-1"
+                                  data-testid={`remove-badge-${userItem.user_id}`}
+                                >
+                                  <X className="w-4 h-4" />
+                                  Kaldır
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Announcement Modal */}
@@ -786,6 +923,70 @@ const AdminDashboard = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Badge Modal */}
+      {showBadgeModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowBadgeModal(null)}>
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-md w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="badge-modal">
+            <h2 className="text-2xl font-bold mb-2">Rozet Ver</h2>
+            <p className="text-gray-400 mb-6">{showBadgeModal.name}</p>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Rozet Tipi</label>
+                <div className="grid grid-cols-2 gap-3">
+                  {['verified', 'top', 'rising', 'new'].map((type) => {
+                    const info = getBadgeInfo(type);
+                    return (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => setBadgeForm({ ...badgeForm, badge_type: type })}
+                        className={`p-3 rounded-xl font-medium transition-colors flex items-center gap-2 ${
+                          badgeForm.badge_type === type
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                            : 'bg-white/10 hover:bg-white/20'
+                        }`}
+                      >
+                        <span className="text-xl">{info.icon}</span>
+                        {info.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Sebep (opsiyonel)</label>
+                <input
+                  type="text"
+                  value={badgeForm.reason}
+                  onChange={(e) => setBadgeForm({ ...badgeForm, reason: e.target.value })}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                  placeholder="Rozet verme sebebi..."
+                />
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowBadgeModal(null)}
+                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                >
+                  İptal
+                </button>
+                <button
+                  onClick={() => handleAwardBadge(showBadgeModal.user_id)}
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  data-testid="confirm-badge-btn"
+                >
+                  Rozet Ver
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
