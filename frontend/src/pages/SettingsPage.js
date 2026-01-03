@@ -661,8 +661,8 @@ const SettingsPage = () => {
                       >
                         <Sun className="w-6 h-6" />
                         <div className="text-left">
-                          <p className="font-medium">Açık Mod</p>
-                          <p className="text-xs text-gray-400">Aydınlık tema</p>
+                          <p className="font-medium">{t('appearance.lightMode')}</p>
+                          <p className="text-xs text-gray-400">{t('appearance.lightDesc')}</p>
                         </div>
                         {currentTheme === 'light' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
                       </button>
@@ -670,14 +670,14 @@ const SettingsPage = () => {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Dil</h3>
+                    <h3 className="text-lg font-semibold mb-4">{t('appearance.language')}</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <button
                         onClick={() => handleLanguageChange('tr')}
                         disabled={saving}
                         data-testid="lang-tr-btn"
                         className={`p-4 rounded-xl border-2 ${
-                          settings?.language === 'tr' 
+                          currentLanguage === 'tr' 
                             ? 'border-fuchsia-500 bg-fuchsia-500/20' 
                             : 'border-gray-700 hover:border-gray-600'
                         } flex items-center gap-3 disabled:opacity-50 transition-all`}
@@ -686,14 +686,14 @@ const SettingsPage = () => {
                         <div className="text-left">
                           <p className="font-medium">Türkçe</p>
                         </div>
-                        {settings?.language === 'tr' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
+                        {currentLanguage === 'tr' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
                       </button>
                       <button
                         onClick={() => handleLanguageChange('en')}
                         disabled={saving}
                         data-testid="lang-en-btn"
                         className={`p-4 rounded-xl border-2 ${
-                          settings?.language === 'en' 
+                          currentLanguage === 'en' 
                             ? 'border-fuchsia-500 bg-fuchsia-500/20' 
                             : 'border-gray-700 hover:border-gray-600'
                         } flex items-center gap-3 disabled:opacity-50 transition-all`}
@@ -702,7 +702,7 @@ const SettingsPage = () => {
                         <div className="text-left">
                           <p className="font-medium">English</p>
                         </div>
-                        {settings?.language === 'en' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
+                        {currentLanguage === 'en' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
                       </button>
                     </div>
                   </div>
