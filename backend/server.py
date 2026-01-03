@@ -498,6 +498,131 @@ class PasswordResetConfirm(BaseModel):
     token: str
     new_password: str
 
+# ============= ETAP 5 MODELS =============
+
+class BriefCreate(BaseModel):
+    """Tersine ilan (brief) oluşturma modeli"""
+    title: str
+    description: str
+    category: str
+    budget_min: float
+    budget_max: float
+    platforms: List[str]
+    deadline: Optional[str] = None
+    requirements: Optional[str] = None
+
+class Brief(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    brief_id: str
+    brand_user_id: str
+    brand_name: str
+    title: str
+    description: str
+    category: str
+    budget_min: float
+    budget_max: float
+    platforms: List[str]
+    deadline: Optional[str] = None
+    requirements: Optional[str] = None
+    status: str = "open"  # open, closed, completed
+    proposal_count: int = 0
+    created_at: datetime
+
+class ProposalCreate(BaseModel):
+    """Influencer teklif modeli"""
+    brief_id: str
+    proposed_price: float
+    message: str
+    delivery_time: str  # "3 gün", "1 hafta" etc
+
+class Proposal(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    proposal_id: str
+    brief_id: str
+    influencer_user_id: str
+    influencer_name: str
+    proposed_price: float
+    message: str
+    delivery_time: str
+    status: str = "pending"  # pending, accepted, rejected
+    created_at: datetime
+
+class PortfolioItem(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    item_id: str
+    user_id: str
+    title: str
+    description: Optional[str] = None
+    category: str
+    image_url: Optional[str] = None
+    video_url: Optional[str] = None
+    link: Optional[str] = None
+    brand_name: Optional[str] = None
+    completion_date: Optional[str] = None
+    metrics: Optional[dict] = None  # views, likes, engagement etc
+    created_at: datetime
+
+class SocialMediaAccount(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    platform: str  # instagram, tiktok, youtube, twitter
+    username: str
+    followers: int = 0
+    profile_url: Optional[str] = None
+    verified: bool = False
+
+class CategoryAlert(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    alert_id: str
+    user_id: str
+    category: str
+    platforms: List[str] = []
+    budget_min: Optional[float] = None
+    budget_max: Optional[float] = None
+    email_notification: bool = True
+    push_notification: bool = False
+    created_at: datetime
+
+class IdentityVerification(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    verification_id: str
+    user_id: str
+    verification_type: str  # tc_kimlik, vergi_no
+    document_number: str  # Hashed/encrypted
+    full_name: str
+    status: str = "pending"  # pending, approved, rejected
+    submitted_at: datetime
+    reviewed_at: Optional[datetime] = None
+    reviewed_by: Optional[str] = None
+
+class Dispute(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    dispute_id: str
+    match_id: str
+    reporter_user_id: str
+    reporter_name: str
+    reported_user_id: str
+    reported_name: str
+    reason: str
+    description: str
+    evidence_urls: List[str] = []
+    status: str = "open"  # open, under_review, resolved, closed
+    admin_notes: Optional[str] = None
+    resolution: Optional[str] = None
+    created_at: datetime
+    resolved_at: Optional[datetime] = None
+
+class ContractSignature(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    signature_id: str
+    contract_id: str
+    user_id: str
+    user_name: str
+    user_type: str
+    signed_at: datetime
+    ip_address: str
+    user_agent: str
+    accepted_terms: bool = True
+
 # ============= HELPER FUNCTIONS =============
 
 def hash_password(password: str) -> str:
