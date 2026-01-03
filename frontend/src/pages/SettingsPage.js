@@ -215,12 +215,16 @@ const SettingsPage = () => {
       // Update local settings
       setSettings({ ...settings, language: newLanguage });
       
+      // Change i18n language
+      i18n.changeLanguage(newLanguage);
+      setCurrentLanguage(newLanguage);
+      
       // Save to localStorage
       localStorage.setItem('language', newLanguage);
       
-      alert(newLanguage === 'tr' ? 'Dil Türkçe olarak ayarlandı!' : 'Language set to English!');
+      alert(t('appearance.languageUpdated'));
     } catch (error) {
-      alert(error.response?.data?.detail || 'Hata oluştu');
+      alert(error.response?.data?.detail || t('settings.error'));
     } finally {
       setSaving(false);
     }
