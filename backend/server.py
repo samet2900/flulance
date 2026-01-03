@@ -2764,6 +2764,783 @@ async def get_featured_content(content_type: str, limit: int = 5):
     
     return content
 
+# ============= ETAP 5: BRIEF (TERSİNE İLAN) ROUTES =============
+
+@api_router.post("/briefs", response_model=Brief)
+async def create_brief(request: Request, brief_data: BriefCreate):
+    """Create a new brief (reverse job posting) - Brand only"""
+    user = await require_role(request, ["marka"])
+    
+    brief_doc = {
+        "brief_id": f"brief_{uuid.uuid4().hex[:12]}",
+        "brand_user_id": user.user_id,
+        "brand_name": user.name,
+        "title": brief_data.title,
+        "description": brief_data.description,
+        "category": brief_data.category,
+        "budget_min": brief_data.budget_min,
+        "budget_max": brief_data.budget_max,
+        "platforms": brief_data.platforms,
+        "deadline": brief_data.deadline,
+        "requirements": brief_data.requirements,
+        "status": "open",
+        "proposal_count": 0,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.briefs.insert_one(brief_doc)
+    brief_doc.pop("_id", None)
+    
+    # Send notification to matching influencers with category alerts
+    alerts = await db.category_alerts.find({
+        "category": brief_data.category,
+        "$or": [
+            {"budget_min": {"$lte": brief_data.budget_max}},
+            {"budget_min": None}
+        ]
+    }).to_list(100)
+    
+    for alert in alerts:
+        await create_notification(
+            user_id=alert["user_id"],
+            type="brief",
+            title="Yeni Brief! 📋",
+            message=f"'{brief_data.title}' - İlginizi çekebilecek yeni bir brief yayınlandı.",
+            link="/briefs"
+        )
+    
+    return Brief(**brief_doc)
+
+@api_router.get("/briefs")
+async def get_briefs(
+    request: Request,
+    status: str = "open",
+    category: Optional[str] = None
+):
+    """Get all open briefs - for influencers"""
+    user = await require_auth(request)
+    
+    query = {"status": status}
+    if category:
+        query["category"] = category
+    
+    briefs = await db.briefs.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return briefs
+
+@api_router.get("/briefs/my-briefs")
+async def get_my_briefs(request: Request):
+    """Get brand's own briefs"""
+    user = await require_role(request, ["marka"])
+    
+    briefs = await db.briefs.find(
+        {"brand_user_id": user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    
+    return briefs
+
+@api_router.get("/briefs/{brief_id}")
+async def get_brief(request: Request, brief_id: str):
+    """Get a specific brief with proposals"""
+    user = await require_auth(request)
+    
+    brief = await db.briefs.find_one({"brief_id": brief_id}, {"_id": 0})
+    if not brief:
+        raise HTTPException(status_code=404, detail="Brief not found")
+    
+    # Get proposals if brand is viewing their own brief
+    proposals = []
+    if user.user_type == "marka" and brief["brand_user_id"] == user.user_id:
+        proposals = await db.proposals.find(
+            {"brief_id": brief_id},
+            {"_id": 0}
+        ).sort("created_at", -1).to_list(100)
+    
+    return {"brief": brief, "proposals": proposals}
+
+@api_router.post("/briefs/{brief_id}/proposals")
+async def create_proposal(request: Request, brief_id: str, proposal_data: ProposalCreate):
+    """Submit a proposal for a brief - Influencer only"""
+    user = await require_role(request, ["influencer"])
+    
+    # Check brief exists and is open
+    brief = await db.briefs.find_one({"brief_id": brief_id})
+    if not brief:
+        raise HTTPException(status_code=404, detail="Brief not found")
+    if brief["status"] != "open":
+        raise HTTPException(status_code=400, detail="Brief is not accepting proposals")
+    
+    # Check if already submitted
+    existing = await db.proposals.find_one({
+        "brief_id": brief_id,
+        "influencer_user_id": user.user_id
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="You already submitted a proposal")
+    
+    proposal_doc = {
+        "proposal_id": f"prop_{uuid.uuid4().hex[:12]}",
+        "brief_id": brief_id,
+        "influencer_user_id": user.user_id,
+        "influencer_name": user.name,
+        "proposed_price": proposal_data.proposed_price,
+        "message": proposal_data.message,
+        "delivery_time": proposal_data.delivery_time,
+        "status": "pending",
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.proposals.insert_one(proposal_doc)
+    
+    # Update proposal count
+    await db.briefs.update_one(
+        {"brief_id": brief_id},
+        {"$inc": {"proposal_count": 1}}
+    )
+    
+    # Notify brand
+    await create_notification(
+        user_id=brief["brand_user_id"],
+        type="proposal",
+        title="Yeni Teklif! 💰",
+        message=f"{user.name} brief'inize teklif gönderdi: {proposal_data.proposed_price}₺",
+        link=f"/briefs/{brief_id}"
+    )
+    
+    proposal_doc.pop("_id", None)
+    return proposal_doc
+
+@api_router.put("/briefs/{brief_id}/proposals/{proposal_id}/accept")
+async def accept_proposal(request: Request, brief_id: str, proposal_id: str):
+    """Accept a proposal and create a match"""
+    user = await require_role(request, ["marka"])
+    
+    # Verify ownership
+    brief = await db.briefs.find_one({"brief_id": brief_id})
+    if not brief or brief["brand_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your brief")
+    
+    proposal = await db.proposals.find_one({"proposal_id": proposal_id})
+    if not proposal:
+        raise HTTPException(status_code=404, detail="Proposal not found")
+    
+    # Update proposal status
+    await db.proposals.update_one(
+        {"proposal_id": proposal_id},
+        {"$set": {"status": "accepted"}}
+    )
+    
+    # Reject other proposals
+    await db.proposals.update_many(
+        {"brief_id": brief_id, "proposal_id": {"$ne": proposal_id}},
+        {"$set": {"status": "rejected"}}
+    )
+    
+    # Close the brief
+    await db.briefs.update_one(
+        {"brief_id": brief_id},
+        {"$set": {"status": "closed"}}
+    )
+    
+    # Create a match
+    match_doc = {
+        "match_id": f"match_{uuid.uuid4().hex[:12]}",
+        "job_id": brief_id,  # Using brief_id as job reference
+        "job_title": brief["title"],
+        "brand_user_id": user.user_id,
+        "brand_name": user.name,
+        "influencer_user_id": proposal["influencer_user_id"],
+        "influencer_name": proposal["influencer_name"],
+        "agreed_price": proposal["proposed_price"],
+        "status": "active",
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.matches.insert_one(match_doc)
+    
+    # Notify influencer
+    await create_notification(
+        user_id=proposal["influencer_user_id"],
+        type="match",
+        title="Teklifiniz Kabul Edildi! 🎉",
+        message=f"{user.name} teklifinizi kabul etti: {brief['title']}",
+        link="/influencer#matches"
+    )
+    
+    return {"message": "Proposal accepted, match created"}
+
+# ============= ETAP 5: PORTFOLIO ROUTES =============
+
+@api_router.get("/portfolio/{user_id}")
+async def get_portfolio(user_id: str):
+    """Get user's portfolio - public"""
+    items = await db.portfolio_items.find(
+        {"user_id": user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    # Get user info
+    user = await db.users.find_one({"user_id": user_id}, {"_id": 0, "password_hash": 0})
+    profile = await db.influencer_profiles.find_one({"user_id": user_id}, {"_id": 0})
+    stats = await db.influencer_stats.find_one({"user_id": user_id}, {"_id": 0})
+    
+    return {
+        "user": user,
+        "profile": profile,
+        "stats": stats,
+        "portfolio": items
+    }
+
+@api_router.post("/portfolio")
+async def add_portfolio_item(request: Request, item: dict):
+    """Add a portfolio item"""
+    user = await require_role(request, ["influencer"])
+    
+    item_doc = {
+        "item_id": f"port_{uuid.uuid4().hex[:12]}",
+        "user_id": user.user_id,
+        "title": item.get("title", ""),
+        "description": item.get("description", ""),
+        "category": item.get("category", ""),
+        "image_url": item.get("image_url", ""),
+        "video_url": item.get("video_url", ""),
+        "link": item.get("link", ""),
+        "brand_name": item.get("brand_name", ""),
+        "completion_date": item.get("completion_date", ""),
+        "metrics": item.get("metrics", {}),
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.portfolio_items.insert_one(item_doc)
+    item_doc.pop("_id", None)
+    
+    return item_doc
+
+@api_router.put("/portfolio/{item_id}")
+async def update_portfolio_item(request: Request, item_id: str, item: dict):
+    """Update a portfolio item"""
+    user = await require_role(request, ["influencer"])
+    
+    existing = await db.portfolio_items.find_one({"item_id": item_id})
+    if not existing or existing["user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your portfolio item")
+    
+    item.pop("item_id", None)
+    item.pop("user_id", None)
+    item.pop("_id", None)
+    
+    await db.portfolio_items.update_one(
+        {"item_id": item_id},
+        {"$set": item}
+    )
+    
+    return {"message": "Portfolio item updated"}
+
+@api_router.delete("/portfolio/{item_id}")
+async def delete_portfolio_item(request: Request, item_id: str):
+    """Delete a portfolio item"""
+    user = await require_role(request, ["influencer"])
+    
+    result = await db.portfolio_items.delete_one({
+        "item_id": item_id,
+        "user_id": user.user_id
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Item not found or not yours")
+    
+    return {"message": "Portfolio item deleted"}
+
+# ============= ETAP 5: SOCIAL MEDIA ACCOUNTS =============
+
+@api_router.get("/social-accounts")
+async def get_social_accounts(request: Request):
+    """Get user's linked social media accounts"""
+    user = await require_auth(request)
+    
+    accounts = await db.social_accounts.find(
+        {"user_id": user.user_id},
+        {"_id": 0}
+    ).to_list(10)
+    
+    return accounts
+
+@api_router.post("/social-accounts")
+async def add_social_account(request: Request, account: dict):
+    """Add or update a social media account"""
+    user = await require_auth(request)
+    
+    platform = account.get("platform", "").lower()
+    if platform not in ["instagram", "tiktok", "youtube", "twitter", "linkedin", "facebook"]:
+        raise HTTPException(status_code=400, detail="Invalid platform")
+    
+    account_doc = {
+        "user_id": user.user_id,
+        "platform": platform,
+        "username": account.get("username", ""),
+        "followers": int(account.get("followers", 0)),
+        "profile_url": account.get("profile_url", ""),
+        "verified": False,
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    # Upsert
+    await db.social_accounts.update_one(
+        {"user_id": user.user_id, "platform": platform},
+        {"$set": account_doc},
+        upsert=True
+    )
+    
+    # Update influencer stats if influencer
+    if user.user_type == "influencer":
+        stats_update = {}
+        if platform == "instagram":
+            stats_update["instagram_followers"] = account_doc["followers"]
+        elif platform == "youtube":
+            stats_update["youtube_subscribers"] = account_doc["followers"]
+        elif platform == "tiktok":
+            stats_update["tiktok_followers"] = account_doc["followers"]
+        elif platform == "twitter":
+            stats_update["twitter_followers"] = account_doc["followers"]
+        
+        if stats_update:
+            await db.influencer_stats.update_one(
+                {"user_id": user.user_id},
+                {"$set": stats_update},
+                upsert=True
+            )
+    
+    return {"message": "Social account updated"}
+
+@api_router.delete("/social-accounts/{platform}")
+async def remove_social_account(request: Request, platform: str):
+    """Remove a social media account"""
+    user = await require_auth(request)
+    
+    result = await db.social_accounts.delete_one({
+        "user_id": user.user_id,
+        "platform": platform.lower()
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Account not found")
+    
+    return {"message": "Social account removed"}
+
+# ============= ETAP 5: CATEGORY ALERTS =============
+
+@api_router.get("/category-alerts")
+async def get_category_alerts(request: Request):
+    """Get user's category alerts"""
+    user = await require_auth(request)
+    
+    alerts = await db.category_alerts.find(
+        {"user_id": user.user_id},
+        {"_id": 0}
+    ).to_list(20)
+    
+    return alerts
+
+@api_router.post("/category-alerts")
+async def create_category_alert(request: Request, alert: dict):
+    """Create a category alert"""
+    user = await require_auth(request)
+    
+    # Check limit
+    count = await db.category_alerts.count_documents({"user_id": user.user_id})
+    if count >= 10:
+        raise HTTPException(status_code=400, detail="Maximum 10 alerts allowed")
+    
+    alert_doc = {
+        "alert_id": f"alert_{uuid.uuid4().hex[:12]}",
+        "user_id": user.user_id,
+        "category": alert.get("category", ""),
+        "platforms": alert.get("platforms", []),
+        "budget_min": alert.get("budget_min"),
+        "budget_max": alert.get("budget_max"),
+        "email_notification": alert.get("email_notification", True),
+        "push_notification": alert.get("push_notification", False),
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.category_alerts.insert_one(alert_doc)
+    alert_doc.pop("_id", None)
+    
+    return alert_doc
+
+@api_router.delete("/category-alerts/{alert_id}")
+async def delete_category_alert(request: Request, alert_id: str):
+    """Delete a category alert"""
+    user = await require_auth(request)
+    
+    result = await db.category_alerts.delete_one({
+        "alert_id": alert_id,
+        "user_id": user.user_id
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Alert not found")
+    
+    return {"message": "Alert deleted"}
+
+# ============= ETAP 5: IDENTITY VERIFICATION =============
+
+@api_router.post("/identity-verification")
+async def submit_identity_verification(request: Request, data: dict):
+    """Submit identity verification (TC/Vergi No)"""
+    user = await require_auth(request)
+    
+    verification_type = data.get("verification_type", "tc_kimlik")
+    if verification_type not in ["tc_kimlik", "vergi_no"]:
+        raise HTTPException(status_code=400, detail="Invalid verification type")
+    
+    # Check if already pending or approved
+    existing = await db.identity_verifications.find_one({
+        "user_id": user.user_id,
+        "status": {"$in": ["pending", "approved"]}
+    })
+    if existing:
+        if existing["status"] == "approved":
+            raise HTTPException(status_code=400, detail="Already verified")
+        raise HTTPException(status_code=400, detail="Verification already pending")
+    
+    # Hash the document number for privacy
+    import hashlib
+    doc_number = data.get("document_number", "")
+    hashed_doc = hashlib.sha256(doc_number.encode()).hexdigest()
+    
+    verification_doc = {
+        "verification_id": f"verify_{uuid.uuid4().hex[:12]}",
+        "user_id": user.user_id,
+        "verification_type": verification_type,
+        "document_number": hashed_doc,
+        "full_name": data.get("full_name", ""),
+        "consent_given": data.get("consent_given", False),  # User acknowledges voluntary submission
+        "status": "pending",
+        "submitted_at": datetime.now(timezone.utc),
+        "reviewed_at": None,
+        "reviewed_by": None
+    }
+    
+    if not verification_doc["consent_given"]:
+        raise HTTPException(status_code=400, detail="Consent required for verification")
+    
+    await db.identity_verifications.insert_one(verification_doc)
+    
+    # Update user badge to show pending verification
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"verification_status": "pending"}}
+    )
+    
+    return {"message": "Verification submitted, pending review"}
+
+@api_router.get("/identity-verification/status")
+async def get_verification_status(request: Request):
+    """Get user's verification status"""
+    user = await require_auth(request)
+    
+    verification = await db.identity_verifications.find_one(
+        {"user_id": user.user_id},
+        {"_id": 0, "document_number": 0}  # Don't return hashed document
+    )
+    
+    if not verification:
+        return {"status": "not_submitted"}
+    
+    return verification
+
+@api_router.get("/admin/identity-verifications")
+async def admin_get_verifications(request: Request, status: str = "pending"):
+    """Admin: Get all pending verifications"""
+    await require_role(request, ["admin"])
+    
+    verifications = await db.identity_verifications.find(
+        {"status": status},
+        {"_id": 0, "document_number": 0}
+    ).sort("submitted_at", -1).to_list(100)
+    
+    # Get user info for each
+    for v in verifications:
+        user = await db.users.find_one({"user_id": v["user_id"]}, {"_id": 0, "password_hash": 0})
+        v["user"] = user
+    
+    return verifications
+
+@api_router.put("/admin/identity-verifications/{verification_id}")
+async def admin_review_verification(request: Request, verification_id: str, data: dict):
+    """Admin: Approve or reject verification"""
+    admin = await require_role(request, ["admin"])
+    
+    status = data.get("status")
+    if status not in ["approved", "rejected"]:
+        raise HTTPException(status_code=400, detail="Invalid status")
+    
+    verification = await db.identity_verifications.find_one({"verification_id": verification_id})
+    if not verification:
+        raise HTTPException(status_code=404, detail="Verification not found")
+    
+    await db.identity_verifications.update_one(
+        {"verification_id": verification_id},
+        {"$set": {
+            "status": status,
+            "reviewed_at": datetime.now(timezone.utc),
+            "reviewed_by": admin.user_id,
+            "admin_notes": data.get("notes", "")
+        }}
+    )
+    
+    # Update user badge
+    if status == "approved":
+        await db.users.update_one(
+            {"user_id": verification["user_id"]},
+            {"$set": {
+                "badge": "verified",
+                "verification_status": "approved"
+            }}
+        )
+        
+        await create_notification(
+            user_id=verification["user_id"],
+            type="verification",
+            title="Kimlik Doğrulandı! ✓",
+            message="Kimlik doğrulamanız onaylandı. Artık 'Doğrulanmış' rozetine sahipsiniz.",
+            link="/settings"
+        )
+    else:
+        await db.users.update_one(
+            {"user_id": verification["user_id"]},
+            {"$set": {"verification_status": "rejected"}}
+        )
+        
+        await create_notification(
+            user_id=verification["user_id"],
+            type="verification",
+            title="Doğrulama Reddedildi",
+            message=f"Kimlik doğrulamanız reddedildi. Sebep: {data.get('notes', 'Belirtilmedi')}",
+            link="/settings"
+        )
+    
+    return {"message": f"Verification {status}"}
+
+# ============= ETAP 5: DISPUTE RESOLUTION =============
+
+@api_router.post("/disputes")
+async def create_dispute(request: Request, data: dict):
+    """Create a dispute for a match"""
+    user = await require_auth(request)
+    
+    match_id = data.get("match_id")
+    match = await db.matches.find_one({"match_id": match_id})
+    if not match:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+    # Verify user is part of this match
+    if match["brand_user_id"] != user.user_id and match["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your match")
+    
+    # Check for existing open dispute
+    existing = await db.disputes.find_one({
+        "match_id": match_id,
+        "status": {"$in": ["open", "under_review"]}
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="An open dispute already exists for this match")
+    
+    # Determine reported user
+    reported_user_id = match["influencer_user_id"] if user.user_id == match["brand_user_id"] else match["brand_user_id"]
+    reported_name = match["influencer_name"] if user.user_id == match["brand_user_id"] else match["brand_name"]
+    
+    dispute_doc = {
+        "dispute_id": f"dispute_{uuid.uuid4().hex[:12]}",
+        "match_id": match_id,
+        "reporter_user_id": user.user_id,
+        "reporter_name": user.name,
+        "reported_user_id": reported_user_id,
+        "reported_name": reported_name,
+        "reason": data.get("reason", ""),
+        "description": data.get("description", ""),
+        "evidence_urls": data.get("evidence_urls", []),
+        "status": "open",
+        "admin_notes": None,
+        "resolution": None,
+        "created_at": datetime.now(timezone.utc),
+        "resolved_at": None
+    }
+    
+    await db.disputes.insert_one(dispute_doc)
+    
+    # Notify admin
+    admins = await db.users.find({"user_type": "admin"}).to_list(10)
+    for admin in admins:
+        await create_notification(
+            user_id=admin["user_id"],
+            type="dispute",
+            title="Yeni Anlaşmazlık! ⚠️",
+            message=f"{user.name} bir anlaşmazlık bildirdi: {data.get('reason', '')}",
+            link="/admin#disputes"
+        )
+    
+    dispute_doc.pop("_id", None)
+    return dispute_doc
+
+@api_router.get("/disputes/my-disputes")
+async def get_my_disputes(request: Request):
+    """Get user's disputes"""
+    user = await require_auth(request)
+    
+    disputes = await db.disputes.find(
+        {"$or": [
+            {"reporter_user_id": user.user_id},
+            {"reported_user_id": user.user_id}
+        ]},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    return disputes
+
+@api_router.get("/admin/disputes")
+async def admin_get_disputes(request: Request, status: str = "open"):
+    """Admin: Get all disputes"""
+    await require_role(request, ["admin"])
+    
+    query = {} if status == "all" else {"status": status}
+    
+    disputes = await db.disputes.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
+    
+    return disputes
+
+@api_router.put("/admin/disputes/{dispute_id}")
+async def admin_resolve_dispute(request: Request, dispute_id: str, data: dict):
+    """Admin: Update dispute status and resolution"""
+    admin = await require_role(request, ["admin"])
+    
+    dispute = await db.disputes.find_one({"dispute_id": dispute_id})
+    if not dispute:
+        raise HTTPException(status_code=404, detail="Dispute not found")
+    
+    update = {
+        "status": data.get("status", dispute["status"]),
+        "admin_notes": data.get("admin_notes", dispute.get("admin_notes")),
+        "resolution": data.get("resolution", dispute.get("resolution"))
+    }
+    
+    if data.get("status") == "resolved":
+        update["resolved_at"] = datetime.now(timezone.utc)
+    
+    await db.disputes.update_one(
+        {"dispute_id": dispute_id},
+        {"$set": update}
+    )
+    
+    # Notify both parties
+    for user_id in [dispute["reporter_user_id"], dispute["reported_user_id"]]:
+        await create_notification(
+            user_id=user_id,
+            type="dispute",
+            title="Anlaşmazlık Güncellendi",
+            message=f"Anlaşmazlık durumu: {data.get('status', dispute['status'])}",
+            link="/settings"
+        )
+    
+    return {"message": "Dispute updated"}
+
+# ============= ETAP 5: CONTRACT SIGNATURES =============
+
+@api_router.post("/contracts/{contract_id}/sign")
+async def sign_contract(request: Request, contract_id: str):
+    """Sign a contract"""
+    user = await require_auth(request)
+    
+    # Get contract
+    contract = await db.contracts.find_one({"contract_id": contract_id})
+    if not contract:
+        raise HTTPException(status_code=404, detail="Contract not found")
+    
+    # Verify user is part of this contract
+    if contract["brand_user_id"] != user.user_id and contract["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your contract")
+    
+    # Check if already signed
+    existing = await db.contract_signatures.find_one({
+        "contract_id": contract_id,
+        "user_id": user.user_id
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="Already signed")
+    
+    # Get IP and user agent
+    forwarded_for = request.headers.get("x-forwarded-for", "")
+    ip_address = forwarded_for.split(",")[0].strip() if forwarded_for else request.client.host
+    user_agent = request.headers.get("user-agent", "Unknown")
+    
+    signature_doc = {
+        "signature_id": f"sig_{uuid.uuid4().hex[:12]}",
+        "contract_id": contract_id,
+        "user_id": user.user_id,
+        "user_name": user.name,
+        "user_type": user.user_type,
+        "signed_at": datetime.now(timezone.utc),
+        "ip_address": ip_address,
+        "user_agent": user_agent[:500],  # Limit length
+        "accepted_terms": True
+    }
+    
+    await db.contract_signatures.insert_one(signature_doc)
+    
+    # Check if both parties signed
+    signatures = await db.contract_signatures.find({"contract_id": contract_id}).to_list(2)
+    
+    if len(signatures) == 2:
+        # Both signed - update contract status
+        await db.contracts.update_one(
+            {"contract_id": contract_id},
+            {"$set": {"status": "signed", "signed_at": datetime.now(timezone.utc)}}
+        )
+        
+        # Notify both parties
+        for sig in signatures:
+            await create_notification(
+                user_id=sig["user_id"],
+                type="contract",
+                title="Sözleşme İmzalandı! ✍️",
+                message="Her iki taraf da sözleşmeyi imzaladı. İşbirliği başlayabilir!",
+                link="/contracts"
+            )
+    else:
+        # Notify the other party
+        other_user_id = contract["influencer_user_id"] if user.user_type == "marka" else contract["brand_user_id"]
+        await create_notification(
+            user_id=other_user_id,
+            type="contract",
+            title="Sözleşme İmza Bekliyor",
+            message=f"{user.name} sözleşmeyi imzaladı. Sizin de imzalamanız bekleniyor.",
+            link=f"/contracts/{contract_id}"
+        )
+    
+    signature_doc.pop("_id", None)
+    return signature_doc
+
+@api_router.get("/contracts/{contract_id}/signatures")
+async def get_contract_signatures(request: Request, contract_id: str):
+    """Get signatures for a contract"""
+    user = await require_auth(request)
+    
+    contract = await db.contracts.find_one({"contract_id": contract_id})
+    if not contract:
+        raise HTTPException(status_code=404, detail="Contract not found")
+    
+    # Verify access
+    if contract["brand_user_id"] != user.user_id and contract["influencer_user_id"] != user.user_id and user.user_type != "admin":
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    signatures = await db.contract_signatures.find(
+        {"contract_id": contract_id},
+        {"_id": 0}
+    ).to_list(10)
+    
+    return signatures
+
 # ============= INFLUENCER SEARCH ROUTES =============
 
 @api_router.get("/influencers/search")
