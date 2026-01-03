@@ -266,12 +266,12 @@ const SettingsPage = () => {
   };
 
   const menuItems = [
-    { id: 'profile', label: 'Profil Ayarları', icon: User },
-    { id: 'security', label: 'Hesap Güvenliği', icon: Lock },
-    { id: 'notifications', label: 'Bildirimler', icon: Bell },
-    { id: 'privacy', label: 'Gizlilik', icon: Eye },
-    { id: 'appearance', label: 'Görünüm', icon: Palette },
-    { id: 'account', label: 'Hesap İşlemleri', icon: Shield },
+    { id: 'profile', labelKey: 'settings.profile', icon: User },
+    { id: 'security', labelKey: 'settings.security', icon: Lock },
+    { id: 'notifications', labelKey: 'settings.notifications', icon: Bell },
+    { id: 'privacy', labelKey: 'settings.privacy', icon: Eye },
+    { id: 'appearance', labelKey: 'settings.appearance', icon: Palette },
+    { id: 'account', labelKey: 'settings.account', icon: Shield },
   ];
 
   if (loading) {
@@ -293,7 +293,7 @@ const SettingsPage = () => {
       <Navbar user={user} onLogout={handleLogout} />
 
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Ayarlar</h1>
+        <h1 className="text-3xl font-bold mb-8">{t('settings.title')}</h1>
 
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar */}
