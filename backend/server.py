@@ -340,6 +340,87 @@ class Badge(BaseModel):
     awarded_at: datetime
     awarded_by: Optional[str] = None  # Admin user_id
 
+# ============= FAZ 3 MODELS =============
+
+# Contract Models
+class ContractCreate(BaseModel):
+    match_id: str
+    title: str
+    description: str
+    total_amount: float
+    payment_terms: str  # 'upfront', 'milestone', 'completion'
+    start_date: str
+    end_date: str
+    terms_and_conditions: Optional[str] = None
+
+class Contract(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    contract_id: str
+    match_id: str
+    job_id: str
+    brand_user_id: str
+    influencer_user_id: str
+    title: str
+    description: str
+    total_amount: float
+    payment_terms: str
+    start_date: str
+    end_date: str
+    terms_and_conditions: Optional[str] = None
+    status: str  # 'draft', 'pending', 'active', 'completed', 'cancelled'
+    brand_signed: bool = False
+    influencer_signed: bool = False
+    created_at: datetime
+    updated_at: datetime
+
+# Milestone Models
+class MilestoneCreate(BaseModel):
+    title: str
+    description: str
+    due_date: str
+    amount: float
+
+class Milestone(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    milestone_id: str
+    contract_id: str
+    title: str
+    description: str
+    due_date: str
+    amount: float
+    status: str  # 'pending', 'in_progress', 'submitted', 'approved', 'rejected'
+    submission_note: Optional[str] = None
+    submission_files: List[str] = []
+    created_at: datetime
+    updated_at: datetime
+
+# Media Library Models
+class MediaItem(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    media_id: str
+    user_id: str
+    filename: str
+    original_filename: str
+    file_type: str  # 'image', 'video', 'document'
+    file_size: int
+    url: str
+    thumbnail_url: Optional[str] = None
+    tags: List[str] = []
+    description: Optional[str] = None
+    created_at: datetime
+
+# Chat Attachment Models
+class ChatAttachment(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    attachment_id: str
+    message_id: str
+    filename: str
+    original_filename: str
+    file_type: str
+    file_size: int
+    url: str
+    thumbnail_url: Optional[str] = None
+
 # ============= HELPER FUNCTIONS =============
 
 def hash_password(password: str) -> str:
