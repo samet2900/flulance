@@ -73,12 +73,18 @@ const InfluencerDashboard = () => {
     if (user) {
       if (activeTab === 'profile') {
         fetchProfile();
+        fetchStats();
+        fetchReviews();
       } else if (activeTab === 'jobs') {
         fetchJobs();
       } else if (activeTab === 'applications') {
         fetchApplications();
       } else if (activeTab === 'matches') {
         fetchMatches();
+      } else if (activeTab === 'stats') {
+        fetchStats();
+      } else if (activeTab === 'reviews') {
+        fetchReviews();
       }
     }
   }, [user, activeTab, filterCategory, filterPlatform]);
