@@ -337,6 +337,35 @@ const InfluencerDashboard = () => {
             Profilim
           </button>
           <button
+            onClick={() => setActiveTab('stats')}
+            className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'stats'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                : 'bg-white/10 hover:bg-white/20'
+            }`}
+            data-testid="tab-stats"
+          >
+            <BarChart3 className="w-5 h-5" />
+            İstatistiklerim
+          </button>
+          <button
+            onClick={() => setActiveTab('reviews')}
+            className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'reviews'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                : 'bg-white/10 hover:bg-white/20'
+            }`}
+            data-testid="tab-reviews"
+          >
+            <Star className="w-5 h-5" />
+            Değerlendirmeler
+            {stats && stats.total_reviews > 0 && (
+              <span className="bg-yellow-500/30 text-yellow-400 text-xs px-2 py-0.5 rounded-full">
+                {stats.average_rating.toFixed(1)}
+              </span>
+            )}
+          </button>
+          <button
             onClick={() => setActiveTab('jobs')}
             className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'jobs'
