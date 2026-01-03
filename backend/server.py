@@ -421,6 +421,43 @@ class ChatAttachment(BaseModel):
     url: str
     thumbnail_url: Optional[str] = None
 
+# ============= SETTINGS MODELS =============
+
+class ProfileUpdate(BaseModel):
+    name: Optional[str] = None
+    bio: Optional[str] = None
+
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str
+
+class EmailChange(BaseModel):
+    new_email: EmailStr
+    password: str
+
+class NotificationSettings(BaseModel):
+    email_new_job: bool = True
+    email_application_status: bool = True
+    email_messages: bool = True
+    email_marketing: bool = False
+    push_new_job: bool = True
+    push_application_status: bool = True
+    push_messages: bool = True
+
+class PrivacySettings(BaseModel):
+    profile_visible: bool = True
+    show_stats_to_brands: bool = True
+    show_in_search: bool = True
+
+class UserSettings(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    user_id: str
+    theme: str = "dark"
+    language: str = "tr"
+    notifications: NotificationSettings = NotificationSettings()
+    privacy: PrivacySettings = PrivacySettings()
+    updated_at: datetime
+
 # ============= HELPER FUNCTIONS =============
 
 def hash_password(password: str) -> str:
