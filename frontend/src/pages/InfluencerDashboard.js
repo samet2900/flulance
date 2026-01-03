@@ -181,6 +181,21 @@ const InfluencerDashboard = () => {
     }
   };
 
+  const handleCompleteMatch = async (matchId) => {
+    if (!window.confirm('Bu işi tamamlandı olarak işaretlemek istediğinize emin misiniz?')) return;
+    
+    try {
+      await axios.put(`${API_URL}/api/matches/${matchId}/complete`, {}, {
+        withCredentials: true
+      });
+      fetchMatches();
+      alert('İş başarıyla tamamlandı olarak işaretlendi!');
+    } catch (error) {
+      console.error('Error completing match:', error);
+      alert(error.response?.data?.detail || 'İş tamamlanırken bir hata oluştu');
+    }
+  };
+
   const fetchStats = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/influencer-stats/me`, {
