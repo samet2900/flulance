@@ -1379,6 +1379,15 @@ const InfluencerDashboard = () => {
           onSubmit={handleSubmitReview}
         />
       )}
+
+      {/* Media Upload Modal */}
+      {showUploadModal && (
+        <MediaUploadModal
+          onClose={() => setShowUploadModal(false)}
+          onUpload={handleUploadMedia}
+          uploading={uploading}
+        />
+      )}
     </div>
   );
 };
