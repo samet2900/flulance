@@ -318,7 +318,7 @@ const SettingsPage = () => {
                     }`}
                   >
                     <Icon className="w-5 h-5" />
-                    <span>{item.label}</span>
+                    <span>{t(item.labelKey)}</span>
                     <ChevronRight className="w-4 h-4 ml-auto" />
                   </button>
                 );
