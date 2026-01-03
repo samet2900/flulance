@@ -15,6 +15,15 @@
 
 ---
 
+## Renk Paleti (Logo Uyumlu - Ocak 2026)
+- **Ana arka plan:** Siyah (#000000)
+- **Gradyan 1:** Fuchsia (#D946EF) → Cyan (#06B6D4)
+- **Vurgu renkleri:** Fuchsia-400, Cyan-400
+- **Border:** Gray-700/800
+- **Metin:** White, Gray-300, Gray-400
+
+---
+
 ## FAZ 1 - Temel Akış İyileştirmeleri ✅ TAMAMLANDI (3 Ocak 2026)
 
 ### Tamamlanan Özellikler:
