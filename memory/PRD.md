@@ -177,13 +177,8 @@
 
 ## Gelecek Özellikler
 
-### Bekleyen Görevler:
-- [ ] **Dil Seçimi (P1)** - react-i18next ile çoklu dil desteği
-  - Türkçe ve İngilizce çeviri dosyaları
-  - Dil değişikliğinin tüm uygulamada uygulanması
-
 ### Planlanan:
-- [ ] AI destekli eşleştirme (P2)
+- [ ] AI destekli eşleştirme (P2) - Markalara otomatik influencer önerisi
 
 ---
 
