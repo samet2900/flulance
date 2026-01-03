@@ -171,7 +171,8 @@ const HomeFeed = () => {
     
     setApplying(true);
     try {
-      await axios.post(`${API_URL}/api/jobs/${selectedJob.job_id}/apply`, {
+      await axios.post(`${API_URL}/api/applications`, {
+        job_id: selectedJob.job_id,
         message: applicationMessage
       }, {
         withCredentials: true
