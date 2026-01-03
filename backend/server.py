@@ -1482,6 +1482,21 @@ async def create_application(request: Request, app_data: ApplicationCreate):
         link="/brand#jobs"
     )
     
+    # Send email notification to brand
+    brand_user = await db.users.find_one({"user_id": job_doc["brand_user_id"]}, {"_id": 0})
+    if brand_user and brand_user.get("email"):
+        html_content = get_notification_email_html(
+            title="Yeni Başvuru Aldınız! 🎉",
+            message=f"<strong>{user.name}</strong> adlı influencer, <strong>{job_doc['title']}</strong> ilanınıza başvurdu.<br><br>Başvuru mesajı: <em>\"{app_data.message[:200]}...\"</em> " if len(app_data.message) > 200 else f"<strong>{user.name}</strong> adlı influencer, <strong>{job_doc['title']}</strong> ilanınıza başvurdu.<br><br>Başvuru mesajı: <em>\"{app_data.message}\"</em>",
+            action_link=f"{FRONTEND_URL}/brand",
+            action_text="Başvuruları Görüntüle"
+        )
+        await send_email(
+            to_email=brand_user["email"],
+            subject=f"Yeni Başvuru: {job_doc['title']} - FLULANCE",
+            html_content=html_content
+        )
+    
     app_doc.pop("_id")
     return Application(**app_doc)
 
