@@ -179,6 +179,57 @@ const SettingsPage = () => {
     }
   };
 
+  const handleThemeChange = async (newTheme) => {
+    setSaving(true);
+    try {
+      const formData = new FormData();
+      formData.append('theme', newTheme);
+      await axios.put(`${API_URL}/api/settings/theme`, formData, { withCredentials: true });
+      
+      // Update local settings
+      setSettings({ ...settings, theme: newTheme });
+      
+      // Apply theme to document
+      if (newTheme === 'light') {
+        document.documentElement.classList.add('light-theme');
+        document.documentElement.classList.remove('dark-theme');
+      } else {
+        document.documentElement.classList.add('dark-theme');
+        document.documentElement.classList.remove('light-theme');
+      }
+      
+      // Save to localStorage for persistence
+      localStorage.setItem('theme', newTheme);
+      
+      alert('Tema güncellendi!');
+    } catch (error) {
+      alert(error.response?.data?.detail || 'Hata oluştu');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleLanguageChange = async (newLanguage) => {
+    setSaving(true);
+    try {
+      const formData = new FormData();
+      formData.append('language', newLanguage);
+      await axios.put(`${API_URL}/api/settings/language`, formData, { withCredentials: true });
+      
+      // Update local settings
+      setSettings({ ...settings, language: newLanguage });
+      
+      // Save to localStorage
+      localStorage.setItem('language', newLanguage);
+      
+      alert(newLanguage === 'tr' ? 'Dil Türkçe olarak ayarlandı!' : 'Language set to English!');
+    } catch (error) {
+      alert(error.response?.data?.detail || 'Hata oluştu');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleDeactivate = async () => {
     setSaving(true);
     try {
