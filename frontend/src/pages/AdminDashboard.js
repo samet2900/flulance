@@ -1330,6 +1330,211 @@ const AdminDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Verifications Tab */}
+        {activeTab === 'verifications' && (
+          <div>
+            <h2 className="text-3xl font-bold mb-6">Kimlik Doğrulama Talepleri</h2>
+            
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
+              </div>
+            ) : verifications.length === 0 ? (
+              <div className="text-center py-12 bg-gray-900/30 rounded-2xl border border-gray-800">
+                <Shield className="w-16 h-16 mx-auto mb-4 text-green-500" />
+                <p className="text-gray-400">Bekleyen doğrulama talebi yok</p>
+              </div>
+            ) : (
+              <div className="grid gap-4" data-testid="verifications-list">
+                {verifications.map(v => (
+                  <div key={v.verification_id} className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-xl font-bold mb-2">{v.full_name}</h3>
+                        <p className="text-gray-400 text-sm mb-2">
+                          {v.verification_type === 'tc_kimlik' ? 'TC Kimlik' : 'Vergi No'}: {v.document_number?.slice(0, 3)}***{v.document_number?.slice(-2)}
+                        </p>
+                        <p className="text-gray-500 text-xs">
+                          Kullanıcı: {v.user_name} • {new Date(v.submitted_at).toLocaleDateString('tr-TR')}
+                        </p>
+                      </div>
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        v.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                        v.status === 'approved' ? 'bg-green-500/20 text-green-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {v.status === 'pending' ? 'Bekliyor' : v.status === 'approved' ? 'Onaylandı' : 'Reddedildi'}
+                      </span>
+                    </div>
+                    
+                    {v.status === 'pending' && (
+                      <div className="flex gap-3 mt-4">
+                        <button
+                          onClick={() => handleVerificationAction(v.verification_id, 'approved')}
+                          className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-colors flex items-center gap-2"
+                          data-testid={`approve-verification-${v.verification_id}`}
+                        >
+                          <Check className="w-4 h-4" /> Onayla
+                        </button>
+                        <button
+                          onClick={() => handleVerificationAction(v.verification_id, 'rejected')}
+                          className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors flex items-center gap-2"
+                          data-testid={`reject-verification-${v.verification_id}`}
+                        >
+                          <X className="w-4 h-4" /> Reddet
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Disputes Tab */}
+        {activeTab === 'disputes' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold">Anlaşmazlık Yönetimi</h2>
+              <div className="flex gap-2">
+                {['open', 'under_review', 'resolved', 'closed'].map(status => (
+                  <button
+                    key={status}
+                    onClick={() => setDisputeFilter(status)}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      disputeFilter === status
+                        ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
+                        : 'bg-gray-800 hover:bg-gray-700'
+                    }`}
+                  >
+                    {status === 'open' ? 'Açık' : status === 'under_review' ? 'İnceleniyor' : status === 'resolved' ? 'Çözüldü' : 'Kapalı'}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
+              </div>
+            ) : disputes.length === 0 ? (
+              <div className="text-center py-12 bg-gray-900/30 rounded-2xl border border-gray-800">
+                <Check className="w-16 h-16 mx-auto mb-4 text-green-500" />
+                <p className="text-gray-400">Bu durumda anlaşmazlık yok</p>
+              </div>
+            ) : (
+              <div className="grid gap-4" data-testid="disputes-list">
+                {disputes.map(d => (
+                  <div key={d.dispute_id} className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-xl font-bold mb-2">{d.reason}</h3>
+                        <p className="text-gray-400 text-sm mb-2">
+                          Raporlayan: <span className="text-white">{d.reporter_name}</span> → 
+                          Raporlanan: <span className="text-white">{d.reported_name}</span>
+                        </p>
+                        <p className="text-gray-300 line-clamp-2">{d.description}</p>
+                      </div>
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        d.status === 'open' ? 'bg-yellow-500/20 text-yellow-400' :
+                        d.status === 'under_review' ? 'bg-blue-500/20 text-blue-400' :
+                        d.status === 'resolved' ? 'bg-green-500/20 text-green-400' :
+                        'bg-gray-500/20 text-gray-400'
+                      }`}>
+                        {d.status === 'open' ? 'Açık' : d.status === 'under_review' ? 'İnceleniyor' : d.status === 'resolved' ? 'Çözüldü' : 'Kapalı'}
+                      </span>
+                    </div>
+                    
+                    {(d.status === 'open' || d.status === 'under_review') && (
+                      <button
+                        onClick={() => setShowDisputeModal(d)}
+                        className="px-4 py-2 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-lg font-semibold hover:scale-105 transition-transform flex items-center gap-2"
+                        data-testid={`resolve-dispute-${d.dispute_id}`}
+                      >
+                        <Check className="w-4 h-4" /> Çöz
+                      </button>
+                    )}
+                    
+                    {d.resolution && (
+                      <div className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                        <p className="text-green-400 font-medium text-sm">Çözüm:</p>
+                        <p className="text-gray-300 text-sm">{d.resolution}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Social Accounts Tab */}
+        {activeTab === 'social' && (
+          <div>
+            <h2 className="text-3xl font-bold mb-6">Sosyal Hesap Doğrulama</h2>
+            
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
+              </div>
+            ) : socialAccounts.length === 0 ? (
+              <div className="text-center py-12 bg-gray-900/30 rounded-2xl border border-gray-800">
+                <Check className="w-16 h-16 mx-auto mb-4 text-green-500" />
+                <p className="text-gray-400">Bekleyen sosyal hesap doğrulaması yok</p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4" data-testid="social-accounts-list">
+                {socialAccounts.map((acc, idx) => (
+                  <div key={idx} className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                        acc.platform === 'instagram' ? 'bg-gradient-to-br from-purple-500 to-pink-500' :
+                        acc.platform === 'tiktok' ? 'bg-gradient-to-br from-cyan-400 to-cyan-600' :
+                        acc.platform === 'youtube' ? 'bg-red-500' :
+                        'bg-blue-500'
+                      }`}>
+                        <span className="text-xl capitalize">{acc.platform?.charAt(0)}</span>
+                      </div>
+                      <div>
+                        <p className="font-bold capitalize">{acc.platform}</p>
+                        <p className="text-sm text-gray-400">@{acc.username}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2 mb-4">
+                      <p className="text-sm text-gray-400">Kullanıcı: <span className="text-white">{acc.user_name}</span></p>
+                      <p className="text-sm text-gray-400">Takipçi: <span className="text-fuchsia-400 font-bold">{acc.followers?.toLocaleString('tr-TR')}</span></p>
+                      {acc.profile_url && (
+                        <a href={acc.profile_url} target="_blank" rel="noopener noreferrer" className="text-xs text-cyan-400 hover:underline block truncate">
+                          {acc.profile_url}
+                        </a>
+                      )}
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleSocialAccountAction(acc.user_id, acc.platform, 'approve')}
+                        className="flex-1 px-3 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-colors flex items-center justify-center gap-1"
+                        data-testid={`approve-social-${acc.platform}`}
+                      >
+                        <Check className="w-4 h-4" /> Onayla
+                      </button>
+                      <button
+                        onClick={() => handleSocialAccountAction(acc.user_id, acc.platform, 'reject')}
+                        className="flex-1 px-3 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors flex items-center justify-center gap-1"
+                        data-testid={`reject-social-${acc.platform}`}
+                      >
+                        <X className="w-4 h-4" /> Reddet
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Announcement Modal */}
