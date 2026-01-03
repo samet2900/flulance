@@ -154,11 +154,39 @@
 - Tema tercihini localStorage ve backend API'ye kaydeder
 
 ### Dil Sistemi Detayları (3 Ocak 2026):
-- `i18n.js`: react-i18next yapılandırması
+- `i18n.js`: react-i18next yapılandırması (Sadece Türkçe)
 - `locales/tr/translation.json`: Türkçe çeviriler
-- `locales/en/translation.json`: İngilizce çeviriler
-- Dil butonları: `data-testid="lang-tr-btn"` ve `data-testid="lang-en-btn"`
-- Dil tercihini localStorage'da `language` anahtarıyla saklar
+- İngilizce dil desteği kaldırıldı (kullanıcı isteği)
+
+## FAZ 5 - Sahibinden.com Tarzı HomeFeed ✅ TAMAMLANDI (3 Ocak 2026)
+
+### Tamamlanan Özellikler:
+- [x] **Sol Filtreleme Paneli**
+  - Kategori filtreleme (açılır/kapanır bölümler)
+  - Platform filtreleme (Instagram, TikTok, YouTube, Twitter)
+  - Bütçe aralığı (hazır aralıklar + özel min/max)
+  - Konum filtreleme (il bazlı)
+  - "Temizle" butonu
+- [x] **Görünüm Seçenekleri**
+  - Grid görünümü (3 sütunlu kartlar)
+  - Liste görünümü (satır düzeni, sağda fiyat)
+  - Grid/List butonları
+- [x] **Sıralama**
+  - En Yeni / En Eski
+  - Bütçe (Yüksek→Düşük / Düşük→Yüksek)
+  - Popülerlik
+- [x] **Öne Çıkan Sistem**
+  - is_featured ve is_urgent rozet alanları
+  - Öne çıkan ilanlar için özel kart stili
+  - "VİTRİN" rozeti
+- [x] **İş Kartları**
+  - Kategori etiketi (pembe)
+  - Platform etiketleri (mavi)
+  - Fiyat (yeşil)
+  - Favori (kalp) butonu
+  - Başvur butonu
+- [x] **Arama**
+  - Başlık, açıklama, marka adı ile arama
 
 ### Yeni API Endpoint'leri:
 - `GET /api/settings` - Tüm ayarları getir
