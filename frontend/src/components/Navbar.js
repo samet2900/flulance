@@ -114,6 +114,15 @@ const Navbar = ({ user, onLogout }) => {
     <nav className="bg-black/80 backdrop-blur-lg border-b border-gray-800 sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+            data-testid="mobile-menu-btn"
+          >
+            {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+
           {/* Logo */}
           <div className="flex items-center gap-8">
             <button
@@ -126,10 +135,10 @@ const Navbar = ({ user, onLogout }) => {
                 alt="FLULANCE Logo" 
                 className="h-8 w-8 object-contain"
               />
-              <span className="text-2xl font-bold bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text">FLULANCE</span>
+              <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text">FLULANCE</span>
             </button>
             
-            {/* Navigation Links */}
+            {/* Navigation Links - Desktop */}
             <div className="hidden md:flex items-center gap-4">
               <button
                 onClick={() => navigate('/home')}
