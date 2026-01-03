@@ -612,8 +612,9 @@ const SettingsPage = () => {
                       <button
                         onClick={() => handleThemeChange('dark')}
                         disabled={saving}
+                        data-testid="theme-dark-btn"
                         className={`p-4 rounded-xl border-2 ${
-                          settings?.theme === 'dark' 
+                          currentTheme === 'dark' 
                             ? 'border-fuchsia-500 bg-fuchsia-500/20' 
                             : 'border-gray-700 hover:border-gray-600'
                         } flex items-center gap-3 disabled:opacity-50 transition-all`}
@@ -623,13 +624,14 @@ const SettingsPage = () => {
                           <p className="font-medium">Koyu Mod</p>
                           <p className="text-xs text-gray-400">Karanlık tema</p>
                         </div>
-                        {settings?.theme === 'dark' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
+                        {currentTheme === 'dark' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
                       </button>
                       <button
                         onClick={() => handleThemeChange('light')}
                         disabled={saving}
+                        data-testid="theme-light-btn"
                         className={`p-4 rounded-xl border-2 ${
-                          settings?.theme === 'light' 
+                          currentTheme === 'light' 
                             ? 'border-fuchsia-500 bg-fuchsia-500/20' 
                             : 'border-gray-700 hover:border-gray-600'
                         } flex items-center gap-3 disabled:opacity-50 transition-all`}
@@ -639,10 +641,9 @@ const SettingsPage = () => {
                           <p className="font-medium">Açık Mod</p>
                           <p className="text-xs text-gray-400">Aydınlık tema</p>
                         </div>
-                        {settings?.theme === 'light' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
+                        {currentTheme === 'light' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
                       </button>
                     </div>
-                    <p className="text-sm text-gray-500 mt-3">Not: Açık mod şu anda geliştirme aşamasındadır.</p>
                   </div>
 
                   <div>
@@ -651,6 +652,7 @@ const SettingsPage = () => {
                       <button
                         onClick={() => handleLanguageChange('tr')}
                         disabled={saving}
+                        data-testid="lang-tr-btn"
                         className={`p-4 rounded-xl border-2 ${
                           settings?.language === 'tr' 
                             ? 'border-fuchsia-500 bg-fuchsia-500/20' 
@@ -666,6 +668,7 @@ const SettingsPage = () => {
                       <button
                         onClick={() => handleLanguageChange('en')}
                         disabled={saving}
+                        data-testid="lang-en-btn"
                         className={`p-4 rounded-xl border-2 ${
                           settings?.language === 'en' 
                             ? 'border-fuchsia-500 bg-fuchsia-500/20' 
