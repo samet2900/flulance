@@ -138,6 +138,7 @@ class JobPostCreate(BaseModel):
     category: str
     budget: float
     platforms: List[str]  # ['instagram', 'tiktok', etc.]
+    duration_days: Optional[int] = 15  # İlan süresi (max 15 gün)
     deadline_days: Optional[int] = None  # Teslim süresi (gün)
     start_date: Optional[str] = None
     content_requirements: Optional[dict] = None  # {"videos": 3, "images": 5}
@@ -159,6 +160,8 @@ class JobPost(BaseModel):
     category: str
     budget: float
     platforms: List[str]
+    duration_days: Optional[int] = 15  # İlan süresi
+    expires_at: Optional[datetime] = None  # Sona erme tarihi
     deadline_days: Optional[int] = None
     start_date: Optional[str] = None
     content_requirements: Optional[dict] = None
@@ -170,7 +173,10 @@ class JobPost(BaseModel):
     is_featured: Optional[bool] = False
     is_urgent: Optional[bool] = False
     application_count: Optional[int] = 0
-    status: str  # 'open', 'closed', 'filled'
+    view_count: Optional[int] = 0  # Görüntülenme sayısı
+    approval_status: Optional[str] = "pending"  # 'pending', 'approved', 'rejected'
+    rejection_reason: Optional[str] = None  # Red sebebi
+    status: str  # 'open', 'closed', 'filled', 'expired'
     created_at: datetime
 
 # Application Models
