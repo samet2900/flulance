@@ -914,7 +914,17 @@ async def get_jobs(
     platform: Optional[str] = None,
     status: str = "open"
 ):
-    query = {"status": status}
+    now = datetime.now(timezone.utc)
+    
+    # Only show approved and non-expired jobs on public feed
+    query = {
+        "status": status,
+        "approval_status": "approved",
+        "$or": [
+            {"expires_at": {"$gt": now}},
+            {"expires_at": None}
+        ]
+    }
     if category:
         query["category"] = category
     if platform:
@@ -922,7 +932,7 @@ async def get_jobs(
     
     jobs = await db.job_posts.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
     
-    # Get application counts
+    # Get application counts and increment view count
     result = []
     for j in jobs:
         app_count = await db.applications.count_documents({"job_id": j["job_id"]})
@@ -930,6 +940,9 @@ async def get_jobs(
         # Set defaults for new fields if not present
         j.setdefault("is_featured", False)
         j.setdefault("is_urgent", False)
+        j.setdefault("view_count", 0)
+        j.setdefault("approval_status", "approved")  # Legacy jobs are approved
+        j.setdefault("duration_days", 15)
         result.append(JobPost(**j))
     
     return result
@@ -943,11 +956,25 @@ async def get_my_jobs(request: Request):
         {"_id": 0}
     ).sort("created_at", -1).to_list(100)
     
+    now = datetime.now(timezone.utc)
     result = []
     for j in jobs:
+        # Check if expired
+        expires_at = j.get("expires_at")
+        if expires_at and expires_at < now and j.get("status") == "open":
+            j["status"] = "expired"
+            # Update in DB
+            await db.job_posts.update_one(
+                {"job_id": j["job_id"]},
+                {"$set": {"status": "expired"}}
+            )
+        
         j.setdefault("is_featured", False)
         j.setdefault("is_urgent", False)
         j.setdefault("application_count", 0)
+        j.setdefault("view_count", 0)
+        j.setdefault("approval_status", "approved")
+        j.setdefault("duration_days", 15)
         result.append(JobPost(**j))
     
     return result
@@ -958,6 +985,16 @@ async def get_job(job_id: str):
     
     if not job_doc:
         raise HTTPException(status_code=404, detail="Job not found")
+    
+    # Increment view count
+    await db.job_posts.update_one(
+        {"job_id": job_id},
+        {"$inc": {"view_count": 1}}
+    )
+    
+    job_doc.setdefault("view_count", 0)
+    job_doc.setdefault("approval_status", "approved")
+    job_doc.setdefault("duration_days", 15)
     
     return JobPost(**job_doc)
 
