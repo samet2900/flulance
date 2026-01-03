@@ -1028,6 +1028,242 @@ const InfluencerDashboard = () => {
           onClose={() => setSelectedMatch(null)}
         />
       )}
+
+      {/* Edit Stats Modal */}
+      {showEditStats && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto" onClick={() => setShowEditStats(false)}>
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-3xl w-full my-8 border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="edit-stats-modal">
+            <h2 className="text-3xl font-bold mb-6">İstatistikleri Düzenle</h2>
+            <form onSubmit={handleSaveStats} className="space-y-6">
+              {/* Instagram */}
+              <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-xl p-4 border border-pink-500/20">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg flex items-center justify-center text-sm font-bold">IG</div>
+                  Instagram
+                </h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Takipçi Sayısı</label>
+                    <input
+                      type="number"
+                      value={statsForm.instagram_followers}
+                      onChange={(e) => setStatsForm({ ...statsForm, instagram_followers: e.target.value })}
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="150000"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Engagement Rate (%)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={statsForm.instagram_engagement}
+                      onChange={(e) => setStatsForm({ ...statsForm, instagram_engagement: e.target.value })}
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="4.5"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* TikTok */}
+              <div className="bg-gradient-to-r from-cyan-500/10 to-pink-500/10 rounded-xl p-4 border border-cyan-500/20">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-pink-500 rounded-lg flex items-center justify-center text-sm font-bold">TT</div>
+                  TikTok
+                </h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Takipçi Sayısı</label>
+                    <input
+                      type="number"
+                      value={statsForm.tiktok_followers}
+                      onChange={(e) => setStatsForm({ ...statsForm, tiktok_followers: e.target.value })}
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="500000"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Engagement Rate (%)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={statsForm.tiktok_engagement}
+                      onChange={(e) => setStatsForm({ ...statsForm, tiktok_engagement: e.target.value })}
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="8.2"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* YouTube */}
+              <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-xl p-4 border border-red-500/20">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg flex items-center justify-center text-sm font-bold">YT</div>
+                  YouTube
+                </h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Abone Sayısı</label>
+                    <input
+                      type="number"
+                      value={statsForm.youtube_subscribers}
+                      onChange={(e) => setStatsForm({ ...statsForm, youtube_subscribers: e.target.value })}
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="100000"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Ortalama İzlenme</label>
+                    <input
+                      type="number"
+                      value={statsForm.youtube_avg_views}
+                      onChange={(e) => setStatsForm({ ...statsForm, youtube_avg_views: e.target.value })}
+                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                      placeholder="25000"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Twitter */}
+              <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-xl p-4 border border-blue-500/20">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-lg flex items-center justify-center text-sm font-bold">X</div>
+                  Twitter/X
+                </h3>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Takipçi Sayısı</label>
+                  <input
+                    type="number"
+                    value={statsForm.twitter_followers}
+                    onChange={(e) => setStatsForm({ ...statsForm, twitter_followers: e.target.value })}
+                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 text-white"
+                    placeholder="50000"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowEditStats(false)}
+                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                >
+                  İptal
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  data-testid="save-stats-btn"
+                >
+                  Kaydet
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Review Modal */}
+      {showReviewModal && (
+        <ReviewModal
+          match={showReviewModal}
+          onClose={() => setShowReviewModal(null)}
+          onSubmit={handleSubmitReview}
+        />
+      )}
+    </div>
+  );
+};
+
+// Review Modal Component
+const ReviewModal = ({ match, onClose, onSubmit }) => {
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [comment, setComment] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (rating === 0) {
+      alert('Lütfen bir puan seçin');
+      return;
+    }
+    onSubmit(match.match_id, rating, comment);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="review-modal">
+        <h2 className="text-2xl font-bold mb-2">Markayı Değerlendir</h2>
+        <p className="text-gray-400 mb-6">{match.brand_name} - {match.job_title}</p>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Star Rating */}
+          <div>
+            <label className="block text-sm font-medium mb-3">Puanınız</label>
+            <div className="flex gap-2 justify-center">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  type="button"
+                  onClick={() => setRating(star)}
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  className="p-1 transition-transform hover:scale-110"
+                >
+                  <Star
+                    className={`w-10 h-10 ${
+                      star <= (hoverRating || rating)
+                        ? 'text-yellow-400 fill-yellow-400'
+                        : 'text-gray-600'
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+            <p className="text-center text-sm text-gray-400 mt-2">
+              {rating === 1 && 'Çok Kötü'}
+              {rating === 2 && 'Kötü'}
+              {rating === 3 && 'Orta'}
+              {rating === 4 && 'İyi'}
+              {rating === 5 && 'Mükemmel'}
+            </p>
+          </div>
+
+          {/* Comment */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Yorumunuz</label>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              required
+              rows={4}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none text-white"
+              placeholder="Marka ile çalışma deneyiminizi paylaşın..."
+              data-testid="review-comment-input"
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+            >
+              İptal
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+              data-testid="submit-review-btn"
+            >
+              Gönder
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
