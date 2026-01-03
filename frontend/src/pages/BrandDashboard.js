@@ -521,24 +521,53 @@ const BrandDashboard = () => {
                   <div 
                     key={job.job_id} 
                     className={`bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border transition-all ${
+                      job.approval_status === 'pending' ? 'border-yellow-500/50' :
+                      job.approval_status === 'rejected' ? 'border-red-500/50' :
+                      job.status === 'expired' ? 'border-orange-500/50' :
                       job.is_featured ? 'border-yellow-500/50 ring-1 ring-yellow-500/20' : 'border-gray-800'
                     }`}
                   >
-                    {/* Premium Badges */}
-                    {(job.is_featured || job.is_urgent) && (
-                      <div className="flex gap-2 mb-3">
-                        {job.is_featured && (
-                          <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-lg text-xs font-semibold flex items-center gap-1">
-                            <Zap className="w-3 h-3" /> ÖNE ÇIKAN
-                          </span>
-                        )}
-                        {job.is_urgent && (
-                          <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded-lg text-xs font-semibold flex items-center gap-1">
-                            <Clock className="w-3 h-3" /> ACİL
-                          </span>
-                        )}
+                    {/* Status & Premium Badges */}
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {/* Approval Status */}
+                      <span className={`px-2 py-1 rounded-lg text-xs font-semibold ${
+                        job.approval_status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                        job.approval_status === 'approved' ? 'bg-green-500/20 text-green-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {job.approval_status === 'pending' ? '⏳ Onay Bekliyor' :
+                         job.approval_status === 'approved' ? '✅ Yayında' : '❌ Reddedildi'}
+                      </span>
+                      
+                      {/* Expired Badge */}
+                      {job.status === 'expired' && (
+                        <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded-lg text-xs font-semibold">
+                          ⏰ Süresi Doldu
+                        </span>
+                      )}
+                      
+                      {/* Premium Badges */}
+                      {job.is_featured && (
+                        <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-lg text-xs font-semibold flex items-center gap-1">
+                          <Zap className="w-3 h-3" /> ÖNE ÇIKAN
+                        </span>
+                      )}
+                      {job.is_urgent && (
+                        <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded-lg text-xs font-semibold flex items-center gap-1">
+                          <Clock className="w-3 h-3" /> ACİL
+                        </span>
+                      )}
+                    </div>
+                    
+                    {/* Rejection Reason */}
+                    {job.approval_status === 'rejected' && job.rejection_reason && (
+                      <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                        <p className="text-sm text-red-400">
+                          Red Sebebi: {job.rejection_reason}
+                        </p>
                       </div>
                     )}
+                    
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-2xl font-bold mb-2">{job.title}</h3>
@@ -546,10 +575,24 @@ const BrandDashboard = () => {
                           <span className="px-3 py-1 bg-fuchsia-500/30 rounded-full text-sm">{job.category}</span>
                           <span className="px-3 py-1 bg-green-500/30 rounded-full text-sm font-semibold">{job.budget.toLocaleString('tr-TR')} ₺</span>
                           <span className={`px-3 py-1 rounded-full text-sm ${
-                            job.status === 'open' ? 'bg-green-500/30' : 'bg-gray-500/30'
+                            job.status === 'open' ? 'bg-green-500/30' : 
+                            job.status === 'expired' ? 'bg-orange-500/30' : 'bg-gray-500/30'
                           }`}>
-                            {job.status === 'open' ? 'Açık' : job.status === 'filled' ? 'Dolu' : 'Kapalı'}
+                            {job.status === 'open' ? 'Açık' : 
+                             job.status === 'expired' ? 'Süresi Doldu' :
+                             job.status === 'filled' ? 'Dolu' : 'Kapalı'}
                           </span>
+                        </div>
+                        
+                        {/* Stats */}
+                        <div className="flex items-center gap-4 text-sm text-gray-500 mt-2">
+                          <span>{job.view_count || 0} görüntülenme</span>
+                          <span>{job.application_count || 0} başvuru</span>
+                          {job.expires_at && (
+                            <span className={job.status === 'expired' ? 'text-orange-400' : ''}>
+                              Bitiş: {new Date(job.expires_at).toLocaleDateString('tr-TR')}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -561,7 +604,7 @@ const BrandDashboard = () => {
                         </span>
                       ))}
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex flex-wrap gap-3">
                       <button
                         onClick={() => fetchApplications(job.job_id)}
                         className="px-4 py-2 bg-gray-900/50 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-2"
