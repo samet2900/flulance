@@ -605,14 +605,256 @@ const InfluencerDashboard = () => {
                   <div key={match.match_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20" data-testid={`match-${match.match_id}`}>
                     <h3 className="text-xl font-bold mb-2">{match.job_title}</h3>
                     <p className="text-gray-400 mb-4">Marka: <span className="text-white font-semibold">{match.brand_name}</span></p>
-                    <button
-                      onClick={() => setSelectedMatch(match)}
-                      className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center justify-center gap-2"
-                      data-testid={`open-chat-${match.match_id}`}
-                    >
-                      <MessageCircle className="w-5 h-5" />
-                      Sohbet Başlat
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => setSelectedMatch(match)}
+                        className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center justify-center gap-2"
+                        data-testid={`open-chat-${match.match_id}`}
+                      >
+                        <MessageCircle className="w-5 h-5" />
+                        Sohbet
+                      </button>
+                      <button
+                        onClick={() => setShowReviewModal(match)}
+                        className="flex-1 px-4 py-3 bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
+                        data-testid={`review-btn-${match.match_id}`}
+                      >
+                        <Star className="w-5 h-5" />
+                        Değerlendir
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Stats Tab */}
+        {activeTab === 'stats' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold">İstatistiklerim</h2>
+              <button
+                onClick={() => setShowEditStats(true)}
+                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center gap-2"
+                data-testid="edit-stats-btn"
+              >
+                <Edit className="w-5 h-5" />
+                {stats ? 'İstatistikleri Düzenle' : 'İstatistik Ekle'}
+              </button>
+            </div>
+
+            {stats ? (
+              <div className="space-y-6">
+                {/* Summary Cards */}
+                <div className="grid md:grid-cols-4 gap-4">
+                  <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Users className="w-8 h-8 text-purple-400" />
+                      <span className="text-gray-400">Toplam Erişim</span>
+                    </div>
+                    <p className="text-3xl font-bold">{(stats.total_reach || 0).toLocaleString('tr-TR')}</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-sm rounded-2xl p-6 border border-yellow-500/30">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Star className="w-8 h-8 text-yellow-400" />
+                      <span className="text-gray-400">Ortalama Puan</span>
+                    </div>
+                    <p className="text-3xl font-bold">{stats.average_rating ? stats.average_rating.toFixed(1) : '0.0'}</p>
+                    <p className="text-sm text-gray-400">{stats.total_reviews || 0} değerlendirme</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl p-6 border border-green-500/30">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Briefcase className="w-8 h-8 text-green-400" />
+                      <span className="text-gray-400">Tamamlanan İş</span>
+                    </div>
+                    <p className="text-3xl font-bold">{stats.completed_jobs || 0}</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/30">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Award className="w-8 h-8 text-blue-400" />
+                      <span className="text-gray-400">Rozet</span>
+                    </div>
+                    <p className="text-xl font-bold capitalize">{user?.badge || 'Yok'}</p>
+                  </div>
+                </div>
+
+                {/* Platform Stats */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                  <h3 className="text-xl font-bold mb-6">Platform İstatistikleri</h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Instagram */}
+                    {(stats.instagram_followers || stats.instagram_engagement) && (
+                      <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-xl p-4 border border-pink-500/20">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg flex items-center justify-center">
+                            <span className="text-lg font-bold">IG</span>
+                          </div>
+                          <span className="font-semibold">Instagram</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-gray-400">Takipçi</p>
+                            <p className="text-xl font-bold">{(stats.instagram_followers || 0).toLocaleString('tr-TR')}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-400">Engagement</p>
+                            <p className="text-xl font-bold">{stats.instagram_engagement || 0}%</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* TikTok */}
+                    {(stats.tiktok_followers || stats.tiktok_engagement) && (
+                      <div className="bg-gradient-to-r from-cyan-500/10 to-pink-500/10 rounded-xl p-4 border border-cyan-500/20">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-pink-500 rounded-lg flex items-center justify-center">
+                            <span className="text-lg font-bold">TT</span>
+                          </div>
+                          <span className="font-semibold">TikTok</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-gray-400">Takipçi</p>
+                            <p className="text-xl font-bold">{(stats.tiktok_followers || 0).toLocaleString('tr-TR')}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-400">Engagement</p>
+                            <p className="text-xl font-bold">{stats.tiktok_engagement || 0}%</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* YouTube */}
+                    {(stats.youtube_subscribers || stats.youtube_avg_views) && (
+                      <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-xl p-4 border border-red-500/20">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg flex items-center justify-center">
+                            <span className="text-lg font-bold">YT</span>
+                          </div>
+                          <span className="font-semibold">YouTube</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-gray-400">Abone</p>
+                            <p className="text-xl font-bold">{(stats.youtube_subscribers || 0).toLocaleString('tr-TR')}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-400">Ort. İzlenme</p>
+                            <p className="text-xl font-bold">{(stats.youtube_avg_views || 0).toLocaleString('tr-TR')}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Twitter */}
+                    {stats.twitter_followers && (
+                      <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-xl p-4 border border-blue-500/20">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-lg flex items-center justify-center">
+                            <span className="text-lg font-bold">X</span>
+                          </div>
+                          <span className="font-semibold">Twitter/X</span>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-400">Takipçi</p>
+                          <p className="text-xl font-bold">{(stats.twitter_followers || 0).toLocaleString('tr-TR')}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+                <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <p className="text-gray-400 mb-4">Henüz istatistik eklemediniz</p>
+                <p className="text-sm text-gray-500 mb-6">Sosyal medya istatistiklerinizi ekleyerek markaların sizi daha iyi tanımasını sağlayın</p>
+                <button
+                  onClick={() => setShowEditStats(true)}
+                  className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                >
+                  İstatistik Ekle
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Reviews Tab */}
+        {activeTab === 'reviews' && (
+          <div>
+            <h2 className="text-3xl font-bold mb-6">Değerlendirmeler</h2>
+            
+            {/* Rating Summary */}
+            {stats && stats.total_reviews > 0 && (
+              <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-sm rounded-2xl p-6 border border-yellow-500/30 mb-6">
+                <div className="flex items-center gap-6">
+                  <div className="text-center">
+                    <p className="text-5xl font-bold text-yellow-400">{stats.average_rating.toFixed(1)}</p>
+                    <div className="flex gap-1 justify-center my-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-5 h-5 ${star <= Math.round(stats.average_rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-sm text-gray-400">{stats.total_reviews} değerlendirme</p>
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    {[5, 4, 3, 2, 1].map((rating) => {
+                      const count = reviews.filter(r => r.rating === rating).length;
+                      const percentage = stats.total_reviews > 0 ? (count / stats.total_reviews) * 100 : 0;
+                      return (
+                        <div key={rating} className="flex items-center gap-2">
+                          <span className="text-sm w-6">{rating}</span>
+                          <Star className="w-4 h-4 text-yellow-400" />
+                          <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-yellow-400 rounded-full"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                          <span className="text-sm text-gray-400 w-8">{count}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {reviews.length === 0 ? (
+              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+                <Star className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <p className="text-gray-400">Henüz değerlendirme almadınız</p>
+                <p className="text-sm text-gray-500 mt-2">İşleri tamamladıkça markalardan değerlendirme alacaksınız</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {reviews.map((review) => (
+                  <div key={review.review_id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <p className="font-semibold text-lg">{review.reviewer_name}</p>
+                        <p className="text-sm text-gray-400">
+                          {new Date(review.created_at).toLocaleDateString('tr-TR')}
+                        </p>
+                      </div>
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-5 h-5 ${star <= review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-gray-300">{review.comment}</p>
                   </div>
                 ))}
               </div>
