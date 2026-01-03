@@ -269,7 +269,9 @@ const SettingsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center ${
+        currentTheme === 'light' ? 'bg-gray-50' : 'bg-black'
+      }`}>
         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-fuchsia-500"></div>
       </div>
     );
