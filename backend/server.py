@@ -1576,6 +1576,21 @@ async def accept_application(request: Request, application_id: str):
         link="/influencer#matches"
     )
     
+    # Send email notification to influencer
+    influencer_user = await db.users.find_one({"user_id": app_doc["influencer_user_id"]}, {"_id": 0})
+    if influencer_user and influencer_user.get("email"):
+        html_content = get_notification_email_html(
+            title="Başvurunuz Kabul Edildi! 🎉",
+            message=f"Tebrikler! <strong>{user.name}</strong>, <strong>{job_doc['title']}</strong> ilanına yaptığınız başvuruyu kabul etti.<br><br>Artık sohbet edebilir ve işbirliğinize başlayabilirsiniz!",
+            action_link=f"{FRONTEND_URL}/influencer",
+            action_text="Sohbete Başla"
+        )
+        await send_email(
+            to_email=influencer_user["email"],
+            subject=f"Başvurunuz Kabul Edildi: {job_doc['title']} - FLULANCE",
+            html_content=html_content
+        )
+    
     # Update job status
     await db.job_posts.update_one(
         {"job_id": app_doc["job_id"]},
