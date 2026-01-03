@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Bell, User, Home, Briefcase, MessageCircle, LogOut, Settings, Star, Menu, X, Heart } from 'lucide-react';
+import { Bell, User, Home, Briefcase, MessageCircle, LogOut, Settings, Star, Menu, X, Heart, FileText, Image, Shield, AlertTriangle, Users } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -303,16 +303,92 @@ const Navbar = ({ user, onLogout }) => {
                       Panelim
                     </button>
                     {user.user_type === 'influencer' && (
-                      <button
-                        onClick={() => {
-                          navigate('/favorites');
-                          setShowProfileMenu(false);
-                        }}
-                        className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
-                      >
-                        <Heart className="w-4 h-4" />
-                        Favorilerim
-                      </button>
+                      <>
+                        <button
+                          onClick={() => {
+                            navigate('/favorites');
+                            setShowProfileMenu(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
+                        >
+                          <Heart className="w-4 h-4" />
+                          Favorilerim
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate('/portfolio');
+                            setShowProfileMenu(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
+                        >
+                          <Image className="w-4 h-4" />
+                          Portföyüm
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate('/social-accounts');
+                            setShowProfileMenu(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
+                        >
+                          <Users className="w-4 h-4" />
+                          Sosyal Hesaplarım
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate('/category-alerts');
+                            setShowProfileMenu(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
+                        >
+                          <Bell className="w-4 h-4" />
+                          Kategori Alarmları
+                        </button>
+                      </>
+                    )}
+                    {user.user_type !== 'admin' && (
+                      <>
+                        <button
+                          onClick={() => {
+                            navigate('/briefs');
+                            setShowProfileMenu(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
+                        >
+                          <FileText className="w-4 h-4" />
+                          Briefs
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate('/contracts');
+                            setShowProfileMenu(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
+                        >
+                          <FileText className="w-4 h-4" />
+                          Sözleşmeler
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate('/disputes');
+                            setShowProfileMenu(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
+                        >
+                          <AlertTriangle className="w-4 h-4" />
+                          Anlaşmazlıklar
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate('/verification');
+                            setShowProfileMenu(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
+                        >
+                          <Shield className="w-4 h-4" />
+                          Kimlik Doğrula
+                        </button>
+                      </>
                     )}
                     <button
                       onClick={() => {
