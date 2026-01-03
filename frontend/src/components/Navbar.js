@@ -23,11 +23,6 @@ const Navbar = ({ user, onLogout }) => {
     }
   }, [user]);
 
-  // If no user, don't render the navbar
-  if (!user || !user.user_id) {
-    return null;
-  }
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -41,6 +36,11 @@ const Navbar = ({ user, onLogout }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // If no user, don't render the navbar
+  if (!user || !user.user_id) {
+    return null;
+  }
 
   const fetchUnreadCount = async () => {
     try {
