@@ -103,7 +103,8 @@ const AdminDashboard = () => {
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/api/admin/jobs`, {
+      const params = jobFilter !== 'all' ? `?approval_status=${jobFilter}` : '';
+      const response = await axios.get(`${API_URL}/api/admin/jobs${params}`, {
         withCredentials: true
       });
       setJobs(response.data);
