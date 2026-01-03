@@ -247,6 +247,7 @@ const HomeFeed = () => {
                       isFavorite={favorites.has(job.job_id)}
                       onToggleFavorite={toggleFavorite}
                       userType={user.user_type}
+                      onApply={openApplicationModal}
                     />
                   ))}
                 </div>
