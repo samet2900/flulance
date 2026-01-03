@@ -1253,6 +1253,163 @@ const BrandDashboard = () => {
           onClose={() => setSelectedMatch(null)}
         />
       )}
+
+      {/* Edit Job Modal */}
+      {showEditJob && editingJob && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full my-8 border border-gray-800" data-testid="edit-job-modal">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">İlanı Düzenle</h2>
+              <button
+                type="button"
+                onClick={() => { setShowEditJob(false); setEditingJob(null); }}
+                className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleUpdateJob} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium mb-2">İlan Başlığı *</label>
+                <input
+                  type="text"
+                  value={editJobForm.title}
+                  onChange={(e) => setEditJobForm({ ...editJobForm, title: e.target.value })}
+                  required
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                  data-testid="edit-job-title"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Açıklama *</label>
+                <textarea
+                  value={editJobForm.description}
+                  onChange={(e) => setEditJobForm({ ...editJobForm, description: e.target.value })}
+                  required
+                  rows={4}
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
+                  data-testid="edit-job-description"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Kategori *</label>
+                  <select
+                    value={editJobForm.category}
+                    onChange={(e) => setEditJobForm({ ...editJobForm, category: e.target.value })}
+                    required
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    style={{colorScheme: 'dark'}}
+                  >
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Bütçe (₺) *</label>
+                  <input
+                    type="number"
+                    value={editJobForm.budget}
+                    onChange={(e) => setEditJobForm({ ...editJobForm, budget: e.target.value })}
+                    required
+                    className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                    data-testid="edit-job-budget"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Platformlar *</label>
+                <div className="flex flex-wrap gap-2">
+                  {['instagram', 'tiktok', 'youtube', 'twitter', 'linkedin', 'facebook'].map((platform) => (
+                    <button
+                      key={platform}
+                      type="button"
+                      onClick={() => toggleEditPlatform(platform)}
+                      className={`px-4 py-2 rounded-xl border transition-colors capitalize ${
+                        editJobForm.platforms.includes(platform)
+                          ? 'border-fuchsia-500 bg-fuchsia-500/20 text-fuchsia-400'
+                          : 'border-gray-700 hover:border-gray-600'
+                      }`}
+                    >
+                      {platform}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">İlan Durumu</label>
+                <select
+                  value={editJobForm.status}
+                  onChange={(e) => setEditJobForm({ ...editJobForm, status: e.target.value })}
+                  className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
+                  style={{colorScheme: 'dark'}}
+                >
+                  <option value="open">Açık</option>
+                  <option value="closed">Kapalı</option>
+                  <option value="filled">Dolu</option>
+                </select>
+              </div>
+
+              {/* Premium Options */}
+              <div className="p-4 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl border border-yellow-500/30">
+                <h3 className="font-semibold text-yellow-400 mb-4 flex items-center gap-2">
+                  <Crown className="w-5 h-5" /> Premium Özellikler
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <label className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                    editJobForm.is_featured ? 'border-yellow-500 bg-yellow-500/20' : 'border-gray-700'
+                  }`}>
+                    <input
+                      type="checkbox"
+                      checked={editJobForm.is_featured}
+                      onChange={(e) => setEditJobForm({ ...editJobForm, is_featured: e.target.checked })}
+                      className="sr-only"
+                    />
+                    <Zap className={`w-5 h-5 ${editJobForm.is_featured ? 'text-yellow-400' : 'text-gray-500'}`} />
+                    <span>Öne Çıkan</span>
+                  </label>
+                  <label className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                    editJobForm.is_urgent ? 'border-red-500 bg-red-500/20' : 'border-gray-700'
+                  }`}>
+                    <input
+                      type="checkbox"
+                      checked={editJobForm.is_urgent}
+                      onChange={(e) => setEditJobForm({ ...editJobForm, is_urgent: e.target.checked })}
+                      className="sr-only"
+                    />
+                    <Clock className={`w-5 h-5 ${editJobForm.is_urgent ? 'text-red-400' : 'text-gray-500'}`} />
+                    <span>Acil</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={() => { setShowEditJob(false); setEditingJob(null); }}
+                  className="flex-1 px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-xl font-semibold transition-colors"
+                >
+                  İptal
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  data-testid="update-job-btn"
+                >
+                  Güncelle
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
