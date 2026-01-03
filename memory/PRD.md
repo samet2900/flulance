@@ -142,7 +142,7 @@
   - Tema seçimi (Koyu/Açık) - ThemeContext ile global yönetim
   - Tema tercihinin localStorage'da saklanması
   - Tüm sayfalarda tema değişikliğinin anında uygulanması
-  - Dil seçimi (Türkçe/English) - Henüz uygulanmadı
+  - Dil seçimi (Türkçe/English) - react-i18next ile çoklu dil desteği ✅
 - [x] **Hesap İşlemleri**
   - Hesabı dondurma
   - Hesabı kalıcı silme
@@ -152,6 +152,13 @@
 - `index.css`: CSS override'ları ile light theme stilleri
 - Theme butonları: `data-testid="theme-light-btn"` ve `data-testid="theme-dark-btn"`
 - Tema tercihini localStorage ve backend API'ye kaydeder
+
+### Dil Sistemi Detayları (3 Ocak 2026):
+- `i18n.js`: react-i18next yapılandırması
+- `locales/tr/translation.json`: Türkçe çeviriler
+- `locales/en/translation.json`: İngilizce çeviriler
+- Dil butonları: `data-testid="lang-tr-btn"` ve `data-testid="lang-en-btn"`
+- Dil tercihini localStorage'da `language` anahtarıyla saklar
 
 ### Yeni API Endpoint'leri:
 - `GET /api/settings` - Tüm ayarları getir
