@@ -175,6 +175,85 @@ const InfluencerDashboard = () => {
     }
   };
 
+  const fetchStats = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/influencer-stats/me`, {
+        withCredentials: true
+      });
+      if (response.data) {
+        setStats(response.data);
+        setStatsForm({
+          instagram_followers: response.data.instagram_followers || '',
+          instagram_engagement: response.data.instagram_engagement || '',
+          tiktok_followers: response.data.tiktok_followers || '',
+          tiktok_engagement: response.data.tiktok_engagement || '',
+          youtube_subscribers: response.data.youtube_subscribers || '',
+          youtube_avg_views: response.data.youtube_avg_views || '',
+          twitter_followers: response.data.twitter_followers || ''
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/reviews/my-reviews`, {
+        withCredentials: true
+      });
+      setReviews(response.data);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
+
+  const handleSaveStats = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        instagram_followers: statsForm.instagram_followers ? parseInt(statsForm.instagram_followers) : null,
+        instagram_engagement: statsForm.instagram_engagement ? parseFloat(statsForm.instagram_engagement) : null,
+        tiktok_followers: statsForm.tiktok_followers ? parseInt(statsForm.tiktok_followers) : null,
+        tiktok_engagement: statsForm.tiktok_engagement ? parseFloat(statsForm.tiktok_engagement) : null,
+        youtube_subscribers: statsForm.youtube_subscribers ? parseInt(statsForm.youtube_subscribers) : null,
+        youtube_avg_views: statsForm.youtube_avg_views ? parseInt(statsForm.youtube_avg_views) : null,
+        twitter_followers: statsForm.twitter_followers ? parseInt(statsForm.twitter_followers) : null
+      };
+      
+      await axios.post(`${API_URL}/api/influencer-stats`, payload, {
+        withCredentials: true
+      });
+      
+      setShowEditStats(false);
+      fetchStats();
+      alert('İstatistikler başarıyla kaydedildi!');
+    } catch (error) {
+      console.error('Error saving stats:', error);
+      alert('İstatistikler kaydedilirken bir hata oluştu');
+    }
+  };
+
+  const handleSubmitReview = async (matchId, rating, comment) => {
+    try {
+      await axios.post(`${API_URL}/api/reviews`, {
+        match_id: matchId,
+        rating: rating,
+        comment: comment,
+        review_type: 'influencer_to_brand'
+      }, {
+        withCredentials: true
+      });
+      
+      setShowReviewModal(null);
+      alert('Değerlendirmeniz gönderildi!');
+      fetchMatches();
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert(error.response?.data?.detail || 'Değerlendirme gönderilirken bir hata oluştu');
+    }
+  };
+
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     try {
