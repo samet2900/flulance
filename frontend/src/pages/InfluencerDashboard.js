@@ -89,6 +89,8 @@ const InfluencerDashboard = () => {
         fetchStats();
       } else if (activeTab === 'reviews') {
         fetchReviews();
+      } else if (activeTab === 'media') {
+        fetchMediaLibrary();
       }
     }
   }, [user, activeTab, filterCategory, filterPlatform]);
