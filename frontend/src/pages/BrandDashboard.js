@@ -626,9 +626,15 @@ const BrandDashboard = () => {
                         <div className="flex items-center gap-4 text-sm text-gray-500 mt-2">
                           <span>{job.view_count || 0} görüntülenme</span>
                           <span>{job.application_count || 0} başvuru</span>
-                          {job.expires_at && (
-                            <span className={job.status === 'expired' ? 'text-orange-400' : ''}>
-                              Bitiş: {new Date(job.expires_at).toLocaleDateString('tr-TR')}
+                          {job.expires_at && job.approval_status === 'approved' && (
+                            <span className={`flex items-center gap-1 ${
+                              getRemainingDays(job.expires_at) <= 3 ? 'text-red-400' : 
+                              getRemainingDays(job.expires_at) <= 7 ? 'text-orange-400' : 'text-gray-500'
+                            }`}>
+                              <Clock className="w-3 h-3" />
+                              {getRemainingDays(job.expires_at) > 0 
+                                ? `${getRemainingDays(job.expires_at)} gün kaldı`
+                                : 'Süresi doldu'}
                             </span>
                           )}
                         </div>
