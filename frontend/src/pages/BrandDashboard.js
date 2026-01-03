@@ -34,7 +34,9 @@ const BrandDashboard = () => {
     min_followers: '',
     content_requirements: { videos: '', images: '', stories: '' },
     target_audience: { age_range: '', location: '' },
-    copyright: 'shared'
+    copyright: 'shared',
+    is_featured: false,
+    is_urgent: false
   });
 
   const [profileForm, setProfileForm] = useState({
