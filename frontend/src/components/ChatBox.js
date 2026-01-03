@@ -245,12 +245,19 @@ const ChatBox = ({ match, currentUser, onClose }) => {
                   <p className="text-xs text-gray-300 mb-1">{msg.sender_name}</p>
                   {msg.message && <p className="text-white">{msg.message}</p>}
                   {renderAttachment(msg.attachment, msg.sender_user_id === currentUser.user_id)}
-                  <p className="text-xs text-gray-400 mt-1">
-                    {new Date(msg.timestamp).toLocaleTimeString('tr-TR', { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
-                    })}
-                  </p>
+                  <div className="flex items-center justify-end gap-1 mt-1">
+                    <p className="text-xs text-gray-400">
+                      {new Date(msg.timestamp).toLocaleTimeString('tr-TR', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
+                    </p>
+                    {msg.sender_user_id === currentUser.user_id && (
+                      <span className={`text-xs ${msg.is_read ? 'text-cyan-400' : 'text-gray-500'}`}>
+                        {msg.is_read ? '✓✓' : '✓'}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             ))
