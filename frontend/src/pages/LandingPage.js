@@ -160,17 +160,17 @@ const LandingPage = () => {
                   <span className="text-gray-300">Kendi fiyatını belirle, komisyon bizden</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Instagram className="w-6 h-6 text-pink-400 flex-shrink-0 mt-1" />
+                  <Instagram className="w-6 h-6 text-fuchsia-400 flex-shrink-0 mt-1" />
                   <span className="text-gray-300">Tüm sosyal medya platformlarında çalış</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <TrendingUp className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
+                  <TrendingUp className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
                   <span className="text-gray-300">Portföyünü göster, markalar seni keşfetsin</span>
                 </li>
               </ul>
               <button
                 onClick={() => navigate('/auth')}
-                className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-lg font-bold hover:scale-105 transition-transform"
+                className="px-8 py-4 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-full text-lg font-bold hover:scale-105 transition-transform hover:shadow-lg hover:shadow-fuchsia-500/25"
                 data-testid="influencer-cta-btn"
               >
                 Influencer Olarak Başla
@@ -178,11 +178,11 @@ const LandingPage = () => {
             </div>
             <div className="grid grid-cols-2 gap-4">
               {portfolioCards.slice(0, 4).map((card, idx) => (
-                <div key={idx} className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 overflow-hidden hover:scale-105 transition-transform">
+                <div key={idx} className="bg-black/50 backdrop-blur-sm rounded-xl border border-gray-800 overflow-hidden hover:scale-105 hover:border-fuchsia-500/50 transition-all">
                   <img src={card.image} alt={card.name} className="w-full h-32 object-cover" />
                   <div className="p-3">
                     <p className="font-semibold text-sm">{card.name}</p>
-                    <p className="text-xs text-purple-400">{card.specialty}</p>
+                    <p className="text-xs text-fuchsia-400">{card.specialty}</p>
                   </div>
                 </div>
               ))}
@@ -192,11 +192,11 @@ const LandingPage = () => {
       </section>
 
       {/* Markalar İçin */}
-      <section className="py-20 px-4 bg-black/30">
+      <section className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1">
-              <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-3xl p-8 border border-purple-500/30">
+              <div className="bg-gradient-to-br from-fuchsia-500/20 to-cyan-500/20 rounded-3xl p-8 border border-fuchsia-500/30">
                 <h3 className="text-2xl font-bold mb-4">İlan Oluştur</h3>
                 <div className="space-y-4 text-gray-300">
                   <p>✓ Kampanya detaylarını yaz</p>
@@ -213,7 +213,7 @@ const LandingPage = () => {
               </p>
               <button
                 onClick={() => navigate('/auth')}
-                className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-lg font-bold hover:scale-105 transition-transform"
+                className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-fuchsia-500 rounded-full text-lg font-bold hover:scale-105 transition-transform hover:shadow-lg hover:shadow-cyan-500/25"
                 data-testid="brand-cta-btn"
               >
                 Marka Olarak Başla
@@ -224,20 +224,20 @@ const LandingPage = () => {
       </section>
 
       {/* Örnek Portföy Kartları */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-black">
         <div className="container mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">Platformdaki Influencer'lar</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text">Platformdaki Influencer'lar</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6" data-testid="portfolio-cards">
             {portfolioCards.map((card, idx) => (
-              <div key={idx} className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden hover:border-purple-500/50 transition-all hover:scale-105" data-testid={`portfolio-card-${idx}`}>
+              <div key={idx} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-800 overflow-hidden hover:border-fuchsia-500/50 transition-all hover:scale-105" data-testid={`portfolio-card-${idx}`}>
                 <img src={card.image} alt={card.name} className="w-full h-48 object-cover" />
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-2">{card.name}</h3>
-                  <p className="text-purple-400 font-semibold mb-2">{card.specialty}</p>
+                  <p className="text-fuchsia-400 font-semibold mb-2">{card.specialty}</p>
                   <p className="text-gray-400 text-sm mb-4">{card.description}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-green-400 font-bold">{card.price}</span>
-                    <button className="text-sm text-purple-400 hover:text-purple-300">Profili Gör →</button>
+                    <span className="text-cyan-400 font-bold">{card.price}</span>
+                    <button className="text-sm text-fuchsia-400 hover:text-fuchsia-300">Profili Gör →</button>
                   </div>
                 </div>
               </div>
