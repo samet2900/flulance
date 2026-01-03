@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { X, Send } from 'lucide-react';
+import { X, Send, Paperclip, Image, File, Video, Download, Loader2 } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -8,7 +8,11 @@ const ChatBox = ({ match, currentUser, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const messagesEndRef = useRef(null);
+  const fileInputRef = useRef(null);
   const pollingInterval = useRef(null);
 
   useEffect(() => {
@@ -41,29 +45,156 @@ const ChatBox = ({ match, currentUser, onClose }) => {
     }
   };
 
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check file size (50MB max)
+      if (file.size > 50 * 1024 * 1024) {
+        alert('Dosya boyutu çok büyük. Maksimum 50MB yükleyebilirsiniz.');
+        return;
+      }
+
+      setSelectedFile(file);
+      
+      // Create preview for images
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => setPreviewUrl(e.target.result);
+        reader.readAsDataURL(file);
+      } else {
+        setPreviewUrl(null);
+      }
+    }
+  };
+
+  const clearSelectedFile = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() && !selectedFile) return;
 
     setLoading(true);
+    setUploading(!!selectedFile);
+
     try {
-      await axios.post(
-        `${API_URL}/api/matches/${match.match_id}/messages`,
-        { message: newMessage },
-        { withCredentials: true }
-      );
+      if (selectedFile) {
+        // Send with attachment
+        const formData = new FormData();
+        formData.append('message', newMessage);
+        formData.append('file', selectedFile);
+
+        await axios.post(
+          `${API_URL}/api/matches/${match.match_id}/messages/with-attachment`,
+          formData,
+          { 
+            withCredentials: true,
+            headers: { 'Content-Type': 'multipart/form-data' }
+          }
+        );
+      } else {
+        // Send text only
+        await axios.post(
+          `${API_URL}/api/matches/${match.match_id}/messages`,
+          { message: newMessage },
+          { withCredentials: true }
+        );
+      }
       
       setNewMessage('');
+      clearSelectedFile();
       fetchMessages();
     } catch (error) {
       console.error('Error sending message:', error);
+      alert('Mesaj gönderilirken bir hata oluştu');
     } finally {
       setLoading(false);
+      setUploading(false);
     }
   };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const getFileIcon = (fileType) => {
+    if (fileType === 'image') return <Image className="w-5 h-5" />;
+    if (fileType === 'video') return <Video className="w-5 h-5" />;
+    return <File className="w-5 h-5" />;
+  };
+
+  const getFileTypeLabel = (fileType) => {
+    if (fileType === 'image') return 'Resim';
+    if (fileType === 'video') return 'Video';
+    return 'Dosya';
+  };
+
+  const renderAttachment = (attachment, isMine) => {
+    if (!attachment) return null;
+
+    const fullUrl = attachment.url.startsWith('http') 
+      ? attachment.url 
+      : `${API_URL}${attachment.url}`;
+
+    if (attachment.file_type === 'image') {
+      return (
+        <div className="mt-2">
+          <a href={fullUrl} target="_blank" rel="noopener noreferrer">
+            <img 
+              src={fullUrl} 
+              alt={attachment.original_filename}
+              className="max-w-[250px] max-h-[200px] rounded-lg object-cover cursor-pointer hover:opacity-90 transition-opacity"
+            />
+          </a>
+          <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+            <Image className="w-3 h-3" />
+            {attachment.original_filename}
+          </p>
+        </div>
+      );
+    }
+
+    if (attachment.file_type === 'video') {
+      return (
+        <div className="mt-2">
+          <video 
+            src={fullUrl} 
+            controls 
+            className="max-w-[300px] max-h-[200px] rounded-lg"
+          />
+          <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+            <Video className="w-3 h-3" />
+            {attachment.original_filename}
+          </p>
+        </div>
+      );
+    }
+
+    // Document
+    return (
+      <a 
+        href={fullUrl} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className={`mt-2 flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+          isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'
+        }`}
+      >
+        <File className="w-5 h-5" />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium truncate">{attachment.original_filename}</p>
+          <p className="text-xs text-gray-400">
+            {(attachment.file_size / 1024).toFixed(1)} KB
+          </p>
+        </div>
+        <Download className="w-4 h-4" />
+      </a>
+    );
   };
 
   const otherUserName = currentUser.user_type === 'marka' ? match.influencer_name : match.brand_name;
@@ -95,6 +226,7 @@ const ChatBox = ({ match, currentUser, onClose }) => {
           {messages.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-400">Henüz mesaj yok. Sohbeti başlatın!</p>
+              <p className="text-sm text-gray-500 mt-2">Resim, video ve dosya paylaşabilirsiniz</p>
             </div>
           ) : (
             messages.map((msg) => (
@@ -111,7 +243,8 @@ const ChatBox = ({ match, currentUser, onClose }) => {
                   }`}
                 >
                   <p className="text-xs text-gray-300 mb-1">{msg.sender_name}</p>
-                  <p className="text-white">{msg.message}</p>
+                  {msg.message && <p className="text-white">{msg.message}</p>}
+                  {renderAttachment(msg.attachment, msg.sender_user_id === currentUser.user_id)}
                   <p className="text-xs text-gray-400 mt-1">
                     {new Date(msg.timestamp).toLocaleTimeString('tr-TR', { 
                       hour: '2-digit', 
@@ -125,28 +258,79 @@ const ChatBox = ({ match, currentUser, onClose }) => {
           <div ref={messagesEndRef} />
         </div>
 
+        {/* File Preview */}
+        {selectedFile && (
+          <div className="px-6 py-3 border-t border-white/10 bg-white/5">
+            <div className="flex items-center gap-3">
+              {previewUrl ? (
+                <img src={previewUrl} alt="Preview" className="w-16 h-16 object-cover rounded-lg" />
+              ) : (
+                <div className="w-16 h-16 bg-white/10 rounded-lg flex items-center justify-center">
+                  {getFileIcon(selectedFile.type.split('/')[0])}
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{selectedFile.name}</p>
+                <p className="text-xs text-gray-400">
+                  {(selectedFile.size / 1024 / 1024).toFixed(2)} MB • {getFileTypeLabel(selectedFile.type.split('/')[0])}
+                </p>
+              </div>
+              <button
+                onClick={clearSelectedFile}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Input */}
         <div className="p-6 border-t border-white/10">
           <form onSubmit={handleSendMessage} className="flex gap-2">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              className="hidden"
+              accept="image/*,video/*,.pdf,.doc,.docx"
+              data-testid="file-input"
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="px-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors flex items-center gap-2"
+              disabled={loading}
+              data-testid="attach-file-btn"
+            >
+              <Paperclip className="w-5 h-5" />
+            </button>
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Mesajınızı yazın..."
-              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500"
+              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
               disabled={loading}
               data-testid="message-input"
             />
             <button
               type="submit"
-              disabled={loading || !newMessage.trim()}
+              disabled={loading || (!newMessage.trim() && !selectedFile)}
               className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2"
               data-testid="send-message-btn"
             >
-              <Send className="w-5 h-5" />
+              {uploading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Send className="w-5 h-5" />
+              )}
               Gönder
             </button>
           </form>
+          <p className="text-xs text-gray-500 mt-2 text-center">
+            Resim, video (max 50MB) ve PDF dosyaları paylaşabilirsiniz
+          </p>
         </div>
       </div>
     </div>
