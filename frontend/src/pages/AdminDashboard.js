@@ -595,43 +595,218 @@ const AdminDashboard = () => {
         {/* Jobs Tab */}
         {activeTab === 'jobs' && (
           <div>
-            <h2 className="text-3xl font-bold mb-6">Tüm İş İlanları ({jobs.length})</h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-bold">İlan Yönetimi ({jobs.length})</h2>
+              
+              {/* Filter Tabs */}
+              <div className="flex gap-2">
+                {[
+                  { key: 'pending', label: 'Onay Bekleyen', color: 'yellow' },
+                  { key: 'approved', label: 'Onaylanan', color: 'green' },
+                  { key: 'rejected', label: 'Reddedilen', color: 'red' },
+                  { key: 'all', label: 'Tümü', color: 'gray' }
+                ].map((filter) => (
+                  <button
+                    key={filter.key}
+                    onClick={() => setJobFilter(filter.key)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      jobFilter === filter.key
+                        ? `bg-${filter.color}-500/30 text-${filter.color}-400 border border-${filter.color}-500/50`
+                        : 'bg-gray-800 hover:bg-gray-700'
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             
             {loading ? (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
               </div>
+            ) : jobs.length === 0 ? (
+              <div className="text-center py-12 bg-gray-900/30 rounded-2xl border border-gray-800">
+                <Briefcase className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+                <p className="text-gray-400">Bu kategoride ilan bulunamadı</p>
+              </div>
             ) : (
-              <div className="grid gap-6" data-testid="jobs-list">
+              <div className="grid gap-4" data-testid="jobs-list">
                 {jobs.map((job) => (
-                  <div key={job.job_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-xl font-bold mb-2">{job.title}</h3>
-                        <p className="text-gray-400 mb-2">Marka: {job.brand_name}</p>
-                        <div className="flex flex-wrap gap-2">
-                          <span className="px-3 py-1 bg-fuchsia-500/30 rounded-full text-sm">{job.category}</span>
-                          <span className="px-3 py-1 bg-green-500/30 rounded-full text-sm font-semibold">{job.budget.toLocaleString('tr-TR')} ₺</span>
-                          <span className={`px-3 py-1 rounded-full text-sm ${
-                            job.status === 'open' ? 'bg-green-500/30' : 'bg-gray-500/30'
+                  <div 
+                    key={job.job_id} 
+                    className={`bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border transition-all ${
+                      job.approval_status === 'pending' ? 'border-yellow-500/50' :
+                      job.approval_status === 'rejected' ? 'border-red-500/50' :
+                      job.is_featured ? 'border-yellow-500/30' : 'border-gray-800'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        {/* Status Badges */}
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                            job.approval_status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                            job.approval_status === 'approved' ? 'bg-green-500/20 text-green-400' :
+                            'bg-red-500/20 text-red-400'
                           }`}>
-                            {job.status === 'open' ? 'Açık' : job.status === 'filled' ? 'Dolu' : 'Kapalı'}
+                            {job.approval_status === 'pending' ? '⏳ Onay Bekliyor' :
+                             job.approval_status === 'approved' ? '✅ Onaylandı' : '❌ Reddedildi'}
+                          </span>
+                          {job.is_featured && (
+                            <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs font-semibold flex items-center gap-1">
+                              <Zap className="w-3 h-3" /> Öne Çıkan
+                            </span>
+                          )}
+                          {job.is_urgent && (
+                            <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs font-semibold flex items-center gap-1">
+                              <Clock className="w-3 h-3" /> Acil
+                            </span>
+                          )}
+                          <span className={`px-2 py-1 rounded text-xs ${
+                            job.status === 'open' ? 'bg-green-500/20 text-green-400' :
+                            job.status === 'expired' ? 'bg-orange-500/20 text-orange-400' :
+                            'bg-gray-500/20 text-gray-400'
+                          }`}>
+                            {job.status === 'open' ? 'Açık' : 
+                             job.status === 'expired' ? 'Süresi Doldu' :
+                             job.status === 'filled' ? 'Dolu' : 'Kapalı'}
                           </span>
                         </div>
+                        
+                        <h3 className="text-xl font-bold mb-1">{job.title}</h3>
+                        <p className="text-fuchsia-400 mb-2">Marka: {job.brand_name}</p>
+                        
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          <span className="px-3 py-1 bg-fuchsia-500/30 rounded-full text-sm">{job.category}</span>
+                          <span className="px-3 py-1 bg-green-500/30 rounded-full text-sm font-semibold">{job.budget.toLocaleString('tr-TR')} ₺</span>
+                          {job.platforms.map((platform) => (
+                            <span key={platform} className="px-3 py-1 bg-blue-500/30 rounded-full text-sm capitalize">
+                              {platform}
+                            </span>
+                          ))}
+                        </div>
+                        
+                        <p className="text-gray-400 text-sm mb-3 line-clamp-2">{job.description}</p>
+                        
+                        {/* Stats */}
+                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                          <span className="flex items-center gap-1">
+                            <Eye className="w-4 h-4" /> {job.view_count || 0} görüntülenme
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Users className="w-4 h-4" /> {job.application_count || 0} başvuru
+                          </span>
+                          <span>
+                            {new Date(job.created_at).toLocaleDateString('tr-TR')}
+                          </span>
+                          {job.expires_at && (
+                            <span className={job.status === 'expired' ? 'text-red-400' : ''}>
+                              Bitiş: {new Date(job.expires_at).toLocaleDateString('tr-TR')}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Rejection Reason */}
+                        {job.approval_status === 'rejected' && job.rejection_reason && (
+                          <div className="mt-3 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                            <p className="text-sm text-red-400">
+                              <AlertTriangle className="w-4 h-4 inline mr-1" />
+                              Red Sebebi: {job.rejection_reason}
+                            </p>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                    <p className="text-gray-300 mb-4">{job.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {job.platforms.map((platform) => (
-                        <span key={platform} className="px-3 py-1 bg-blue-500/30 rounded-full text-sm capitalize">
-                          {platform}
-                        </span>
-                      ))}
+                      
+                      {/* Action Buttons */}
+                      <div className="flex flex-col gap-2 ml-4">
+                        {job.approval_status === 'pending' && (
+                          <>
+                            <button
+                              onClick={() => handleApproveJob(job.job_id)}
+                              className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-colors flex items-center gap-2"
+                              data-testid={`approve-job-${job.job_id}`}
+                            >
+                              <Check className="w-4 h-4" /> Onayla
+                            </button>
+                            <button
+                              onClick={() => setShowRejectModal(job.job_id)}
+                              className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors flex items-center gap-2"
+                              data-testid={`reject-job-${job.job_id}`}
+                            >
+                              <X className="w-4 h-4" /> Reddet
+                            </button>
+                          </>
+                        )}
+                        <button
+                          onClick={() => handleDeleteJob(job.job_id)}
+                          className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors flex items-center gap-2"
+                          data-testid={`delete-job-${job.job_id}`}
+                        >
+                          <Trash2 className="w-4 h-4" /> Sil
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {/* Reject Modal */}
+        {showRejectModal && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-900 rounded-2xl p-6 max-w-md w-full border border-gray-800">
+              <h3 className="text-xl font-bold mb-4">İlanı Reddet</h3>
+              <p className="text-gray-400 mb-4">Red sebebini belirtin (marka bilgilendirilecek):</p>
+              
+              <div className="space-y-2 mb-4">
+                {[
+                  'Topluluk kurallarına aykırı içerik',
+                  'Eksik veya yanıltıcı bilgiler',
+                  'Uygunsuz bütçe/ücret talebi',
+                  'Spam veya reklam içeriği',
+                  'Diğer'
+                ].map((reason) => (
+                  <button
+                    key={reason}
+                    onClick={() => setRejectionReason(reason)}
+                    className={`w-full text-left px-4 py-2 rounded-lg border transition-colors ${
+                      rejectionReason === reason
+                        ? 'border-red-500 bg-red-500/20 text-red-400'
+                        : 'border-gray-700 hover:border-gray-600'
+                    }`}
+                  >
+                    {reason}
+                  </button>
+                ))}
+              </div>
+              
+              <textarea
+                value={rejectionReason}
+                onChange={(e) => setRejectionReason(e.target.value)}
+                placeholder="Özel bir sebep yazın..."
+                rows={2}
+                className="w-full px-4 py-2 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-red-500 resize-none text-white mb-4"
+              />
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => { setShowRejectModal(null); setRejectionReason(''); }}
+                  className="flex-1 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+                >
+                  İptal
+                </button>
+                <button
+                  onClick={handleRejectJob}
+                  disabled={!rejectionReason}
+                  className="flex-1 px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  Reddet
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
