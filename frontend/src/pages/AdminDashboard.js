@@ -47,6 +47,9 @@ const AdminDashboard = () => {
         fetchMatches();
       } else if (activeTab === 'announcements') {
         fetchAnnouncements();
+      } else if (activeTab === 'badges') {
+        fetchUsers();
+        fetchBadges();
       }
     }
   }, [user, activeTab]);
