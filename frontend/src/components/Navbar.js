@@ -110,24 +110,29 @@ const Navbar = ({ user, onLogout }) => {
   };
 
   return (
-    <nav className="bg-black/30 backdrop-blur-lg border-b border-white/10 sticky top-0 z-50">
+    <nav className="bg-black/80 backdrop-blur-lg border-b border-gray-800 sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-8">
             <button
               onClick={() => navigate('/home')}
-              className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text hover:scale-105 transition-transform"
+              className="flex items-center gap-2 hover:scale-105 transition-transform"
               data-testid="nav-logo"
             >
-              FLULANCE
+              <img 
+                src="https://customer-assets.emergentagent.com/job_freelance-hub-216/artifacts/er3uz3pj_WhatsApp%20Image%202026-01-03%20at%2015.54.27.jpeg" 
+                alt="FLULANCE Logo" 
+                className="h-8 w-8 object-contain"
+              />
+              <span className="text-2xl font-bold bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text">FLULANCE</span>
             </button>
             
             {/* Navigation Links */}
             <div className="hidden md:flex items-center gap-4">
               <button
                 onClick={() => navigate('/home')}
-                className="px-4 py-2 text-white hover:text-purple-400 transition-colors flex items-center gap-2"
+                className="px-4 py-2 text-white hover:text-fuchsia-400 transition-colors flex items-center gap-2"
                 data-testid="nav-home"
               >
                 <Home className="w-4 h-4" />
@@ -142,14 +147,14 @@ const Navbar = ({ user, onLogout }) => {
                         document.getElementById('jobs')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                       }, 100);
                     }}
-                    className="px-4 py-2 text-white hover:text-purple-400 transition-colors flex items-center gap-2"
+                    className="px-4 py-2 text-white hover:text-fuchsia-400 transition-colors flex items-center gap-2"
                   >
                     <Briefcase className="w-4 h-4" />
                     İş İlanları
                   </button>
                   <button
                     onClick={() => navigate('/announcements')}
-                    className="px-4 py-2 text-white hover:text-purple-400 transition-colors flex items-center gap-2"
+                    className="px-4 py-2 text-white hover:text-cyan-400 transition-colors flex items-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4" />
                     Duyurular
