@@ -175,7 +175,7 @@ const Navbar = ({ user, onLogout }) => {
               >
                 <Bell className="w-5 h-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-fuchsia-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
@@ -183,13 +183,13 @@ const Navbar = ({ user, onLogout }) => {
 
               {/* Notifications Dropdown */}
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-gray-900 border border-white/20 rounded-xl shadow-2xl overflow-hidden" data-testid="notifications-dropdown">
-                  <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <div className="absolute right-0 mt-2 w-80 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden" data-testid="notifications-dropdown">
+                  <div className="p-4 border-b border-gray-700 flex items-center justify-between">
                     <h3 className="font-semibold">Bildirimler</h3>
                     {unreadCount > 0 && (
                       <button
                         onClick={markAllRead}
-                        className="text-xs text-purple-400 hover:text-purple-300"
+                        className="text-xs text-fuchsia-400 hover:text-fuchsia-300"
                       >
                         Tümünü okundu işaretle
                       </button>
@@ -205,8 +205,8 @@ const Navbar = ({ user, onLogout }) => {
                       notifications.map((notif) => (
                         <div
                           key={notif.notification_id}
-                          className={`p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors ${
-                            !notif.is_read ? 'bg-purple-500/10' : ''
+                          className={`p-4 border-b border-gray-800 hover:bg-white/5 cursor-pointer transition-colors ${
+                            !notif.is_read ? 'bg-fuchsia-500/10' : ''
                           }`}
                           onClick={() => {
                             if (!notif.is_read) markAsRead(notif.notification_id);
@@ -223,7 +223,7 @@ const Navbar = ({ user, onLogout }) => {
                               </p>
                             </div>
                             {!notif.is_read && (
-                              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                              <div className="w-2 h-2 bg-fuchsia-500 rounded-full"></div>
                             )}
                           </div>
                         </div>
