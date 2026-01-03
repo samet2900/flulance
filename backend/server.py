@@ -146,6 +146,8 @@ class JobPostCreate(BaseModel):
     min_followers: Optional[int] = None  # Minimum takipçi sayısı
     target_audience: Optional[dict] = None  # {"age_range": "18-24", "location": "Turkey"}
     copyright: Optional[str] = None  # "brand", "influencer", "shared"
+    is_featured: Optional[bool] = False  # Öne çıkan ilan
+    is_urgent: Optional[bool] = False  # Acil ilan
 
 class JobPost(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -165,6 +167,9 @@ class JobPost(BaseModel):
     min_followers: Optional[int] = None
     target_audience: Optional[dict] = None
     copyright: Optional[str] = None
+    is_featured: Optional[bool] = False
+    is_urgent: Optional[bool] = False
+    application_count: Optional[int] = 0
     status: str  # 'open', 'closed', 'filled'
     created_at: datetime
 
