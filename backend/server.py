@@ -269,6 +269,67 @@ class Favorite(BaseModel):
     job_id: str
     created_at: datetime
 
+# Review Models (FAZ 2)
+class ReviewCreate(BaseModel):
+    match_id: str
+    rating: int  # 1-5 yıldız
+    comment: str
+    review_type: str  # 'brand_to_influencer' veya 'influencer_to_brand'
+
+class Review(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    review_id: str
+    match_id: str
+    reviewer_user_id: str
+    reviewer_name: str
+    reviewed_user_id: str
+    reviewed_name: str
+    rating: int
+    comment: str
+    review_type: str
+    created_at: datetime
+
+# Influencer Statistics Models (FAZ 2)
+class InfluencerStatsCreate(BaseModel):
+    instagram_followers: Optional[int] = None
+    instagram_engagement: Optional[float] = None  # Engagement rate %
+    tiktok_followers: Optional[int] = None
+    tiktok_engagement: Optional[float] = None
+    youtube_subscribers: Optional[int] = None
+    youtube_avg_views: Optional[int] = None
+    twitter_followers: Optional[int] = None
+    total_reach: Optional[int] = None
+
+class InfluencerStats(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    stats_id: str
+    user_id: str
+    instagram_followers: Optional[int] = None
+    instagram_engagement: Optional[float] = None
+    tiktok_followers: Optional[int] = None
+    tiktok_engagement: Optional[float] = None
+    youtube_subscribers: Optional[int] = None
+    youtube_avg_views: Optional[int] = None
+    twitter_followers: Optional[int] = None
+    total_reach: Optional[int] = None
+    completed_jobs: int = 0
+    average_rating: float = 0.0
+    total_reviews: int = 0
+    updated_at: datetime
+
+# Badge/Verification Models (FAZ 2)
+class BadgeRequest(BaseModel):
+    badge_type: str  # 'verified', 'top', 'rising'
+    reason: Optional[str] = None
+
+class Badge(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    badge_id: str
+    user_id: str
+    badge_type: str  # 'verified', 'top', 'rising', 'new'
+    awarded_at: datetime
+    awarded_by: Optional[str] = None  # Admin user_id
+
 # ============= HELPER FUNCTIONS =============
 
 def hash_password(password: str) -> str:
