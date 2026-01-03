@@ -1781,6 +1781,666 @@ async def get_user_badges(user_id: str):
         "badge_history": badges
     }
 
+# ============= FAZ 3: FILE UPLOAD ROUTES =============
+
+ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime']
+ALLOWED_DOC_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB
+
+def get_file_type(content_type: str) -> str:
+    if content_type in ALLOWED_IMAGE_TYPES:
+        return 'image'
+    elif content_type in ALLOWED_VIDEO_TYPES:
+        return 'video'
+    elif content_type in ALLOWED_DOC_TYPES:
+        return 'document'
+    return 'unknown'
+
+@api_router.post("/upload")
+async def upload_file(request: Request, file: UploadFile = File(...)):
+    """Generic file upload endpoint"""
+    user = await require_auth(request)
+    
+    # Validate file type
+    content_type = file.content_type or 'application/octet-stream'
+    file_type = get_file_type(content_type)
+    
+    if file_type == 'unknown':
+        raise HTTPException(status_code=400, detail="File type not allowed. Allowed: images, videos, PDFs")
+    
+    # Generate unique filename
+    ext = Path(file.filename).suffix if file.filename else '.bin'
+    unique_filename = f"{uuid.uuid4().hex}{ext}"
+    file_path = UPLOAD_DIR / unique_filename
+    
+    # Save file
+    try:
+        with open(file_path, "wb") as buffer:
+            content = await file.read()
+            if len(content) > MAX_FILE_SIZE:
+                raise HTTPException(status_code=400, detail="File too large. Max 50MB allowed")
+            buffer.write(content)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save file: {str(e)}")
+    
+    # Get file URL
+    file_url = f"/uploads/{unique_filename}"
+    
+    return {
+        "filename": unique_filename,
+        "original_filename": file.filename,
+        "file_type": file_type,
+        "file_size": len(content),
+        "url": file_url,
+        "content_type": content_type
+    }
+
+# ============= FAZ 3: CHAT WITH ATTACHMENTS =============
+
+@api_router.post("/matches/{match_id}/messages/with-attachment")
+async def send_message_with_attachment(
+    request: Request,
+    match_id: str,
+    message: str = Form(""),
+    file: UploadFile = File(None)
+):
+    """Send message with optional file attachment"""
+    user = await require_auth(request)
+    
+    # Verify match access
+    match_doc = await db.matches.find_one({"match_id": match_id})
+    if not match_doc:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+    if match_doc["brand_user_id"] != user.user_id and match_doc["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your match")
+    
+    message_id = f"msg_{uuid.uuid4().hex[:12]}"
+    attachment_data = None
+    
+    # Handle file upload if present
+    if file and file.filename:
+        content_type = file.content_type or 'application/octet-stream'
+        file_type = get_file_type(content_type)
+        
+        if file_type == 'unknown':
+            raise HTTPException(status_code=400, detail="File type not allowed")
+        
+        ext = Path(file.filename).suffix if file.filename else '.bin'
+        unique_filename = f"chat_{uuid.uuid4().hex}{ext}"
+        file_path = UPLOAD_DIR / unique_filename
+        
+        try:
+            content = await file.read()
+            if len(content) > MAX_FILE_SIZE:
+                raise HTTPException(status_code=400, detail="File too large. Max 50MB allowed")
+            with open(file_path, "wb") as buffer:
+                buffer.write(content)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to save file: {str(e)}")
+        
+        attachment_id = f"attach_{uuid.uuid4().hex[:12]}"
+        attachment_data = {
+            "attachment_id": attachment_id,
+            "message_id": message_id,
+            "filename": unique_filename,
+            "original_filename": file.filename,
+            "file_type": file_type,
+            "file_size": len(content),
+            "url": f"/uploads/{unique_filename}",
+            "content_type": content_type
+        }
+    
+    # Create message
+    msg_doc = {
+        "message_id": message_id,
+        "match_id": match_id,
+        "sender_user_id": user.user_id,
+        "sender_name": user.name,
+        "message": message,
+        "attachment": attachment_data,
+        "timestamp": datetime.now(timezone.utc)
+    }
+    
+    await db.messages.insert_one(msg_doc)
+    
+    msg_doc.pop("_id", None)
+    return msg_doc
+
+# ============= FAZ 3: CONTRACT ROUTES =============
+
+@api_router.post("/contracts", response_model=Contract)
+async def create_contract(request: Request, contract_data: ContractCreate):
+    """Create a new contract for a match"""
+    user = await require_auth(request)
+    
+    # Get match
+    match_doc = await db.matches.find_one({"match_id": contract_data.match_id})
+    if not match_doc:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+    # Verify user is part of this match
+    if match_doc["brand_user_id"] != user.user_id and match_doc["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your match")
+    
+    # Check if contract already exists for this match
+    existing = await db.contracts.find_one({"match_id": contract_data.match_id, "status": {"$nin": ["cancelled"]}})
+    if existing:
+        raise HTTPException(status_code=400, detail="Contract already exists for this match")
+    
+    contract_id = f"contract_{uuid.uuid4().hex[:12]}"
+    
+    contract_doc = {
+        "contract_id": contract_id,
+        "match_id": contract_data.match_id,
+        "job_id": match_doc["job_id"],
+        "brand_user_id": match_doc["brand_user_id"],
+        "influencer_user_id": match_doc["influencer_user_id"],
+        "title": contract_data.title,
+        "description": contract_data.description,
+        "total_amount": contract_data.total_amount,
+        "payment_terms": contract_data.payment_terms,
+        "start_date": contract_data.start_date,
+        "end_date": contract_data.end_date,
+        "terms_and_conditions": contract_data.terms_and_conditions,
+        "status": "draft",
+        "brand_signed": False,
+        "influencer_signed": False,
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    await db.contracts.insert_one(contract_doc)
+    
+    # Notify other party
+    other_user_id = match_doc["influencer_user_id"] if user.user_id == match_doc["brand_user_id"] else match_doc["brand_user_id"]
+    await create_notification(
+        user_id=other_user_id,
+        type="contract",
+        title="Yeni Sözleşme!",
+        message=f"{user.name} bir sözleşme taslağı oluşturdu: {contract_data.title}",
+        link=f"/contracts/{contract_id}"
+    )
+    
+    contract_doc.pop("_id", None)
+    return Contract(**contract_doc)
+
+@api_router.get("/contracts/my-contracts")
+async def get_my_contracts(request: Request):
+    """Get all contracts for current user"""
+    user = await require_auth(request)
+    
+    query = {"$or": [
+        {"brand_user_id": user.user_id},
+        {"influencer_user_id": user.user_id}
+    ]}
+    
+    contracts = await db.contracts.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
+    
+    # Add match info
+    for contract in contracts:
+        match_doc = await db.matches.find_one({"match_id": contract["match_id"]}, {"_id": 0})
+        if match_doc:
+            contract["job_title"] = match_doc.get("job_title")
+            contract["brand_name"] = match_doc.get("brand_name")
+            contract["influencer_name"] = match_doc.get("influencer_name")
+    
+    return contracts
+
+@api_router.get("/contracts/{contract_id}")
+async def get_contract(request: Request, contract_id: str):
+    """Get contract details"""
+    user = await require_auth(request)
+    
+    contract_doc = await db.contracts.find_one({"contract_id": contract_id}, {"_id": 0})
+    if not contract_doc:
+        raise HTTPException(status_code=404, detail="Contract not found")
+    
+    # Verify access
+    if contract_doc["brand_user_id"] != user.user_id and contract_doc["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your contract")
+    
+    # Get milestones
+    milestones = await db.milestones.find({"contract_id": contract_id}, {"_id": 0}).sort("due_date", 1).to_list(100)
+    contract_doc["milestones"] = milestones
+    
+    # Get match info
+    match_doc = await db.matches.find_one({"match_id": contract_doc["match_id"]}, {"_id": 0})
+    if match_doc:
+        contract_doc["job_title"] = match_doc.get("job_title")
+        contract_doc["brand_name"] = match_doc.get("brand_name")
+        contract_doc["influencer_name"] = match_doc.get("influencer_name")
+    
+    return contract_doc
+
+@api_router.post("/contracts/{contract_id}/sign")
+async def sign_contract(request: Request, contract_id: str):
+    """Sign a contract"""
+    user = await require_auth(request)
+    
+    contract_doc = await db.contracts.find_one({"contract_id": contract_id})
+    if not contract_doc:
+        raise HTTPException(status_code=404, detail="Contract not found")
+    
+    # Verify access
+    if contract_doc["brand_user_id"] != user.user_id and contract_doc["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your contract")
+    
+    # Update signature
+    update_field = "brand_signed" if user.user_id == contract_doc["brand_user_id"] else "influencer_signed"
+    
+    await db.contracts.update_one(
+        {"contract_id": contract_id},
+        {"$set": {update_field: True, "updated_at": datetime.now(timezone.utc)}}
+    )
+    
+    # Check if both signed
+    contract_doc = await db.contracts.find_one({"contract_id": contract_id})
+    if contract_doc["brand_signed"] and contract_doc["influencer_signed"]:
+        await db.contracts.update_one(
+            {"contract_id": contract_id},
+            {"$set": {"status": "active"}}
+        )
+        
+        # Notify both parties
+        for uid in [contract_doc["brand_user_id"], contract_doc["influencer_user_id"]]:
+            await create_notification(
+                user_id=uid,
+                type="contract",
+                title="Sözleşme Aktif!",
+                message=f"Sözleşme her iki tarafça imzalandı ve aktif hale geldi",
+                link=f"/contracts/{contract_id}"
+            )
+    else:
+        # Notify other party
+        other_user_id = contract_doc["influencer_user_id"] if user.user_id == contract_doc["brand_user_id"] else contract_doc["brand_user_id"]
+        await create_notification(
+            user_id=other_user_id,
+            type="contract",
+            title="Sözleşme İmzalandı!",
+            message=f"{user.name} sözleşmeyi imzaladı. Sizin de imzalamanız bekleniyor.",
+            link=f"/contracts/{contract_id}"
+        )
+    
+    return {"message": "Contract signed successfully"}
+
+@api_router.post("/contracts/{contract_id}/complete")
+async def complete_contract(request: Request, contract_id: str):
+    """Mark contract as completed"""
+    user = await require_auth(request)
+    
+    contract_doc = await db.contracts.find_one({"contract_id": contract_id})
+    if not contract_doc:
+        raise HTTPException(status_code=404, detail="Contract not found")
+    
+    # Only brand can complete
+    if contract_doc["brand_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Only brand can complete contract")
+    
+    if contract_doc["status"] != "active":
+        raise HTTPException(status_code=400, detail="Contract must be active to complete")
+    
+    await db.contracts.update_one(
+        {"contract_id": contract_id},
+        {"$set": {"status": "completed", "updated_at": datetime.now(timezone.utc)}}
+    )
+    
+    # Update influencer stats
+    await db.influencer_stats.update_one(
+        {"user_id": contract_doc["influencer_user_id"]},
+        {"$inc": {"completed_jobs": 1}},
+        upsert=True
+    )
+    
+    # Notify influencer
+    await create_notification(
+        user_id=contract_doc["influencer_user_id"],
+        type="contract",
+        title="Sözleşme Tamamlandı!",
+        message="Tebrikler! Sözleşme başarıyla tamamlandı.",
+        link=f"/contracts/{contract_id}"
+    )
+    
+    return {"message": "Contract completed successfully"}
+
+# ============= FAZ 3: MILESTONE ROUTES =============
+
+@api_router.post("/contracts/{contract_id}/milestones")
+async def create_milestone(request: Request, contract_id: str, milestone_data: MilestoneCreate):
+    """Add a milestone to a contract"""
+    user = await require_auth(request)
+    
+    contract_doc = await db.contracts.find_one({"contract_id": contract_id})
+    if not contract_doc:
+        raise HTTPException(status_code=404, detail="Contract not found")
+    
+    # Verify access
+    if contract_doc["brand_user_id"] != user.user_id and contract_doc["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your contract")
+    
+    milestone_id = f"milestone_{uuid.uuid4().hex[:12]}"
+    
+    milestone_doc = {
+        "milestone_id": milestone_id,
+        "contract_id": contract_id,
+        "title": milestone_data.title,
+        "description": milestone_data.description,
+        "due_date": milestone_data.due_date,
+        "amount": milestone_data.amount,
+        "status": "pending",
+        "submission_note": None,
+        "submission_files": [],
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    await db.milestones.insert_one(milestone_doc)
+    
+    milestone_doc.pop("_id", None)
+    return milestone_doc
+
+@api_router.get("/contracts/{contract_id}/milestones")
+async def get_milestones(request: Request, contract_id: str):
+    """Get all milestones for a contract"""
+    user = await require_auth(request)
+    
+    contract_doc = await db.contracts.find_one({"contract_id": contract_id})
+    if not contract_doc:
+        raise HTTPException(status_code=404, detail="Contract not found")
+    
+    if contract_doc["brand_user_id"] != user.user_id and contract_doc["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your contract")
+    
+    milestones = await db.milestones.find({"contract_id": contract_id}, {"_id": 0}).sort("due_date", 1).to_list(100)
+    
+    return milestones
+
+@api_router.post("/milestones/{milestone_id}/submit")
+async def submit_milestone(
+    request: Request,
+    milestone_id: str,
+    note: str = Form(""),
+    files: List[UploadFile] = File([])
+):
+    """Submit milestone for approval"""
+    user = await require_role(request, ["influencer"])
+    
+    milestone_doc = await db.milestones.find_one({"milestone_id": milestone_id})
+    if not milestone_doc:
+        raise HTTPException(status_code=404, detail="Milestone not found")
+    
+    contract_doc = await db.contracts.find_one({"contract_id": milestone_doc["contract_id"]})
+    if contract_doc["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your milestone")
+    
+    # Handle file uploads
+    file_urls = []
+    for file in files:
+        if file.filename:
+            ext = Path(file.filename).suffix
+            unique_filename = f"milestone_{uuid.uuid4().hex}{ext}"
+            file_path = UPLOAD_DIR / unique_filename
+            
+            content = await file.read()
+            with open(file_path, "wb") as buffer:
+                buffer.write(content)
+            
+            file_urls.append(f"/uploads/{unique_filename}")
+    
+    await db.milestones.update_one(
+        {"milestone_id": milestone_id},
+        {"$set": {
+            "status": "submitted",
+            "submission_note": note,
+            "submission_files": file_urls,
+            "updated_at": datetime.now(timezone.utc)
+        }}
+    )
+    
+    # Notify brand
+    await create_notification(
+        user_id=contract_doc["brand_user_id"],
+        type="milestone",
+        title="Milestone Teslim Edildi!",
+        message=f"{user.name} bir milestone teslim etti: {milestone_doc['title']}",
+        link=f"/contracts/{milestone_doc['contract_id']}"
+    )
+    
+    return {"message": "Milestone submitted successfully"}
+
+@api_router.post("/milestones/{milestone_id}/approve")
+async def approve_milestone(request: Request, milestone_id: str):
+    """Approve a submitted milestone"""
+    user = await require_role(request, ["marka"])
+    
+    milestone_doc = await db.milestones.find_one({"milestone_id": milestone_id})
+    if not milestone_doc:
+        raise HTTPException(status_code=404, detail="Milestone not found")
+    
+    contract_doc = await db.contracts.find_one({"contract_id": milestone_doc["contract_id"]})
+    if contract_doc["brand_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your milestone")
+    
+    if milestone_doc["status"] != "submitted":
+        raise HTTPException(status_code=400, detail="Milestone must be submitted to approve")
+    
+    await db.milestones.update_one(
+        {"milestone_id": milestone_id},
+        {"$set": {"status": "approved", "updated_at": datetime.now(timezone.utc)}}
+    )
+    
+    # Notify influencer
+    await create_notification(
+        user_id=contract_doc["influencer_user_id"],
+        type="milestone",
+        title="Milestone Onaylandı!",
+        message=f"Milestone onaylandı: {milestone_doc['title']}",
+        link=f"/contracts/{milestone_doc['contract_id']}"
+    )
+    
+    return {"message": "Milestone approved"}
+
+# ============= FAZ 3: MEDIA LIBRARY ROUTES =============
+
+@api_router.post("/media-library")
+async def upload_to_media_library(
+    request: Request,
+    file: UploadFile = File(...),
+    tags: str = Form(""),
+    description: str = Form("")
+):
+    """Upload file to influencer's media library"""
+    user = await require_role(request, ["influencer"])
+    
+    content_type = file.content_type or 'application/octet-stream'
+    file_type = get_file_type(content_type)
+    
+    if file_type == 'unknown':
+        raise HTTPException(status_code=400, detail="File type not allowed")
+    
+    ext = Path(file.filename).suffix if file.filename else '.bin'
+    unique_filename = f"media_{uuid.uuid4().hex}{ext}"
+    file_path = UPLOAD_DIR / unique_filename
+    
+    content = await file.read()
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail="File too large. Max 50MB allowed")
+    
+    with open(file_path, "wb") as buffer:
+        buffer.write(content)
+    
+    media_id = f"media_{uuid.uuid4().hex[:12]}"
+    
+    tag_list = [t.strip() for t in tags.split(",") if t.strip()] if tags else []
+    
+    media_doc = {
+        "media_id": media_id,
+        "user_id": user.user_id,
+        "filename": unique_filename,
+        "original_filename": file.filename,
+        "file_type": file_type,
+        "file_size": len(content),
+        "url": f"/uploads/{unique_filename}",
+        "thumbnail_url": None,
+        "tags": tag_list,
+        "description": description,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.media_library.insert_one(media_doc)
+    
+    media_doc.pop("_id", None)
+    return media_doc
+
+@api_router.get("/media-library")
+async def get_my_media_library(request: Request, file_type: Optional[str] = None):
+    """Get influencer's media library"""
+    user = await require_role(request, ["influencer"])
+    
+    query = {"user_id": user.user_id}
+    if file_type:
+        query["file_type"] = file_type
+    
+    media = await db.media_library.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
+    
+    return media
+
+@api_router.delete("/media-library/{media_id}")
+async def delete_media(request: Request, media_id: str):
+    """Delete media from library"""
+    user = await require_role(request, ["influencer"])
+    
+    media_doc = await db.media_library.find_one({"media_id": media_id})
+    if not media_doc:
+        raise HTTPException(status_code=404, detail="Media not found")
+    
+    if media_doc["user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your media")
+    
+    # Delete file
+    file_path = UPLOAD_DIR / media_doc["filename"]
+    if file_path.exists():
+        file_path.unlink()
+    
+    await db.media_library.delete_one({"media_id": media_id})
+    
+    return {"message": "Media deleted"}
+
+# ============= FAZ 3: ADVANCED SEARCH =============
+
+@api_router.get("/search/jobs")
+async def search_jobs(
+    q: Optional[str] = None,
+    category: Optional[str] = None,
+    platform: Optional[str] = None,
+    min_budget: Optional[float] = None,
+    max_budget: Optional[float] = None,
+    experience_level: Optional[str] = None,
+    sort_by: str = "created_at",
+    sort_order: str = "desc"
+):
+    """Advanced job search with filters"""
+    query = {"status": "open"}
+    
+    if q:
+        query["$or"] = [
+            {"title": {"$regex": q, "$options": "i"}},
+            {"description": {"$regex": q, "$options": "i"}},
+            {"brand_name": {"$regex": q, "$options": "i"}}
+        ]
+    
+    if category:
+        query["category"] = category
+    
+    if platform:
+        query["platforms"] = platform
+    
+    if min_budget is not None:
+        query["budget"] = query.get("budget", {})
+        query["budget"]["$gte"] = min_budget
+    
+    if max_budget is not None:
+        query["budget"] = query.get("budget", {})
+        query["budget"]["$lte"] = max_budget
+    
+    if experience_level:
+        query["experience_level"] = experience_level
+    
+    sort_direction = -1 if sort_order == "desc" else 1
+    
+    jobs = await db.job_posts.find(query, {"_id": 0}).sort(sort_by, sort_direction).to_list(100)
+    
+    return {
+        "results": jobs,
+        "total": len(jobs)
+    }
+
+@api_router.get("/search/influencers")
+async def search_influencers(
+    q: Optional[str] = None,
+    specialty: Optional[str] = None,
+    min_followers: Optional[int] = None,
+    min_rating: Optional[float] = None,
+    platform: Optional[str] = None,
+    sort_by: str = "total_reach",
+    sort_order: str = "desc"
+):
+    """Advanced influencer search with filters"""
+    # Get profiles
+    profile_query = {}
+    
+    if q:
+        profile_query["$or"] = [
+            {"bio": {"$regex": q, "$options": "i"}}
+        ]
+    
+    if specialty:
+        profile_query["specialties"] = specialty
+    
+    profiles = await db.influencer_profiles.find(profile_query, {"_id": 0}).to_list(200)
+    
+    # Get stats and filter
+    results = []
+    for profile in profiles:
+        user_doc = await db.users.find_one({"user_id": profile["user_id"]}, {"_id": 0, "password_hash": 0})
+        stats_doc = await db.influencer_stats.find_one({"user_id": profile["user_id"]}, {"_id": 0})
+        
+        if not user_doc:
+            continue
+        
+        # Apply filters
+        if min_followers and stats_doc:
+            if (stats_doc.get("total_reach", 0) or 0) < min_followers:
+                continue
+        
+        if min_rating and stats_doc:
+            if (stats_doc.get("average_rating", 0) or 0) < min_rating:
+                continue
+        
+        if platform and profile.get("social_media"):
+            if not profile["social_media"].get(platform):
+                continue
+        
+        results.append({
+            "user": user_doc,
+            "profile": profile,
+            "stats": stats_doc
+        })
+    
+    # Sort
+    if sort_by == "total_reach":
+        results.sort(key=lambda x: (x.get("stats") or {}).get("total_reach", 0) or 0, reverse=(sort_order == "desc"))
+    elif sort_by == "average_rating":
+        results.sort(key=lambda x: (x.get("stats") or {}).get("average_rating", 0) or 0, reverse=(sort_order == "desc"))
+    elif sort_by == "starting_price":
+        results.sort(key=lambda x: x.get("profile", {}).get("starting_price", 0) or 0, reverse=(sort_order == "desc"))
+    
+    return {
+        "results": results[:50],
+        "total": len(results)
+    }
+
 # Include router in app
 app.include_router(api_router)
 
