@@ -969,6 +969,42 @@ async def delete_job(request: Request, job_id: str):
     await db.job_posts.delete_one({"job_id": job_id})
     return {"message": "Job deleted"}
 
+class JobUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    budget: Optional[float] = None
+    platforms: Optional[List[str]] = None
+    is_featured: Optional[bool] = None
+    is_urgent: Optional[bool] = None
+    status: Optional[str] = None
+
+@api_router.put("/jobs/{job_id}")
+async def update_job(request: Request, job_id: str, job_update: JobUpdate):
+    user = await require_role(request, ["marka", "admin"])
+    
+    job_doc = await db.job_posts.find_one({"job_id": job_id})
+    if not job_doc:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    if user.user_type == "marka" and job_doc["brand_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your job")
+    
+    update_data = {k: v for k, v in job_update.model_dump().items() if v is not None}
+    
+    if update_data:
+        await db.job_posts.update_one(
+            {"job_id": job_id},
+            {"$set": update_data}
+        )
+    
+    updated_doc = await db.job_posts.find_one({"job_id": job_id}, {"_id": 0})
+    updated_doc.setdefault("is_featured", False)
+    updated_doc.setdefault("is_urgent", False)
+    updated_doc.setdefault("application_count", 0)
+    
+    return JobPost(**updated_doc)
+
 # ============= APPLICATION ROUTES =============
 
 @api_router.post("/applications", response_model=Application)
