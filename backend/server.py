@@ -892,18 +892,48 @@ async def get_brand_profile(profile_id: str):
 async def create_job(request: Request, job_data: JobPostCreate):
     user = await require_role(request, ["marka"])
     
+    # Max 15 days duration
+    duration_days = min(job_data.duration_days or 15, 15)
+    
     job_id = f"job_{uuid.uuid4().hex[:12]}"
+    now = datetime.now(timezone.utc)
+    expires_at = now + timedelta(days=duration_days)
     
     job_doc = {
         "job_id": job_id,
         "brand_user_id": user.user_id,
         "brand_name": user.name,
         **job_data.model_dump(),
+        "duration_days": duration_days,
+        "expires_at": expires_at,
+        "view_count": 0,
+        "approval_status": "pending",  # Needs admin approval
+        "rejection_reason": None,
         "status": "open",
-        "created_at": datetime.now(timezone.utc)
+        "created_at": now
     }
     
     await db.job_posts.insert_one(job_doc)
+    
+    # Create notification for admins
+    admins = await db.users.find({"user_type": "admin"}, {"_id": 0, "user_id": 1}).to_list(100)
+    for admin in admins:
+        await create_notification(
+            user_id=admin["user_id"],
+            type="new",
+            title="Yeni İlan Onay Bekliyor",
+            message=f"{user.name} yeni bir ilan oluşturdu: {job_data.title}",
+            link="/admin#jobs"
+        )
+    
+    # Create notification for brand
+    await create_notification(
+        user_id=user.user_id,
+        type="update",
+        title="İlanınız Onay Bekliyor",
+        message=f"'{job_data.title}' ilanınız admin onayı bekliyor.",
+        link="/brand#jobs"
+    )
     
     job_doc.pop("_id")
     return JobPost(**job_doc)
