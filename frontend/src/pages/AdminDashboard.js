@@ -55,7 +55,7 @@ const AdminDashboard = () => {
         fetchBadges();
       }
     }
-  }, [user, activeTab]);
+  }, [user, activeTab, jobFilter]);
 
   const fetchUser = async () => {
     try {
