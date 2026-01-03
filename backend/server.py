@@ -865,7 +865,7 @@ async def create_application(request: Request, app_data: ApplicationCreate):
         type="application",
         title="Yeni Başvuru!",
         message=f"{user.name} iş ilanınıza başvurdu: {job_doc['title']}",
-        link=f"/brand#jobs"
+        link="/brand#jobs"
     )
     
     app_doc.pop("_id")
@@ -944,7 +944,7 @@ async def accept_application(request: Request, application_id: str):
         type="match",
         title="Başvurunuz Kabul Edildi!",
         message=f"{user.name} başvurunuzu kabul etti: {job_doc['title']}",
-        link=f"/influencer#matches"
+        link="/influencer#matches"
     )
     
     # Update job status
