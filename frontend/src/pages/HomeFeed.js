@@ -1018,6 +1018,33 @@ const JobCardList = ({ job, isFavorite, onToggleFavorite, userType, onApply }) =
           </div>
         </div>
       </div>
+
+      {/* Popup Modal */}
+      {showPopup && popupData && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 rounded-2xl max-w-md w-full border border-gray-800 shadow-2xl overflow-hidden">
+            <div className="p-6">
+              <h2 className="text-2xl font-bold mb-4">{popupData.title}</h2>
+              <p className="text-gray-400 mb-6 whitespace-pre-line">{popupData.content}</p>
+              <button
+                onClick={() => {
+                  handleClosePopup();
+                  if (popupData.button_link) {
+                    if (popupData.button_link.startsWith('http')) {
+                      window.open(popupData.button_link, '_blank');
+                    } else {
+                      navigate(popupData.button_link);
+                    }
+                  }
+                }}
+                className="w-full py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-[1.02] transition-transform"
+              >
+                {popupData.button_text || 'Anladım'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
