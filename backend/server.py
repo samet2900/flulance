@@ -1352,6 +1352,52 @@ async def get_my_matches(request: Request):
     
     return [Match(**m) for m in matches]
 
+@api_router.put("/matches/{match_id}/complete")
+async def complete_match(request: Request, match_id: str):
+    """Mark a match/job as completed"""
+    user = await require_auth(request)
+    
+    match_doc = await db.matches.find_one({"match_id": match_id})
+    if not match_doc:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+    # Verify user is part of this match
+    if match_doc["brand_user_id"] != user.user_id and match_doc["influencer_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your match")
+    
+    # Only active matches can be completed
+    if match_doc.get("status") != "active":
+        raise HTTPException(status_code=400, detail="Only active matches can be completed")
+    
+    # Update match status
+    await db.matches.update_one(
+        {"match_id": match_id},
+        {"$set": {
+            "status": "completed",
+            "completed_at": datetime.now(timezone.utc),
+            "completed_by": user.user_id
+        }}
+    )
+    
+    # Update job status to filled if brand completes
+    if user.user_type == "marka":
+        await db.job_posts.update_one(
+            {"job_id": match_doc["job_id"]},
+            {"$set": {"status": "filled"}}
+        )
+    
+    # Notify the other party
+    other_user_id = match_doc["influencer_user_id"] if user.user_type == "marka" else match_doc["brand_user_id"]
+    await create_notification(
+        user_id=other_user_id,
+        type="match",
+        title="İş Tamamlandı! ✅",
+        message=f"'{match_doc['job_title']}' işi tamamlandı olarak işaretlendi.",
+        link="/home"
+    )
+    
+    return {"message": "Match completed successfully"}
+
 @api_router.get("/matches/{match_id}/messages", response_model=List[Message])
 async def get_messages(request: Request, match_id: str):
     user = await require_auth(request)
