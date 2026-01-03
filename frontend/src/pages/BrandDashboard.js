@@ -16,6 +16,8 @@ const BrandDashboard = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [applications, setApplications] = useState([]);
   const [showCreateJob, setShowCreateJob] = useState(false);
+  const [showEditJob, setShowEditJob] = useState(false);
+  const [editingJob, setEditingJob] = useState(null);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -37,6 +39,17 @@ const BrandDashboard = () => {
     copyright: 'shared',
     is_featured: false,
     is_urgent: false
+  });
+
+  const [editJobForm, setEditJobForm] = useState({
+    title: '',
+    description: '',
+    category: '',
+    budget: '',
+    platforms: [],
+    is_featured: false,
+    is_urgent: false,
+    status: 'open'
   });
 
   const [profileForm, setProfileForm] = useState({
