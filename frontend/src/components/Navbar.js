@@ -295,12 +295,12 @@ const Navbar = ({ user, onLogout }) => {
                     {user.user_type === 'influencer' && (
                       <button
                         onClick={() => {
-                          navigate('/home#favorites');
+                          navigate('/favorites');
                           setShowProfileMenu(false);
                         }}
                         className="w-full px-4 py-2 text-left hover:bg-fuchsia-500/20 transition-colors flex items-center gap-3"
                       >
-                        <Star className="w-4 h-4" />
+                        <Heart className="w-4 h-4" />
                         Favorilerim
                       </button>
                     )}
