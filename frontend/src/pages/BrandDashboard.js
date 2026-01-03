@@ -201,7 +201,9 @@ const BrandDashboard = () => {
           age_range: newJob.target_audience.age_range || null,
           location: newJob.target_audience.location || null
         },
-        copyright: newJob.copyright || 'shared'
+        copyright: newJob.copyright || 'shared',
+        is_featured: newJob.is_featured,
+        is_urgent: newJob.is_urgent
       };
       
       await axios.post(`${API_URL}/api/jobs`, jobPayload, {
@@ -222,7 +224,9 @@ const BrandDashboard = () => {
         min_followers: '',
         content_requirements: { videos: '', images: '', stories: '' },
         target_audience: { age_range: '', location: '' },
-        copyright: 'shared'
+        copyright: 'shared',
+        is_featured: false,
+        is_urgent: false
       });
       fetchJobs();
       alert('İş ilanı başarıyla oluşturuldu!');
