@@ -321,6 +321,60 @@
 
 ---
 
+## FAZ 8 - Etap 2 Özellikleri ✅ TAMAMLANDI (3 Ocak 2026)
+
+### Tamamlanan Özellikler:
+- [x] **E-posta Bildirimleri (Resend)**
+  - Başvuru yapıldığında markaya e-posta
+  - Başvuru kabul edildiğinde influencer'a e-posta
+  - Şifre sıfırlama e-postası
+  - HTML e-posta şablonları (FLULANCE temalı)
+  - **NOT:** API key placeholder olarak ayarlandı, gerçek gönderim için Resend API key gerekli
+- [x] **Şifremi Unuttum (Forgot Password)**
+  - `/forgot-password` sayfası
+  - E-posta adresi girişi
+  - Başarı mesajı gösterimi
+  - `POST /api/auth/forgot-password` endpoint
+- [x] **Şifre Sıfırlama (Reset Password)**
+  - `/reset-password?token=xxx` sayfası
+  - Token doğrulama
+  - Yeni şifre belirleme
+  - `GET /api/auth/verify-reset-token/{token}` endpoint
+  - `POST /api/auth/reset-password` endpoint
+- [x] **Influencer Arama Sayfası**
+  - `/influencers` route (sadece markalar için)
+  - Sol tarafta filtre paneli
+  - Filtreleme: Uzmanlık alanı, Platform, Min. takipçi, Maks. fiyat, Rozet
+  - Sıralama: Puan, Takipçi, Fiyat (düşük/yüksek), Yeni
+  - Grid/List görünüm seçenekleri
+  - Influencer detay modalı
+  - `GET /api/influencers/search` endpoint
+
+### Yeni API Endpoint'leri:
+- `POST /api/auth/forgot-password` - Şifre sıfırlama talebi
+- `POST /api/auth/reset-password` - Şifre sıfırlama işlemi
+- `GET /api/auth/verify-reset-token/{token}` - Token doğrulama
+- `GET /api/influencers/search` - Influencer arama (filtreli)
+
+### Yeni Dosyalar:
+- `/app/frontend/src/pages/ForgotPasswordPage.js`
+- `/app/frontend/src/pages/ResetPasswordPage.js`
+- `/app/frontend/src/pages/InfluencerSearchPage.js`
+- `/app/tests/test_etap2_features.py` - 19 test (tümü geçti)
+
+### Test Sonuçları:
+- Backend: 19/19 ✅
+- Frontend: Tüm UI testleri başarılı ✅
+
+### NOT - E-posta Entegrasyonu:
+E-posta bildirimleri şu an **MOCKED** durumda. Gerçek e-posta göndermek için:
+1. Resend.com'dan hesap aç
+2. API key al
+3. `/app/backend/.env` dosyasındaki `RESEND_API_KEY=re_placeholder_key` değerini gerçek key ile değiştir
+4. `SENDER_EMAIL=noreply@flulance.com` değerini doğrulanmış domain ile değiştir
+
+---
+
 ## Gelecek Özellikler (Kullanıcı İstek Listesi)
 
 ### Etap 2 - Temel İletişim (P0):
