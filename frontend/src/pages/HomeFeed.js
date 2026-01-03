@@ -70,6 +70,7 @@ const HomeFeed = () => {
 
   useEffect(() => {
     fetchUser();
+    fetchPopupSettings();
   }, []);
 
   useEffect(() => {
@@ -77,6 +78,29 @@ const HomeFeed = () => {
       fetchAllData();
     }
   }, [user, filterCategory, filterPlatform]);
+
+  const fetchPopupSettings = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/popup-settings`);
+      if (response.data?.enabled) {
+        // Check if already shown (stored in localStorage)
+        const popupShown = localStorage.getItem('flulance_popup_shown');
+        if (!popupShown || !response.data.show_once) {
+          setPopupData(response.data);
+          setShowPopup(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching popup settings:', error);
+    }
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    if (popupData?.show_once) {
+      localStorage.setItem('flulance_popup_shown', 'true');
+    }
+  };
 
   const fetchUser = async () => {
     try {
