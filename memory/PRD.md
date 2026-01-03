@@ -228,10 +228,54 @@
 
 ---
 
+## FAZ 6 - Admin Onay Sistemi & İlan Yaşam Döngüsü ✅ TAMAMLANDI (3 Ocak 2026)
+
+### Tamamlanan Özellikler:
+- [x] **Admin Onay Sistemi**
+  - Yeni ilanlar `approval_status='pending'` olarak başlar
+  - Pending ilanlar HomeFeed'de görünmez
+  - Admin "İş İlanları" sekmesinde pending ilanları görebilir
+  - Admin ilanları onaylayabilir veya reddetebilir
+  - Reddedilen ilanlara sebep yazılabilir
+- [x] **İlan Süresi (Expiration)**
+  - İlanlar varsayılan 15 gün sürelidir (`duration_days`)
+  - `expires_at` alanı ile bitiş tarihi takibi
+  - Süresi dolan ilanlar otomatik olarak HomeFeed'den kaldırılır
+  - Marka Dashboard'da "Bitiş" tarihi görünür
+- [x] **İlan Yenileme (Renewal)**
+  - Markalar ilanlarını "Yenile" butonu ile yenileyebilir
+  - Yenileme işlemi `expires_at`'ı 15 gün uzatır
+  - Yenilenen ilan tekrar `approval_status='pending'` olur (yeniden onay gerekir)
+- [x] **Marka Dashboard İlan Durumları**
+  - "Onay Bekliyor" (sarı badge) - pending
+  - "Yayında" (yeşil badge) - approved
+  - "Reddedildi" (kırmızı badge + red sebebi) - rejected
+- [x] **Admin Dashboard İlan Yönetimi**
+  - "Onay Bekleyen", "Onaylanan", "Reddedilen", "Tümü" filtreleri
+  - "Onayla" butonu (yeşil)
+  - "Reddet" butonu (kırmızı) + sebep modal'ı
+  - "Sil" butonu
+  - İlan detayları (marka, kategori, bütçe, platformlar, tarihler)
+
+### Yeni API Endpoint'leri:
+- `GET /api/admin/jobs` - Admin için tüm ilanları listele (filtreli)
+- `PUT /api/admin/jobs/{job_id}/approval` - İlan onayla/reddet
+- `POST /api/jobs/{job_id}/renew` - İlan yenile (marka)
+
+### Test Dosyaları:
+- `/app/tests/test_admin_approval_system.py` - 11 backend test (tümü geçti)
+
+---
+
 ## Gelecek Özellikler
 
-### Planlanan:
-- [ ] AI destekli eşleştirme (P2) - Markalara otomatik influencer önerisi
+### Yakın Gelecek (P1):
+- [ ] İlan İstatistikleri - view_count ve application_count gösterimi
+- [ ] İlan Arşivleme - Markaların eski ilanları arşivlemesi
+- [ ] Premium Özellikler Ödeme Sistemi (Stripe) - "Öne Çıkan" ve "Acil" için ücretlendirme
+
+### Planlanan (P2):
+- [ ] AI destekli eşleştirme - Markalara otomatik influencer önerisi
 
 ---
 
