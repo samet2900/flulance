@@ -283,6 +283,75 @@ const BrandDashboard = () => {
     }));
   };
 
+  const toggleEditPlatform = (platform) => {
+    setEditJobForm(prev => ({
+      ...prev,
+      platforms: prev.platforms.includes(platform)
+        ? prev.platforms.filter(p => p !== platform)
+        : [...prev.platforms, platform]
+    }));
+  };
+
+  const openEditJobModal = (job) => {
+    setEditingJob(job);
+    setEditJobForm({
+      title: job.title,
+      description: job.description,
+      category: job.category,
+      budget: job.budget.toString(),
+      platforms: job.platforms || [],
+      is_featured: job.is_featured || false,
+      is_urgent: job.is_urgent || false,
+      status: job.status || 'open'
+    });
+    setShowEditJob(true);
+  };
+
+  const handleUpdateJob = async (e) => {
+    e.preventDefault();
+    if (!editingJob) return;
+    
+    try {
+      const updatePayload = {
+        title: editJobForm.title,
+        description: editJobForm.description,
+        category: editJobForm.category,
+        budget: parseFloat(editJobForm.budget),
+        platforms: editJobForm.platforms,
+        is_featured: editJobForm.is_featured,
+        is_urgent: editJobForm.is_urgent,
+        status: editJobForm.status
+      };
+      
+      await axios.put(`${API_URL}/api/jobs/${editingJob.job_id}`, updatePayload, {
+        withCredentials: true
+      });
+      
+      setShowEditJob(false);
+      setEditingJob(null);
+      fetchJobs();
+      alert('İlan başarıyla güncellendi!');
+    } catch (error) {
+      console.error('Error updating job:', error);
+      alert(error.response?.data?.detail || 'İlan güncellenirken bir hata oluştu');
+    }
+  };
+
+  const handleDeleteJob = async (jobId) => {
+    if (!window.confirm('Bu ilanı silmek istediğinizden emin misiniz?')) return;
+    
+    try {
+      await axios.delete(`${API_URL}/api/jobs/${jobId}`, {
+        withCredentials: true
+      });
+      fetchJobs();
+      alert('İlan başarıyla silindi!');
+    } catch (error) {
+      console.error('Error deleting job:', error);
+      alert(error.response?.data?.detail || 'İlan silinirken bir hata oluştu');
+    }
+  };
+
   if (!user) {
     return <div className="min-h-screen bg-black flex items-center justify-center">
       <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-fuchsia-500"></div>
