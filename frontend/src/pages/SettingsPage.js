@@ -276,7 +276,11 @@ const SettingsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className={`min-h-screen transition-colors duration-300 ${
+      currentTheme === 'light' 
+        ? 'bg-gray-50 text-gray-900' 
+        : 'bg-black text-white'
+    }`}>
       <Navbar user={user} onLogout={handleLogout} />
 
       <div className="container mx-auto px-4 py-8">
@@ -285,7 +289,11 @@ const SettingsPage = () => {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-800 overflow-hidden">
+            <div className={`backdrop-blur-sm rounded-2xl border overflow-hidden transition-colors duration-300 ${
+              currentTheme === 'light'
+                ? 'bg-white/80 border-gray-200'
+                : 'bg-gray-900/50 border-gray-800'
+            }`}>
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -309,7 +317,11 @@ const SettingsPage = () => {
 
           {/* Content */}
           <div className="lg:col-span-3">
-            <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-800 p-6">
+            <div className={`backdrop-blur-sm rounded-2xl border p-6 transition-colors duration-300 ${
+              currentTheme === 'light'
+                ? 'bg-white/80 border-gray-200'
+                : 'bg-gray-900/50 border-gray-800'
+            }`}>
               
               {/* Profile Section */}
               {activeSection === 'profile' && (
