@@ -428,6 +428,79 @@ const HomeFeed = () => {
           </div>
         </div>
       </div>
+
+      {/* Application Modal */}
+      {selectedJob && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setSelectedJob(null)}>
+          <div className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="application-modal">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h2 className="text-2xl font-bold mb-2">İşe Başvur</h2>
+                <p className="text-gray-400">{selectedJob.title}</p>
+                <p className="text-sm text-purple-400">{selectedJob.brand_name}</p>
+              </div>
+              <button
+                onClick={() => setSelectedJob(null)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Job Details */}
+            <div className="bg-white/5 rounded-xl p-4 mb-6 border border-white/10">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-400">Bütçe:</span>
+                  <span className="ml-2 font-semibold text-green-400">{selectedJob.budget.toLocaleString('tr-TR')} ₺</span>
+                </div>
+                <div>
+                  <span className="text-gray-400">Kategori:</span>
+                  <span className="ml-2">{selectedJob.category}</span>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-gray-400">Platformlar:</span>
+                  <span className="ml-2">{selectedJob.platforms.join(', ')}</span>
+                </div>
+              </div>
+              <p className="text-sm text-gray-300 mt-4">{selectedJob.description}</p>
+            </div>
+
+            <form onSubmit={handleApply} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium mb-2">Başvuru Mesajınız</label>
+                <textarea
+                  value={applicationMessage}
+                  onChange={(e) => setApplicationMessage(e.target.value)}
+                  required
+                  rows={4}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none text-white"
+                  placeholder="Neden bu iş için uygun olduğunuzu anlatın..."
+                  data-testid="application-message-input"
+                />
+              </div>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => setSelectedJob(null)}
+                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+                >
+                  İptal
+                </button>
+                <button
+                  type="submit"
+                  disabled={applying}
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+                  data-testid="submit-application-btn"
+                >
+                  <Send className="w-5 h-5" />
+                  {applying ? 'Gönderiliyor...' : 'Başvuru Gönder'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
