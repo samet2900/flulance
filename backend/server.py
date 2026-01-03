@@ -2478,6 +2478,315 @@ async def search_influencers(
         "total": len(results)
     }
 
+# ============= SETTINGS ROUTES =============
+
+@api_router.get("/settings")
+async def get_settings(request: Request):
+    """Get user settings"""
+    user = await require_auth(request)
+    
+    settings_doc = await db.user_settings.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not settings_doc:
+        # Create default settings
+        settings_doc = {
+            "user_id": user.user_id,
+            "theme": "dark",
+            "language": "tr",
+            "notifications": {
+                "email_new_job": True,
+                "email_application_status": True,
+                "email_messages": True,
+                "email_marketing": False,
+                "push_new_job": True,
+                "push_application_status": True,
+                "push_messages": True
+            },
+            "privacy": {
+                "profile_visible": True,
+                "show_stats_to_brands": True,
+                "show_in_search": True
+            },
+            "updated_at": datetime.now(timezone.utc)
+        }
+        await db.user_settings.insert_one(settings_doc)
+        settings_doc.pop("_id", None)
+    
+    # Get user info
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0, "password_hash": 0})
+    
+    # Get session history
+    sessions = await db.user_sessions.find(
+        {"user_id": user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(10)
+    
+    return {
+        "user": user_doc,
+        "settings": settings_doc,
+        "sessions": sessions
+    }
+
+@api_router.put("/settings/profile")
+async def update_profile(request: Request, profile_data: ProfileUpdate):
+    """Update user profile"""
+    user = await require_auth(request)
+    
+    update_fields = {}
+    if profile_data.name:
+        update_fields["name"] = profile_data.name
+    if profile_data.bio is not None:
+        update_fields["bio"] = profile_data.bio
+    
+    if update_fields:
+        await db.users.update_one(
+            {"user_id": user.user_id},
+            {"$set": update_fields}
+        )
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0, "password_hash": 0})
+    return user_doc
+
+@api_router.post("/settings/profile-photo")
+async def upload_profile_photo(request: Request, file: UploadFile = File(...)):
+    """Upload profile photo"""
+    user = await require_auth(request)
+    
+    content_type = file.content_type or ''
+    if not content_type.startswith('image/'):
+        raise HTTPException(status_code=400, detail="Only image files are allowed")
+    
+    ext = Path(file.filename).suffix if file.filename else '.jpg'
+    unique_filename = f"profile_{user.user_id}_{uuid.uuid4().hex[:8]}{ext}"
+    file_path = UPLOAD_DIR / unique_filename
+    
+    content = await file.read()
+    if len(content) > 5 * 1024 * 1024:  # 5MB limit for profile photos
+        raise HTTPException(status_code=400, detail="File too large. Max 5MB allowed")
+    
+    with open(file_path, "wb") as buffer:
+        buffer.write(content)
+    
+    photo_url = f"/uploads/{unique_filename}"
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"picture": photo_url}}
+    )
+    
+    return {"picture": photo_url}
+
+@api_router.put("/settings/password")
+async def change_password(request: Request, password_data: PasswordChange):
+    """Change user password"""
+    user = await require_auth(request)
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Verify current password
+    if not user_doc.get("password_hash"):
+        raise HTTPException(status_code=400, detail="Cannot change password for social login accounts")
+    
+    if not verify_password(password_data.current_password, user_doc["password_hash"]):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    
+    # Validate new password
+    if len(password_data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters")
+    
+    # Update password
+    new_hash = hash_password(password_data.new_password)
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"password_hash": new_hash}}
+    )
+    
+    return {"message": "Password changed successfully"}
+
+@api_router.put("/settings/email")
+async def change_email(request: Request, email_data: EmailChange):
+    """Change user email"""
+    user = await require_auth(request)
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Verify password
+    if user_doc.get("password_hash"):
+        if not verify_password(email_data.password, user_doc["password_hash"]):
+            raise HTTPException(status_code=400, detail="Password is incorrect")
+    
+    # Check if email is already taken
+    existing = await db.users.find_one({"email": email_data.new_email})
+    if existing and existing["user_id"] != user.user_id:
+        raise HTTPException(status_code=400, detail="Email is already in use")
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"email": email_data.new_email}}
+    )
+    
+    return {"message": "Email changed successfully", "email": email_data.new_email}
+
+@api_router.put("/settings/notifications")
+async def update_notification_settings(request: Request, notif_settings: NotificationSettings):
+    """Update notification preferences"""
+    user = await require_auth(request)
+    
+    await db.user_settings.update_one(
+        {"user_id": user.user_id},
+        {
+            "$set": {
+                "notifications": notif_settings.model_dump(),
+                "updated_at": datetime.now(timezone.utc)
+            }
+        },
+        upsert=True
+    )
+    
+    return {"message": "Notification settings updated"}
+
+@api_router.put("/settings/privacy")
+async def update_privacy_settings(request: Request, privacy_settings: PrivacySettings):
+    """Update privacy preferences"""
+    user = await require_auth(request)
+    
+    await db.user_settings.update_one(
+        {"user_id": user.user_id},
+        {
+            "$set": {
+                "privacy": privacy_settings.model_dump(),
+                "updated_at": datetime.now(timezone.utc)
+            }
+        },
+        upsert=True
+    )
+    
+    return {"message": "Privacy settings updated"}
+
+@api_router.put("/settings/theme")
+async def update_theme(request: Request, theme: str = Form(...)):
+    """Update theme preference"""
+    user = await require_auth(request)
+    
+    if theme not in ["dark", "light"]:
+        raise HTTPException(status_code=400, detail="Invalid theme. Must be 'dark' or 'light'")
+    
+    await db.user_settings.update_one(
+        {"user_id": user.user_id},
+        {
+            "$set": {
+                "theme": theme,
+                "updated_at": datetime.now(timezone.utc)
+            }
+        },
+        upsert=True
+    )
+    
+    return {"message": "Theme updated", "theme": theme}
+
+@api_router.put("/settings/language")
+async def update_language(request: Request, language: str = Form(...)):
+    """Update language preference"""
+    user = await require_auth(request)
+    
+    if language not in ["tr", "en"]:
+        raise HTTPException(status_code=400, detail="Invalid language. Must be 'tr' or 'en'")
+    
+    await db.user_settings.update_one(
+        {"user_id": user.user_id},
+        {
+            "$set": {
+                "language": language,
+                "updated_at": datetime.now(timezone.utc)
+            }
+        },
+        upsert=True
+    )
+    
+    return {"message": "Language updated", "language": language}
+
+@api_router.post("/settings/deactivate")
+async def deactivate_account(request: Request, password: str = Form(...)):
+    """Deactivate (freeze) user account"""
+    user = await require_auth(request)
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Verify password
+    if user_doc.get("password_hash"):
+        if not verify_password(password, user_doc["password_hash"]):
+            raise HTTPException(status_code=400, detail="Password is incorrect")
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"status": "deactivated", "deactivated_at": datetime.now(timezone.utc)}}
+    )
+    
+    # Clear session
+    await db.sessions.delete_many({"user_id": user.user_id})
+    
+    return {"message": "Account deactivated"}
+
+@api_router.delete("/settings/delete-account")
+async def delete_account(request: Request, password: str = Form(...)):
+    """Permanently delete user account"""
+    user = await require_auth(request)
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Verify password
+    if user_doc.get("password_hash"):
+        if not verify_password(password, user_doc["password_hash"]):
+            raise HTTPException(status_code=400, detail="Password is incorrect")
+    
+    # Delete all user data
+    await db.users.delete_one({"user_id": user.user_id})
+    await db.sessions.delete_many({"user_id": user.user_id})
+    await db.user_settings.delete_one({"user_id": user.user_id})
+    await db.influencer_profiles.delete_one({"user_id": user.user_id})
+    await db.brand_profiles.delete_one({"user_id": user.user_id})
+    await db.influencer_stats.delete_one({"user_id": user.user_id})
+    await db.notifications.delete_many({"user_id": user.user_id})
+    await db.favorites.delete_many({"user_id": user.user_id})
+    await db.media_library.delete_many({"user_id": user.user_id})
+    
+    return {"message": "Account deleted permanently"}
+
+@api_router.get("/settings/sessions")
+async def get_sessions(request: Request):
+    """Get user session history"""
+    user = await require_auth(request)
+    
+    sessions = await db.user_sessions.find(
+        {"user_id": user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(20)
+    
+    return sessions
+
+@api_router.delete("/settings/sessions/{session_id}")
+async def revoke_session(request: Request, session_id: str):
+    """Revoke a specific session"""
+    user = await require_auth(request)
+    
+    result = await db.sessions.delete_one({
+        "session_token": session_id,
+        "user_id": user.user_id
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    return {"message": "Session revoked"}
+
 # Include router in app
 app.include_router(api_router)
 
