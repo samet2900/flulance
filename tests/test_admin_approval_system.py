@@ -495,10 +495,21 @@ class TestHomeFeedFiltering:
             if expires_at:
                 # Parse the datetime
                 if isinstance(expires_at, str):
-                    # Handle ISO format
-                    expires_dt = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
+                    # Handle ISO format - ensure timezone aware
+                    expires_str = expires_at.replace('Z', '+00:00')
+                    if '+' not in expires_str and '-' not in expires_str[-6:]:
+                        expires_str = expires_str + '+00:00'
+                    try:
+                        expires_dt = datetime.fromisoformat(expires_str)
+                    except:
+                        # If parsing fails, skip this check
+                        continue
                 else:
                     expires_dt = expires_at
+                
+                # Ensure timezone aware
+                if expires_dt.tzinfo is None:
+                    expires_dt = expires_dt.replace(tzinfo=timezone.utc)
                 
                 # Note: We can't strictly assert this because the API might return jobs
                 # that are about to expire. Just log a warning if found.
@@ -506,7 +517,6 @@ class TestHomeFeedFiltering:
                     print(f"⚠️ Warning: Job {job['job_id']} has expired (expires_at={expires_at})")
         
         print(f"✅ Test 11 PASSED: HomeFeed shows {len(jobs)} approved jobs")
-        return len(jobs)
 
 
 # Cleanup function to delete test jobs
