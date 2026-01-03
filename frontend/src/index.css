@@ -113,3 +113,70 @@ code {
         border-bottom-color: inherit;
     }
 }
+
+/* FLULANCE Theme System */
+/* Light Theme */
+.light {
+    --fl-bg-primary: #ffffff;
+    --fl-bg-secondary: #f8fafc;
+    --fl-bg-card: #ffffff;
+    --fl-bg-input: #f1f5f9;
+    --fl-text-primary: #1e293b;
+    --fl-text-secondary: #64748b;
+    --fl-text-muted: #94a3b8;
+    --fl-border: #e2e8f0;
+    --fl-border-focus: #ec4899;
+}
+
+/* Dark Theme */
+.dark {
+    --fl-bg-primary: #000000;
+    --fl-bg-secondary: #111827;
+    --fl-bg-card: rgba(17, 24, 39, 0.5);
+    --fl-bg-input: rgba(0, 0, 0, 0.5);
+    --fl-text-primary: #ffffff;
+    --fl-text-secondary: #d1d5db;
+    --fl-text-muted: #9ca3af;
+    --fl-border: #374151;
+    --fl-border-focus: #ec4899;
+}
+
+/* Apply theme variables */
+html {
+    background-color: var(--fl-bg-primary);
+    color: var(--fl-text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Theme utility classes */
+.theme-bg-primary {
+    background-color: var(--fl-bg-primary) !important;
+}
+
+.theme-bg-secondary {
+    background-color: var(--fl-bg-secondary) !important;
+}
+
+.theme-bg-card {
+    background-color: var(--fl-bg-card) !important;
+}
+
+.theme-bg-input {
+    background-color: var(--fl-bg-input) !important;
+}
+
+.theme-text-primary {
+    color: var(--fl-text-primary) !important;
+}
+
+.theme-text-secondary {
+    color: var(--fl-text-secondary) !important;
+}
+
+.theme-text-muted {
+    color: var(--fl-text-muted) !important;
+}
+
+.theme-border {
+    border-color: var(--fl-border) !important;
+}

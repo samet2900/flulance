@@ -7,6 +7,7 @@ import {
   Check, X, Loader2
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import { useTheme } from '../context/ThemeContext';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
