@@ -9,6 +9,7 @@ import BrandDashboard from './pages/BrandDashboard';
 import InfluencerDashboard from './pages/InfluencerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminSecretLogin from './pages/AdminSecretLogin';
+import FavoritesPage from './pages/FavoritesPage';
 import SettingsPage from './pages/SettingsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useLocation } from 'react-router-dom';
