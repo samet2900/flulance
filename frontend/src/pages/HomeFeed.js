@@ -431,8 +431,7 @@ const HomeFeed = () => {
 };
 
 // Job Card Component
-const JobCard = ({ job, isFavorite, onToggleFavorite, userType, expanded = false }) => {
-  const navigate = useNavigate();
+const JobCard = ({ job, isFavorite, onToggleFavorite, userType, onApply, expanded = false }) => {
 
   return (
     <div
@@ -493,15 +492,9 @@ const JobCard = ({ job, isFavorite, onToggleFavorite, userType, expanded = false
         </div>
       </div>
       <div className="flex gap-3">
-        <button
-          onClick={() => navigate(`/home/job/${job.job_id}`)}
-          className="flex-1 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-sm font-medium"
-        >
-          Detayları Gör
-        </button>
         {userType === 'influencer' && (
           <button
-            onClick={() => navigate(`/home/job/${job.job_id}#apply`)}
+            onClick={() => onApply(job)}
             className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:scale-105 transition-transform text-sm font-bold"
             data-testid={`apply-btn-${job.job_id}`}
           >
