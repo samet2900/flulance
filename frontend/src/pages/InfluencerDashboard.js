@@ -459,6 +459,18 @@ const InfluencerDashboard = () => {
             <MessageCircle className="w-5 h-5" />
             Eşleşmeler & Sohbet
           </button>
+          <button
+            onClick={() => setActiveTab('media')}
+            className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'media'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                : 'bg-white/10 hover:bg-white/20'
+            }`}
+            data-testid="tab-media"
+          >
+            <Image className="w-5 h-5" />
+            Medya Kütüphanem
+          </button>
         </div>
 
         {/* Profile Tab */}
