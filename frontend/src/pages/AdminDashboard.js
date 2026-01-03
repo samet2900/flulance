@@ -249,6 +249,59 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchBadges = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/admin/badges`, {
+        withCredentials: true
+      });
+      setBadges(response.data);
+    } catch (error) {
+      console.error('Error fetching badges:', error);
+    }
+  };
+
+  const handleAwardBadge = async (userId) => {
+    try {
+      await axios.post(`${API_URL}/api/admin/badges/${userId}`, badgeForm, {
+        withCredentials: true
+      });
+      alert('Rozet başarıyla verildi!');
+      setShowBadgeModal(null);
+      setBadgeForm({ badge_type: 'verified', reason: '' });
+      fetchUsers();
+      fetchBadges();
+    } catch (error) {
+      console.error('Error awarding badge:', error);
+      alert('Rozet verilemedi');
+    }
+  };
+
+  const handleRemoveBadge = async (userId) => {
+    if (!window.confirm('Bu kullanıcının rozetini kaldırmak istediğinizden emin misiniz?')) return;
+    
+    try {
+      await axios.delete(`${API_URL}/api/admin/badges/${userId}`, {
+        withCredentials: true
+      });
+      alert('Rozet kaldırıldı');
+      fetchUsers();
+      fetchBadges();
+    } catch (error) {
+      console.error('Error removing badge:', error);
+      alert('Rozet kaldırılamadı');
+    }
+  };
+
+  const getBadgeInfo = (badgeType) => {
+    const badges = {
+      verified: { name: 'Doğrulanmış', icon: '✓', color: 'blue' },
+      top: { name: 'Top Influencer', icon: '⭐', color: 'yellow' },
+      rising: { name: 'Yükselen Yıldız', icon: '🚀', color: 'purple' },
+      new: { name: 'Yeni Üye', icon: '🆕', color: 'green' }
+    };
+    return badges[badgeType] || { name: badgeType, icon: '?', color: 'gray' };
+  };
+
   if (!user) {
     return <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
       <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500"></div>
