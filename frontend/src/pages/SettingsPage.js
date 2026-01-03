@@ -204,31 +204,6 @@ const SettingsPage = () => {
     }
   };
 
-  const handleLanguageChange = async (newLanguage) => {
-    setSaving(true);
-    try {
-      const formData = new FormData();
-      formData.append('language', newLanguage);
-      await axios.put(`${API_URL}/api/settings/language`, formData, { withCredentials: true });
-      
-      // Update local settings
-      setSettings({ ...settings, language: newLanguage });
-      
-      // Change i18n language
-      i18n.changeLanguage(newLanguage);
-      setCurrentLanguage(newLanguage);
-      
-      // Save to localStorage
-      localStorage.setItem('language', newLanguage);
-      
-      alert(t('appearance.languageUpdated'));
-    } catch (error) {
-      alert(error.response?.data?.detail || t('settings.error'));
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const handleDeactivate = async () => {
     setSaving(true);
     try {
