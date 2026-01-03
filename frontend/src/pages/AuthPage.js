@@ -49,10 +49,10 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text mb-2">FLULANCE</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-fuchsia-400 to-cyan-400 text-transparent bg-clip-text mb-2">FLULANCE</h1>
           <p className="text-gray-400">{isLogin ? 'Hesabına giriş yap' : 'Yeni hesap oluştur'}</p>
         </div>
 
@@ -73,7 +73,7 @@ const AuthPage = () => {
                     onClick={() => setUserType('marka')}
                     className={`px-4 py-3 rounded-xl font-semibold transition-colors ${
                       userType === 'marka'
-                        ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                        ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
                         : 'bg-white/5 hover:bg-white/10'
                     }`}
                     data-testid="user-type-marka"
@@ -85,7 +85,7 @@ const AuthPage = () => {
                     onClick={() => setUserType('influencer')}
                     className={`px-4 py-3 rounded-xl font-semibold transition-colors ${
                       userType === 'influencer'
-                        ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                        ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
                         : 'bg-white/5 hover:bg-white/10'
                     }`}
                     data-testid="user-type-influencer"
@@ -104,7 +104,7 @@ const AuthPage = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 transition-colors"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
                   placeholder="Adınız"
                   data-testid="auth-name-input"
                 />
@@ -118,7 +118,7 @@ const AuthPage = () => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
                 placeholder="ornek@email.com"
                 data-testid="auth-email-input"
               />
@@ -131,7 +131,7 @@ const AuthPage = () => {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
                 placeholder="••••••••"
                 data-testid="auth-password-input"
               />
@@ -140,7 +140,7 @@ const AuthPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-bold hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100"
+              className="w-full px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-bold hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100"
               data-testid="auth-submit-btn"
             >
               {loading ? 'Yükleniyor...' : isLogin ? 'Giriş Yap' : 'Kayıt Ol'}
@@ -178,7 +178,7 @@ const AuthPage = () => {
                 setIsLogin(!isLogin);
                 setError('');
               }}
-              className="text-purple-400 hover:text-purple-300 text-sm"
+              className="text-fuchsia-400 hover:text-purple-300 text-sm"
               data-testid="toggle-auth-mode"
             >
               {isLogin ? 'Hesabın yok mu? Kayıt ol' : 'Zaten hesabın var mı? Giriş yap'}
