@@ -90,6 +90,17 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchDetailedStats = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/admin/dashboard-stats`, {
+        withCredentials: true
+      });
+      setDetailedStats(response.data);
+    } catch (error) {
+      console.error('Error fetching detailed stats:', error);
+    }
+  };
+
   const fetchUsers = async () => {
     setLoading(true);
     try {
