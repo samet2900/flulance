@@ -1098,6 +1098,104 @@ const AdminDashboard = () => {
             )}
           </div>
         )}
+
+        {/* Content Management Tab */}
+        {activeTab === 'content' && (
+          <div>
+            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+              <FileText className="w-8 h-8 text-fuchsia-400" />
+              İçerik Yönetimi
+            </h2>
+            <AdminContentManager />
+          </div>
+        )}
+
+        {/* Dashboard Charts Section - Show in Stats tab */}
+        {activeTab === 'stats' && detailedStats && (
+          <div className="mt-8">
+            <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+              <BarChart3 className="w-7 h-7 text-fuchsia-400" />
+              Detaylı İstatistikler
+            </h3>
+            
+            {/* Category Distribution */}
+            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 mb-6">
+              <h4 className="text-lg font-semibold mb-4">Kategori Dağılımı</h4>
+              <div className="space-y-3">
+                {detailedStats.categories?.map((cat, index) => (
+                  <div key={index} className="flex items-center gap-4">
+                    <span className="w-32 text-sm text-gray-400">{cat.name}</span>
+                    <div className="flex-1 h-8 bg-gray-800 rounded-lg overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-lg flex items-center justify-end px-3"
+                        style={{width: `${Math.min(100, (cat.count / (detailedStats.jobs?.total || 1)) * 100)}%`}}
+                      >
+                        <span className="text-xs font-semibold">{cat.count}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Stats Summary Cards */}
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+                <h4 className="text-lg font-semibold mb-4">İş İlanları</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Toplam</span>
+                    <span className="font-bold">{detailedStats.jobs?.total || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Açık</span>
+                    <span className="font-bold text-green-400">{detailedStats.jobs?.open || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Onay Bekleyen</span>
+                    <span className="font-bold text-yellow-400">{detailedStats.jobs?.pending || 0}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+                <h4 className="text-lg font-semibold mb-4">Eşleşmeler</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Toplam</span>
+                    <span className="font-bold">{detailedStats.matches?.total || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Aktif</span>
+                    <span className="font-bold text-blue-400">{detailedStats.matches?.active || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Tamamlanan</span>
+                    <span className="font-bold text-green-400">{detailedStats.matches?.completed || 0}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+                <h4 className="text-lg font-semibold mb-4">Başvurular</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Toplam</span>
+                    <span className="font-bold">{detailedStats.applications?.total || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Bekleyen</span>
+                    <span className="font-bold text-yellow-400">{detailedStats.applications?.pending || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Kabul Edilen</span>
+                    <span className="font-bold text-green-400">{detailedStats.applications?.accepted || 0}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Announcement Modal */}
