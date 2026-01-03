@@ -627,10 +627,10 @@ const SettingsPage = () => {
               {/* Appearance Section */}
               {activeSection === 'appearance' && (
                 <div>
-                  <h2 className="text-2xl font-bold mb-6">Görünüm</h2>
+                  <h2 className="text-2xl font-bold mb-6">{t('appearance.title')}</h2>
                   
                   <div className="mb-8">
-                    <h3 className="text-lg font-semibold mb-4">Tema</h3>
+                    <h3 className="text-lg font-semibold mb-4">{t('appearance.theme')}</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <button
                         onClick={() => handleThemeChange('dark')}
@@ -644,8 +644,8 @@ const SettingsPage = () => {
                       >
                         <Moon className="w-6 h-6" />
                         <div className="text-left">
-                          <p className="font-medium">Koyu Mod</p>
-                          <p className="text-xs text-gray-400">Karanlık tema</p>
+                          <p className="font-medium">{t('appearance.darkMode')}</p>
+                          <p className="text-xs text-gray-400">{t('appearance.darkDesc')}</p>
                         </div>
                         {currentTheme === 'dark' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
                       </button>
