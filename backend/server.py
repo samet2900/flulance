@@ -220,6 +220,8 @@ class Message(BaseModel):
     sender_name: str
     message: str
     timestamp: datetime
+    attachment: Optional[dict] = None
+    is_read: bool = False
 
 # Commission Models
 class CommissionSettings(BaseModel):
