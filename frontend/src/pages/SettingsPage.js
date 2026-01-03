@@ -668,44 +668,6 @@ const SettingsPage = () => {
                       </button>
                     </div>
                   </div>
-
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">{t('appearance.language')}</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <button
-                        onClick={() => handleLanguageChange('tr')}
-                        disabled={saving}
-                        data-testid="lang-tr-btn"
-                        className={`p-4 rounded-xl border-2 ${
-                          currentLanguage === 'tr' 
-                            ? 'border-fuchsia-500 bg-fuchsia-500/20' 
-                            : 'border-gray-700 hover:border-gray-600'
-                        } flex items-center gap-3 disabled:opacity-50 transition-all`}
-                      >
-                        <span className="text-2xl">🇹🇷</span>
-                        <div className="text-left">
-                          <p className="font-medium">Türkçe</p>
-                        </div>
-                        {currentLanguage === 'tr' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
-                      </button>
-                      <button
-                        onClick={() => handleLanguageChange('en')}
-                        disabled={saving}
-                        data-testid="lang-en-btn"
-                        className={`p-4 rounded-xl border-2 ${
-                          currentLanguage === 'en' 
-                            ? 'border-fuchsia-500 bg-fuchsia-500/20' 
-                            : 'border-gray-700 hover:border-gray-600'
-                        } flex items-center gap-3 disabled:opacity-50 transition-all`}
-                      >
-                        <span className="text-2xl">🇬🇧</span>
-                        <div className="text-left">
-                          <p className="font-medium">English</p>
-                        </div>
-                        {currentLanguage === 'en' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
-                      </button>
-                    </div>
-                  </div>
                 </div>
               )}
 
