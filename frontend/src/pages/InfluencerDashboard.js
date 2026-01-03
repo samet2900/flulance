@@ -1473,4 +1473,152 @@ const ReviewModal = ({ match, onClose, onSubmit }) => {
   );
 };
 
+// Media Upload Modal Component
+const MediaUploadModal = ({ onClose, onUpload, uploading }) => {
+  const [file, setFile] = useState(null);
+  const [tags, setTags] = useState('');
+  const [description, setDescription] = useState('');
+  const [preview, setPreview] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileSelect = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (selectedFile.size > 50 * 1024 * 1024) {
+        alert('Dosya boyutu çok büyük. Maksimum 50MB yükleyebilirsiniz.');
+        return;
+      }
+      setFile(selectedFile);
+      
+      if (selectedFile.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => setPreview(e.target.result);
+        reader.readAsDataURL(selectedFile);
+      } else {
+        setPreview(null);
+      }
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!file) {
+      alert('Lütfen bir dosya seçin');
+      return;
+    }
+    onUpload(file, tags, description);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-white/20" onClick={(e) => e.stopPropagation()} data-testid="upload-media-modal">
+        <h2 className="text-2xl font-bold mb-6">Dosya Yükle</h2>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* File Input */}
+          <div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              className="hidden"
+              accept="image/*,video/*,.pdf"
+            />
+            
+            {!file ? (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-white/20 rounded-xl p-8 text-center cursor-pointer hover:border-purple-500 transition-colors"
+              >
+                <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                <p className="text-gray-400 mb-2">Dosya seçmek için tıklayın</p>
+                <p className="text-sm text-gray-500">Resim, video veya PDF (max 50MB)</p>
+              </div>
+            ) : (
+              <div className="bg-white/5 rounded-xl p-4">
+                {preview ? (
+                  <img src={preview} alt="Preview" className="w-full h-48 object-cover rounded-lg mb-4" />
+                ) : (
+                  <div className="w-full h-48 bg-white/10 rounded-lg mb-4 flex items-center justify-center">
+                    {file.type.startsWith('video/') ? (
+                      <Video className="w-16 h-16 text-gray-400" />
+                    ) : (
+                      <FileText className="w-16 h-16 text-gray-400" />
+                    )}
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium truncate">{file.name}</p>
+                    <p className="text-sm text-gray-400">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setFile(null); setPreview(null); }}
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Tags */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Etiketler (virgülle ayırın)</label>
+            <input
+              type="text"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+              placeholder="moda, güzellik, yaşam tarzı"
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Açıklama (opsiyonel)</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none text-white"
+              placeholder="Bu içerik hakkında bir açıklama yazın..."
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors"
+            >
+              İptal
+            </button>
+            <button
+              type="submit"
+              disabled={!file || uploading}
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+              data-testid="confirm-upload-btn"
+            >
+              {uploading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Yükleniyor...
+                </>
+              ) : (
+                <>
+                  <Upload className="w-5 h-5" />
+                  Yükle
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export default InfluencerDashboard;
