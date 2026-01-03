@@ -456,6 +456,18 @@ const AdminDashboard = () => {
             <Award className="w-5 h-5" />
             Rozetler
           </button>
+          <button
+            onClick={() => setActiveTab('content')}
+            className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'content'
+                ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
+                : 'bg-gray-900/50 hover:bg-white/20'
+            }`}
+            data-testid="tab-content"
+          >
+            <FileText className="w-5 h-5" />
+            İçerik Yönetimi
+          </button>
         </div>
 
         {/* Stats Tab */}
