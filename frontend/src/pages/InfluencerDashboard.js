@@ -931,6 +931,141 @@ const InfluencerDashboard = () => {
             )}
           </div>
         )}
+
+        {/* Media Library Tab */}
+        {activeTab === 'media' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold">Medya Kütüphanem</h2>
+              <button
+                onClick={() => setShowUploadModal(true)}
+                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform flex items-center gap-2"
+                data-testid="upload-media-btn"
+              >
+                <Upload className="w-5 h-5" />
+                Dosya Yükle
+              </button>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="flex gap-2 mb-6">
+              {[
+                { key: 'all', label: 'Tümü', icon: FileIcon },
+                { key: 'image', label: 'Resimler', icon: Image },
+                { key: 'video', label: 'Videolar', icon: Video },
+                { key: 'document', label: 'Dosyalar', icon: FileText }
+              ].map(({ key, label, icon: Icon }) => (
+                <button
+                  key={key}
+                  onClick={() => { setMediaFilter(key); fetchMediaLibrary(); }}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+                    mediaFilter === key
+                      ? 'bg-purple-500'
+                      : 'bg-white/10 hover:bg-white/20'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
+              </div>
+            ) : mediaLibrary.length === 0 ? (
+              <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
+                <Image className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <p className="text-gray-400 mb-2">Henüz medya dosyanız yok</p>
+                <p className="text-sm text-gray-500">Portföyünüzü oluşturmak için resim ve video yükleyin</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {mediaLibrary.map((media) => (
+                  <div key={media.media_id} className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden group">
+                    {media.file_type === 'image' ? (
+                      <div className="aspect-square relative">
+                        <img
+                          src={`${API_URL}${media.url}`}
+                          alt={media.original_filename}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <a
+                            href={`${API_URL}${media.url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
+                          >
+                            <Eye className="w-5 h-5" />
+                          </a>
+                          <button
+                            onClick={() => handleDeleteMedia(media.media_id)}
+                            className="p-2 bg-red-500/50 rounded-lg hover:bg-red-500/70 transition-colors"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    ) : media.file_type === 'video' ? (
+                      <div className="aspect-square relative bg-gray-800 flex items-center justify-center">
+                        <Video className="w-12 h-12 text-gray-400" />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <a
+                            href={`${API_URL}${media.url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
+                          >
+                            <Eye className="w-5 h-5" />
+                          </a>
+                          <button
+                            onClick={() => handleDeleteMedia(media.media_id)}
+                            className="p-2 bg-red-500/50 rounded-lg hover:bg-red-500/70 transition-colors"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="aspect-square relative bg-gray-800 flex items-center justify-center">
+                        <FileText className="w-12 h-12 text-gray-400" />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <a
+                            href={`${API_URL}${media.url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
+                          >
+                            <Eye className="w-5 h-5" />
+                          </a>
+                          <button
+                            onClick={() => handleDeleteMedia(media.media_id)}
+                            className="p-2 bg-red-500/50 rounded-lg hover:bg-red-500/70 transition-colors"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    <div className="p-3">
+                      <p className="text-sm font-medium truncate">{media.original_filename}</p>
+                      <p className="text-xs text-gray-400">{(media.file_size / 1024 / 1024).toFixed(2)} MB</p>
+                      {media.tags && media.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {media.tags.slice(0, 3).map((tag, i) => (
+                            <span key={i} className="text-xs bg-purple-500/30 px-2 py-0.5 rounded-full">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Edit Profile Modal */}
