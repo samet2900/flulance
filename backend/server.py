@@ -915,6 +915,109 @@ async def logout(request: Request):
     response.delete_cookie("session_token", path="/")
     return response
 
+@api_router.post("/auth/forgot-password")
+async def forgot_password(data: PasswordResetRequest):
+    """Request password reset - sends email with reset link"""
+    user = await db.users.find_one({"email": data.email}, {"_id": 0})
+    
+    # Always return success (don't reveal if email exists)
+    if not user:
+        return {"message": "Şifre sıfırlama linki e-posta adresinize gönderildi."}
+    
+    # Generate reset token
+    reset_token = uuid.uuid4().hex
+    expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+    
+    # Store reset token
+    await db.password_resets.update_one(
+        {"user_id": user["user_id"]},
+        {"$set": {
+            "user_id": user["user_id"],
+            "token": reset_token,
+            "expires_at": expires_at,
+            "used": False
+        }},
+        upsert=True
+    )
+    
+    # Send email
+    reset_link = f"{FRONTEND_URL}/reset-password?token={reset_token}"
+    html_content = get_password_reset_email_html(reset_link, user.get("name", "Kullanıcı"))
+    
+    await send_email(
+        to_email=data.email,
+        subject="Şifre Sıfırlama - FLULANCE",
+        html_content=html_content
+    )
+    
+    return {"message": "Şifre sıfırlama linki e-posta adresinize gönderildi."}
+
+@api_router.post("/auth/reset-password")
+async def reset_password(data: PasswordResetConfirm):
+    """Reset password using token from email"""
+    # Find valid reset token
+    reset_doc = await db.password_resets.find_one({
+        "token": data.token,
+        "used": False
+    })
+    
+    if not reset_doc:
+        raise HTTPException(status_code=400, detail="Geçersiz veya süresi dolmuş link.")
+    
+    # Check expiry
+    expires_at = reset_doc["expires_at"]
+    if isinstance(expires_at, str):
+        expires_at = datetime.fromisoformat(expires_at)
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if expires_at < datetime.now(timezone.utc):
+        raise HTTPException(status_code=400, detail="Link süresi dolmuş. Lütfen yeni bir şifre sıfırlama talebi oluşturun.")
+    
+    # Validate password
+    if len(data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Şifre en az 6 karakter olmalıdır.")
+    
+    # Update password
+    new_hash = hash_password(data.new_password)
+    await db.users.update_one(
+        {"user_id": reset_doc["user_id"]},
+        {"$set": {"password_hash": new_hash}}
+    )
+    
+    # Mark token as used
+    await db.password_resets.update_one(
+        {"token": data.token},
+        {"$set": {"used": True}}
+    )
+    
+    # Clear all sessions for this user (security measure)
+    await db.user_sessions.delete_many({"user_id": reset_doc["user_id"]})
+    
+    return {"message": "Şifreniz başarıyla değiştirildi. Yeni şifrenizle giriş yapabilirsiniz."}
+
+@api_router.get("/auth/verify-reset-token/{token}")
+async def verify_reset_token(token: str):
+    """Verify if reset token is valid"""
+    reset_doc = await db.password_resets.find_one({
+        "token": token,
+        "used": False
+    })
+    
+    if not reset_doc:
+        return {"valid": False, "message": "Geçersiz link."}
+    
+    expires_at = reset_doc["expires_at"]
+    if isinstance(expires_at, str):
+        expires_at = datetime.fromisoformat(expires_at)
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if expires_at < datetime.now(timezone.utc):
+        return {"valid": False, "message": "Link süresi dolmuş."}
+    
+    return {"valid": True}
+
 # ============= INFLUENCER PROFILE ROUTES =============
 
 @api_router.post("/profile", response_model=InfluencerProfile)
