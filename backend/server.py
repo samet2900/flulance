@@ -2390,6 +2390,255 @@ async def get_user_badges(user_id: str):
         "badge_history": badges
     }
 
+# ============= ADMIN CONTENT MANAGEMENT ROUTES =============
+
+@api_router.get("/admin/dashboard-stats")
+async def get_dashboard_stats(request: Request):
+    """Get detailed dashboard statistics for admin"""
+    await require_role(request, ["admin"])
+    
+    # User stats
+    total_users = await db.users.count_documents({})
+    brands = await db.users.count_documents({"user_type": "marka"})
+    influencers = await db.users.count_documents({"user_type": "influencer"})
+    
+    # Get users by date for chart
+    from datetime import timedelta
+    end_date = datetime.now(timezone.utc)
+    start_date = end_date - timedelta(days=30)
+    
+    user_growth = []
+    for i in range(30):
+        day = start_date + timedelta(days=i)
+        next_day = day + timedelta(days=1)
+        count = await db.users.count_documents({
+            "created_at": {"$gte": day, "$lt": next_day}
+        })
+        user_growth.append({
+            "date": day.strftime("%Y-%m-%d"),
+            "count": count
+        })
+    
+    # Job stats
+    total_jobs = await db.job_posts.count_documents({})
+    open_jobs = await db.job_posts.count_documents({"status": "open"})
+    pending_jobs = await db.job_posts.count_documents({"approval_status": "pending"})
+    approved_jobs = await db.job_posts.count_documents({"approval_status": "approved"})
+    
+    # Match stats
+    total_matches = await db.matches.count_documents({})
+    active_matches = await db.matches.count_documents({"status": "active"})
+    completed_matches = await db.matches.count_documents({"status": "completed"})
+    
+    # Application stats
+    total_applications = await db.applications.count_documents({})
+    pending_applications = await db.applications.count_documents({"status": "pending"})
+    accepted_applications = await db.applications.count_documents({"status": "accepted"})
+    
+    # Category distribution
+    categories = await db.job_posts.aggregate([
+        {"$group": {"_id": "$category", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 10}
+    ]).to_list(10)
+    
+    return {
+        "users": {
+            "total": total_users,
+            "brands": brands,
+            "influencers": influencers,
+            "growth": user_growth
+        },
+        "jobs": {
+            "total": total_jobs,
+            "open": open_jobs,
+            "pending": pending_jobs,
+            "approved": approved_jobs
+        },
+        "matches": {
+            "total": total_matches,
+            "active": active_matches,
+            "completed": completed_matches
+        },
+        "applications": {
+            "total": total_applications,
+            "pending": pending_applications,
+            "accepted": accepted_applications
+        },
+        "categories": [{"name": c["_id"] or "Diğer", "count": c["count"]} for c in categories]
+    }
+
+@api_router.get("/admin/activity-logs")
+async def get_activity_logs(request: Request, limit: int = 50, skip: int = 0):
+    """Get recent activity logs"""
+    await require_role(request, ["admin"])
+    
+    logs = await db.activity_logs.find(
+        {},
+        {"_id": 0}
+    ).sort("timestamp", -1).skip(skip).limit(limit).to_list(limit)
+    
+    return logs
+
+@api_router.post("/admin/activity-logs")
+async def create_activity_log(user_id: str, action: str, details: str = "", target_type: str = "", target_id: str = ""):
+    """Create an activity log entry (internal use)"""
+    log_doc = {
+        "log_id": f"log_{uuid.uuid4().hex[:12]}",
+        "user_id": user_id,
+        "action": action,
+        "details": details,
+        "target_type": target_type,
+        "target_id": target_id,
+        "timestamp": datetime.now(timezone.utc)
+    }
+    await db.activity_logs.insert_one(log_doc)
+    return log_doc
+
+# Popup Settings
+@api_router.get("/admin/popup-settings")
+async def get_popup_settings(request: Request):
+    """Get popup notification settings"""
+    await require_role(request, ["admin"])
+    
+    settings = await db.popup_settings.find_one({"type": "homepage"}, {"_id": 0})
+    if not settings:
+        settings = {
+            "type": "homepage",
+            "enabled": False,
+            "title": "Hoş Geldiniz!",
+            "content": "FLULANCE'a hoş geldiniz!",
+            "button_text": "Anladım",
+            "button_link": "",
+            "show_once": True
+        }
+    return settings
+
+@api_router.put("/admin/popup-settings")
+async def update_popup_settings(request: Request, settings: dict):
+    """Update popup notification settings"""
+    await require_role(request, ["admin"])
+    
+    settings["type"] = "homepage"
+    settings["updated_at"] = datetime.now(timezone.utc)
+    
+    await db.popup_settings.update_one(
+        {"type": "homepage"},
+        {"$set": settings},
+        upsert=True
+    )
+    
+    return {"message": "Popup settings updated"}
+
+@api_router.get("/popup-settings")
+async def get_public_popup_settings():
+    """Get popup settings for public display"""
+    settings = await db.popup_settings.find_one({"type": "homepage", "enabled": True}, {"_id": 0})
+    return settings or {"enabled": False}
+
+# Blog/Success Stories Management
+@api_router.get("/admin/content/{content_type}")
+async def get_admin_content(request: Request, content_type: str):
+    """Get content by type (blog, success_stories, events, faq)"""
+    await require_role(request, ["admin"])
+    
+    content = await db.admin_content.find(
+        {"content_type": content_type},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    
+    return content
+
+@api_router.post("/admin/content")
+async def create_admin_content(request: Request, content: dict):
+    """Create new content (blog, success_story, event, faq)"""
+    await require_role(request, ["admin"])
+    
+    content_doc = {
+        "content_id": f"content_{uuid.uuid4().hex[:12]}",
+        "content_type": content.get("content_type", "blog"),
+        "title": content.get("title", ""),
+        "content": content.get("content", ""),
+        "summary": content.get("summary", ""),
+        "image_url": content.get("image_url", ""),
+        "author": content.get("author", "FLULANCE"),
+        "is_published": content.get("is_published", False),
+        "is_featured": content.get("is_featured", False),
+        "tags": content.get("tags", []),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    # For FAQ
+    if content.get("content_type") == "faq":
+        content_doc["question"] = content.get("question", "")
+        content_doc["answer"] = content.get("answer", "")
+        content_doc["category"] = content.get("category", "Genel")
+        content_doc["order"] = content.get("order", 0)
+    
+    # For Events
+    if content.get("content_type") == "event":
+        content_doc["event_date"] = content.get("event_date")
+        content_doc["event_link"] = content.get("event_link", "")
+        content_doc["event_type"] = content.get("event_type", "webinar")
+    
+    await db.admin_content.insert_one(content_doc)
+    content_doc.pop("_id", None)
+    
+    return content_doc
+
+@api_router.put("/admin/content/{content_id}")
+async def update_admin_content(request: Request, content_id: str, content: dict):
+    """Update existing content"""
+    await require_role(request, ["admin"])
+    
+    content["updated_at"] = datetime.now(timezone.utc)
+    content.pop("content_id", None)
+    content.pop("_id", None)
+    
+    result = await db.admin_content.update_one(
+        {"content_id": content_id},
+        {"$set": content}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Content not found")
+    
+    return {"message": "Content updated"}
+
+@api_router.delete("/admin/content/{content_id}")
+async def delete_admin_content(request: Request, content_id: str):
+    """Delete content"""
+    await require_role(request, ["admin"])
+    
+    result = await db.admin_content.delete_one({"content_id": content_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Content not found")
+    
+    return {"message": "Content deleted"}
+
+# Public content endpoints
+@api_router.get("/content/{content_type}")
+async def get_public_content(content_type: str, limit: int = 10):
+    """Get published content by type"""
+    content = await db.admin_content.find(
+        {"content_type": content_type, "is_published": True},
+        {"_id": 0}
+    ).sort("created_at", -1).limit(limit).to_list(limit)
+    
+    return content
+
+@api_router.get("/content/{content_type}/featured")
+async def get_featured_content(content_type: str, limit: int = 5):
+    """Get featured content by type"""
+    content = await db.admin_content.find(
+        {"content_type": content_type, "is_published": True, "is_featured": True},
+        {"_id": 0}
+    ).sort("created_at", -1).limit(limit).to_list(limit)
+    
+    return content
+
 # ============= INFLUENCER SEARCH ROUTES =============
 
 @api_router.get("/influencers/search")
