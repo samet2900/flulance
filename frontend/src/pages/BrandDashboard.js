@@ -970,6 +970,79 @@ const BrandDashboard = () => {
                 </div>
               </div>
 
+              {/* Premium Features - Öne Çıkar & Acil */}
+              <div className="mt-6 p-4 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl border border-yellow-500/30">
+                <div className="flex items-center gap-2 mb-4">
+                  <Crown className="w-5 h-5 text-yellow-400" />
+                  <h3 className="font-semibold text-yellow-400">Premium Özellikler</h3>
+                  <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-300 text-xs rounded-full">Daha Fazla Görünürlük</span>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Öne Çıkar */}
+                  <label 
+                    className={`flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                      newJob.is_featured 
+                        ? 'border-yellow-500 bg-yellow-500/20' 
+                        : 'border-gray-700 hover:border-yellow-500/50'
+                    }`}
+                    data-testid="featured-toggle"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={newJob.is_featured}
+                      onChange={(e) => setNewJob({ ...newJob, is_featured: e.target.checked })}
+                      className="sr-only"
+                    />
+                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      newJob.is_featured ? 'bg-yellow-500' : 'bg-gray-700'
+                    }`}>
+                      {newJob.is_featured && <Zap className="w-4 h-4 text-black" />}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold">Öne Çıkan İlan</span>
+                        <Star className="w-4 h-4 text-yellow-400" />
+                      </div>
+                      <p className="text-sm text-gray-400 mt-1">
+                        İlanınız ana sayfada "Vitrin" bölümünde gösterilir ve listelerde en üstte yer alır.
+                      </p>
+                    </div>
+                  </label>
+
+                  {/* Acil */}
+                  <label 
+                    className={`flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                      newJob.is_urgent 
+                        ? 'border-red-500 bg-red-500/20' 
+                        : 'border-gray-700 hover:border-red-500/50'
+                    }`}
+                    data-testid="urgent-toggle"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={newJob.is_urgent}
+                      onChange={(e) => setNewJob({ ...newJob, is_urgent: e.target.checked })}
+                      className="sr-only"
+                    />
+                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      newJob.is_urgent ? 'bg-red-500' : 'bg-gray-700'
+                    }`}>
+                      {newJob.is_urgent && <Clock className="w-4 h-4 text-white" />}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold">Acil İlan</span>
+                        <Clock className="w-4 h-4 text-red-400" />
+                      </div>
+                      <p className="text-sm text-gray-400 mt-1">
+                        "ACİL" rozeti ile dikkat çekici olur. Hızlı başvuru almak istiyorsanız seçin.
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
               <div className="flex gap-4 pt-4">
                 <button
                   type="button"
