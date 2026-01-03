@@ -2049,7 +2049,7 @@ async def sign_contract(request: Request, contract_id: str):
                 user_id=uid,
                 type="contract",
                 title="Sözleşme Aktif!",
-                message=f"Sözleşme her iki tarafça imzalandı ve aktif hale geldi",
+                message="Sözleşme her iki tarafça imzalandı ve aktif hale geldi",
                 link=f"/contracts/{contract_id}"
             )
     else:
