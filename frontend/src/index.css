@@ -244,3 +244,23 @@ html {
 .light .bg-black\/70 {
     background-color: rgba(0, 0, 0, 0.5) !important;
 }
+
+/* Gradient overrides for light mode */
+.light .bg-gradient-to-b.from-black.via-gray-900.to-black,
+.light .bg-gradient-to-b.from-black {
+    background: linear-gradient(to bottom, #f1f5f9, #e2e8f0, #f1f5f9) !important;
+}
+
+.light .bg-gradient-to-br.from-black,
+.light .bg-gradient-to-r.from-black {
+    background: linear-gradient(to bottom right, #f1f5f9, #e2e8f0) !important;
+}
+
+/* Navigation in light mode */
+.light .bg-black\/80 {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.light nav.bg-black\/80 {
+    border-color: #e2e8f0 !important;
+}
