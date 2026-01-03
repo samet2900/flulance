@@ -3980,13 +3980,18 @@ async def get_my_contracts(request: Request):
     
     contracts = await db.contracts.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
     
-    # Add match info
+    # Add match info and signature status
     for contract in contracts:
         match_doc = await db.matches.find_one({"match_id": contract["match_id"]}, {"_id": 0})
         if match_doc:
             contract["job_title"] = match_doc.get("job_title")
             contract["brand_name"] = match_doc.get("brand_name")
             contract["influencer_name"] = match_doc.get("influencer_name")
+        
+        # Get signature status
+        signatures = await db.contract_signatures.find({"contract_id": contract["contract_id"]}, {"_id": 0}).to_list(2)
+        contract["brand_signed"] = any(s.get("user_id") == contract["brand_user_id"] for s in signatures)
+        contract["influencer_signed"] = any(s.get("user_id") == contract["influencer_user_id"] for s in signatures)
     
     return contracts
 
