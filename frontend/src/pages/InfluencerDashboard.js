@@ -260,6 +260,58 @@ const InfluencerDashboard = () => {
     }
   };
 
+  const fetchMediaLibrary = async () => {
+    setLoading(true);
+    try {
+      const url = mediaFilter === 'all' 
+        ? `${API_URL}/api/media-library`
+        : `${API_URL}/api/media-library?file_type=${mediaFilter}`;
+      
+      const response = await axios.get(url, { withCredentials: true });
+      setMediaLibrary(response.data);
+    } catch (error) {
+      console.error('Error fetching media library:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUploadMedia = async (file, tags, description) => {
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('tags', tags);
+      formData.append('description', description);
+
+      await axios.post(`${API_URL}/api/media-library`, formData, {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      setShowUploadModal(false);
+      fetchMediaLibrary();
+      alert('Dosya başarıyla yüklendi!');
+    } catch (error) {
+      console.error('Error uploading media:', error);
+      alert(error.response?.data?.detail || 'Dosya yüklenirken bir hata oluştu');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDeleteMedia = async (mediaId) => {
+    if (!window.confirm('Bu dosyayı silmek istediğinizden emin misiniz?')) return;
+
+    try {
+      await axios.delete(`${API_URL}/api/media-library/${mediaId}`, { withCredentials: true });
+      fetchMediaLibrary();
+    } catch (error) {
+      console.error('Error deleting media:', error);
+      alert('Dosya silinirken bir hata oluştu');
+    }
+  };
+
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     try {
