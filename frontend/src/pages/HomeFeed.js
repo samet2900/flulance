@@ -873,6 +873,7 @@ const JobCardGrid = ({ job, isFavorite, onToggleFavorite, userType, onApply }) =
             className={`p-1.5 rounded-lg transition-colors ${
               isFavorite ? 'text-red-400' : 'text-gray-500 hover:text-red-400'
             }`}
+            data-testid={`favorite-btn-${job.job_id}`}
           >
             <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
           </button>
