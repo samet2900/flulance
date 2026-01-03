@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Users, Briefcase, TrendingUp, DollarSign, LogOut, Trash2, Settings, Bell, Edit, Plus, Star } from 'lucide-react';
+import { Users, Briefcase, TrendingUp, DollarSign, LogOut, Trash2, Settings, Bell, Edit, Plus, Star, Award, Check, X } from 'lucide-react';
 import Navbar from '../components/Navbar';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
@@ -15,10 +15,13 @@ const AdminDashboard = () => {
   const [jobs, setJobs] = useState([]);
   const [matches, setMatches] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
+  const [badges, setBadges] = useState([]);
   const [commission, setCommission] = useState(null);
   const [newCommission, setNewCommission] = useState('');
   const [loading, setLoading] = useState(false);
   const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
+  const [showBadgeModal, setShowBadgeModal] = useState(null);
+  const [badgeForm, setBadgeForm] = useState({ badge_type: 'verified', reason: '' });
   const [editingAnnouncement, setEditingAnnouncement] = useState(null);
   const [announcementForm, setAnnouncementForm] = useState({
     title: '',
