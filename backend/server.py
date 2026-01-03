@@ -491,6 +491,13 @@ class Favorite(BaseModel):
     is_urgent: bool = False
     favorited_at: datetime
 
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+class PasswordResetConfirm(BaseModel):
+    token: str
+    new_password: str
+
 # ============= HELPER FUNCTIONS =============
 
 def hash_password(password: str) -> str:
@@ -498,6 +505,111 @@ def hash_password(password: str) -> str:
 
 def verify_password(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+
+async def send_email(to_email: str, subject: str, html_content: str) -> dict:
+    """Send email using Resend API (non-blocking)"""
+    if not resend.api_key or resend.api_key == 're_placeholder_key':
+        logging.warning(f"Email not sent (no API key): {subject} to {to_email}")
+        return {"status": "skipped", "message": "Email API key not configured"}
+    
+    params = {
+        "from": SENDER_EMAIL,
+        "to": [to_email],
+        "subject": subject,
+        "html": html_content
+    }
+    
+    try:
+        email = await asyncio.to_thread(resend.Emails.send, params)
+        logging.info(f"Email sent: {subject} to {to_email}")
+        return {"status": "success", "email_id": email.get("id")}
+    except Exception as e:
+        logging.error(f"Failed to send email: {str(e)}")
+        return {"status": "error", "message": str(e)}
+
+def get_password_reset_email_html(reset_link: str, user_name: str) -> str:
+    """Generate password reset email HTML"""
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Şifre Sıfırlama - FLULANCE</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; background-color: #0a0a0a; color: #ffffff; padding: 40px 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0a 100%); border-radius: 16px; padding: 40px; border: 1px solid #333;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="background: linear-gradient(90deg, #d946ef, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px; margin: 0;">FLULANCE</h1>
+            </div>
+            
+            <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 20px;">Merhaba {user_name}!</h2>
+            
+            <p style="color: #9ca3af; font-size: 16px; line-height: 1.6;">
+                Şifrenizi sıfırlamak için bir talep aldık. Aşağıdaki butona tıklayarak yeni şifrenizi belirleyebilirsiniz.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{reset_link}" style="display: inline-block; background: linear-gradient(90deg, #d946ef, #06b6d4); color: white; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-weight: bold; font-size: 16px;">
+                    Şifremi Sıfırla
+                </a>
+            </div>
+            
+            <p style="color: #6b7280; font-size: 14px; line-height: 1.6;">
+                Bu link 1 saat içinde geçerliliğini yitirecektir. Eğer bu talebi siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.
+            </p>
+            
+            <hr style="border: none; border-top: 1px solid #333; margin: 30px 0;">
+            
+            <p style="color: #6b7280; font-size: 12px; text-align: center;">
+                © 2026 FLULANCE. Tüm hakları saklıdır.
+            </p>
+        </div>
+    </body>
+    </html>
+    """
+
+def get_notification_email_html(title: str, message: str, action_link: str = None, action_text: str = None) -> str:
+    """Generate notification email HTML"""
+    action_button = ""
+    if action_link and action_text:
+        action_button = f"""
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{action_link}" style="display: inline-block; background: linear-gradient(90deg, #d946ef, #06b6d4); color: white; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-weight: bold; font-size: 16px;">
+                    {action_text}
+                </a>
+            </div>
+        """
+    
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>{title} - FLULANCE</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; background-color: #0a0a0a; color: #ffffff; padding: 40px 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0a 100%); border-radius: 16px; padding: 40px; border: 1px solid #333;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="background: linear-gradient(90deg, #d946ef, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px; margin: 0;">FLULANCE</h1>
+            </div>
+            
+            <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 20px;">{title}</h2>
+            
+            <p style="color: #9ca3af; font-size: 16px; line-height: 1.6;">
+                {message}
+            </p>
+            
+            {action_button}
+            
+            <hr style="border: none; border-top: 1px solid #333; margin: 30px 0;">
+            
+            <p style="color: #6b7280; font-size: 12px; text-align: center;">
+                © 2026 FLULANCE. Tüm hakları saklıdır.
+            </p>
+        </div>
+    </body>
+    </html>
+    """
 
 async def get_current_user(request: Request) -> Optional[User]:
     # Try cookie first
