@@ -383,6 +383,92 @@ const AdminDashboard = () => {
     return badges[badgeType] || { name: badgeType, icon: '?', color: 'gray' };
   };
 
+  // Fetch verifications for admin
+  const fetchVerifications = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_URL}/api/admin/identity-verifications`, { withCredentials: true });
+      setVerifications(response.data);
+    } catch (error) {
+      console.error('Error fetching verifications:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch disputes for admin
+  const fetchDisputes = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_URL}/api/admin/disputes?status=${disputeFilter}`, { withCredentials: true });
+      setDisputes(response.data);
+    } catch (error) {
+      console.error('Error fetching disputes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch pending social accounts for admin
+  const fetchSocialAccounts = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_URL}/api/admin/social-accounts`, { withCredentials: true });
+      setSocialAccounts(response.data);
+    } catch (error) {
+      console.error('Error fetching social accounts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle verification approval/rejection
+  const handleVerificationAction = async (verificationId, action, notes = '') => {
+    try {
+      await axios.put(`${API_URL}/api/admin/identity-verifications/${verificationId}`, {
+        status: action,
+        admin_notes: notes
+      }, { withCredentials: true });
+      alert(action === 'approved' ? 'Doğrulama onaylandı!' : 'Doğrulama reddedildi!');
+      fetchVerifications();
+    } catch (error) {
+      console.error('Error updating verification:', error);
+      alert('İşlem başarısız');
+    }
+  };
+
+  // Handle dispute resolution
+  const handleResolveDispute = async (disputeId) => {
+    try {
+      await axios.put(`${API_URL}/api/admin/disputes/${disputeId}`, {
+        status: 'resolved',
+        resolution: disputeResolution.resolution,
+        admin_notes: disputeResolution.admin_notes
+      }, { withCredentials: true });
+      alert('Anlaşmazlık çözüldü!');
+      setShowDisputeModal(null);
+      setDisputeResolution({ resolution: '', admin_notes: '' });
+      fetchDisputes();
+    } catch (error) {
+      console.error('Error resolving dispute:', error);
+      alert('İşlem başarısız');
+    }
+  };
+
+  // Handle social account verification
+  const handleSocialAccountAction = async (userId, platform, action) => {
+    try {
+      await axios.put(`${API_URL}/api/admin/social-accounts/${userId}/${platform}`, {
+        verified: action === 'approve'
+      }, { withCredentials: true });
+      alert(action === 'approve' ? 'Sosyal hesap onaylandı!' : 'Sosyal hesap reddedildi!');
+      fetchSocialAccounts();
+    } catch (error) {
+      console.error('Error updating social account:', error);
+      alert('İşlem başarısız');
+    }
+  };
+
   if (!user) {
     return <div className="min-h-screen bg-black flex items-center justify-center">
       <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-fuchsia-500"></div>
