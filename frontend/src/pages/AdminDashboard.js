@@ -375,6 +375,18 @@ const AdminDashboard = () => {
             <Bell className="w-5 h-5" />
             Duyurular
           </button>
+          <button
+            onClick={() => setActiveTab('badges')}
+            className={`px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'badges'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                : 'bg-white/10 hover:bg-white/20'
+            }`}
+            data-testid="tab-badges"
+          >
+            <Award className="w-5 h-5" />
+            Rozetler
+          </button>
         </div>
 
         {/* Stats Tab */}
