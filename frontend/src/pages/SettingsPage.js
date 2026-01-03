@@ -13,6 +13,7 @@ const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const SettingsPage = () => {
   const navigate = useNavigate();
+  const { theme: currentTheme, changeTheme } = useTheme();
   const [user, setUser] = useState(null);
   const [settings, setSettings] = useState(null);
   const [sessions, setSessions] = useState([]);
@@ -190,17 +191,8 @@ const SettingsPage = () => {
       // Update local settings
       setSettings({ ...settings, theme: newTheme });
       
-      // Apply theme to document
-      if (newTheme === 'light') {
-        document.documentElement.classList.add('light-theme');
-        document.documentElement.classList.remove('dark-theme');
-      } else {
-        document.documentElement.classList.add('dark-theme');
-        document.documentElement.classList.remove('light-theme');
-      }
-      
-      // Save to localStorage for persistence
-      localStorage.setItem('theme', newTheme);
+      // Apply theme globally using context
+      changeTheme(newTheme);
       
       alert('Tema güncellendi!');
     } catch (error) {
