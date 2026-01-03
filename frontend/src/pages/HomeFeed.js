@@ -285,7 +285,7 @@ const HomeFeed = () => {
                   <select
                     value={filterPlatform}
                     onChange={(e) => setFilterPlatform(e.target.value)}
-                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
                     data-testid="filter-platform"
                     style={{colorScheme: 'dark'}}
                   >
@@ -304,7 +304,7 @@ const HomeFeed = () => {
 
               {loading ? (
                 <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500 mx-auto"></div>
                 </div>
               ) : filteredJobs.length === 0 ? (
                 <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10">
@@ -335,12 +335,12 @@ const HomeFeed = () => {
             <section id="announcements">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold flex items-center gap-2">
-                  <Bell className="w-5 h-5 text-purple-400" />
+                  <Bell className="w-5 h-5 text-fuchsia-400" />
                   Önemli Duyurular
                 </h3>
                 <button
                   onClick={() => navigate('/announcements')}
-                  className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
+                  className="text-sm text-fuchsia-400 hover:text-fuchsia-300 transition-colors"
                 >
                   Tümünü Gör →
                 </button>
@@ -354,7 +354,7 @@ const HomeFeed = () => {
                   announcements.map((announcement) => (
                     <div
                       key={announcement.announcement_id}
-                      className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-purple-500/50 transition-colors cursor-pointer"
+                      className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-fuchsia-500/50 transition-colors cursor-pointer"
                       onClick={() => navigate('/announcements')}
                       data-testid={`announcement-${announcement.announcement_id}`}
                     >
@@ -388,11 +388,11 @@ const HomeFeed = () => {
                       setFilterCategory(item.category);
                       document.getElementById('jobs')?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="w-full bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20 hover:border-purple-500/50 transition-colors text-left"
+                    className="w-full bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20 hover:border-fuchsia-500/50 transition-colors text-left"
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{item.category}</span>
-                      <span className="text-sm text-purple-400">{item.count} ilan</span>
+                      <span className="text-sm text-fuchsia-400">{item.count} ilan</span>
                     </div>
                   </button>
                 ))}
@@ -402,7 +402,7 @@ const HomeFeed = () => {
             {/* Platform Stats */}
             <section>
               <h3 className="text-xl font-bold mb-4">Platform İstatistikleri</h3>
-              <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-xl p-4 border border-purple-500/30 space-y-3">
+              <div className="bg-gradient-to-br from-fuchsia-500/20 to-cyan-500/20 backdrop-blur-sm rounded-xl p-4 border border-fuchsia-500/30 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-400 flex items-center gap-2">
                     <Briefcase className="w-4 h-4" />
@@ -438,7 +438,7 @@ const HomeFeed = () => {
               <div>
                 <h2 className="text-2xl font-bold mb-2">İşe Başvur</h2>
                 <p className="text-gray-400">{selectedJob.title}</p>
-                <p className="text-sm text-purple-400">{selectedJob.brand_name}</p>
+                <p className="text-sm text-fuchsia-400">{selectedJob.brand_name}</p>
               </div>
               <button
                 onClick={() => setSelectedJob(null)}
@@ -475,7 +475,7 @@ const HomeFeed = () => {
                   onChange={(e) => setApplicationMessage(e.target.value)}
                   required
                   rows={4}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 resize-none text-white"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-fuchsia-500 resize-none text-white"
                   placeholder="Neden bu iş için uygun olduğunuzu anlatın..."
                   data-testid="application-message-input"
                 />
@@ -491,7 +491,7 @@ const HomeFeed = () => {
                 <button
                   type="submit"
                   disabled={applying}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
                   data-testid="submit-application-btn"
                 >
                   <Send className="w-5 h-5" />
@@ -511,7 +511,7 @@ const JobCard = ({ job, isFavorite, onToggleFavorite, userType, onApply, expande
 
   return (
     <div
-      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-purple-500/50 transition-all ${
+      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-fuchsia-500/50 transition-all ${
         expanded ? '' : 'hover:scale-105'
       }`}
       data-testid={`job-card-${job.job_id}`}
@@ -520,17 +520,17 @@ const JobCard = ({ job, isFavorite, onToggleFavorite, userType, onApply, expande
         <div className="flex-1">
           <div className="flex items-start gap-3 mb-2">
             <div>
-              <h3 className="text-xl font-bold mb-1 hover:text-purple-400 transition-colors cursor-pointer">
+              <h3 className="text-xl font-bold mb-1 hover:text-fuchsia-400 transition-colors cursor-pointer">
                 {job.title}
               </h3>
               <p className="text-sm text-gray-400">
-                <span className="text-purple-400 font-medium">{job.brand_name}</span>
+                <span className="text-fuchsia-400 font-medium">{job.brand_name}</span>
               </p>
             </div>
           </div>
           <p className="text-gray-300 mb-3 line-clamp-2">{job.description}</p>
           <div className="flex flex-wrap gap-2 mb-3">
-            <span className="px-3 py-1 bg-purple-500/30 rounded-full text-sm">{job.category}</span>
+            <span className="px-3 py-1 bg-fuchsia-500/30 rounded-full text-sm">{job.category}</span>
             <span className="px-3 py-1 bg-green-500/30 rounded-full text-sm font-semibold flex items-center gap-1">
               <DollarSign className="w-3 h-3" />
               {job.budget.toLocaleString('tr-TR')} ₺
@@ -571,7 +571,7 @@ const JobCard = ({ job, isFavorite, onToggleFavorite, userType, onApply, expande
         {userType === 'influencer' && (
           <button
             onClick={() => onApply(job)}
-            className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:scale-105 transition-transform text-sm font-bold"
+            className="flex-1 px-4 py-2 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-lg hover:scale-105 transition-transform text-sm font-bold"
             data-testid={`apply-btn-${job.job_id}`}
           >
             Başvur
