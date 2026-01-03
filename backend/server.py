@@ -4014,6 +4014,11 @@ async def get_contract(request: Request, contract_id: str):
         contract_doc["brand_name"] = match_doc.get("brand_name")
         contract_doc["influencer_name"] = match_doc.get("influencer_name")
     
+    # Get signature status
+    signatures = await db.contract_signatures.find({"contract_id": contract_id}, {"_id": 0}).to_list(2)
+    contract_doc["brand_signed"] = any(s.get("user_id") == contract_doc["brand_user_id"] for s in signatures)
+    contract_doc["influencer_signed"] = any(s.get("user_id") == contract_doc["influencer_user_id"] for s in signatures)
+    
     return contract_doc
 
 @api_router.post("/contracts/{contract_id}/sign")
