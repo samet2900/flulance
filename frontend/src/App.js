@@ -8,6 +8,7 @@ import AnnouncementsPage from './pages/AnnouncementsPage';
 import BrandDashboard from './pages/BrandDashboard';
 import InfluencerDashboard from './pages/InfluencerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminSecretLogin from './pages/AdminSecretLogin';
 import SettingsPage from './pages/SettingsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useLocation } from 'react-router-dom';
