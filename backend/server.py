@@ -937,7 +937,14 @@ async def get_my_jobs(request: Request):
         {"_id": 0}
     ).sort("created_at", -1).to_list(100)
     
-    return [JobPost(**j) for j in jobs]
+    result = []
+    for j in jobs:
+        j.setdefault("is_featured", False)
+        j.setdefault("is_urgent", False)
+        j.setdefault("application_count", 0)
+        result.append(JobPost(**j))
+    
+    return result
 
 @api_router.get("/jobs/{job_id}", response_model=JobPost)
 async def get_job(job_id: str):
