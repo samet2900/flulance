@@ -62,10 +62,16 @@ const AdminDashboard = () => {
       } else if (activeTab === 'badges') {
         fetchUsers();
         fetchBadges();
+      } else if (activeTab === 'verifications') {
+        fetchVerifications();
+      } else if (activeTab === 'disputes') {
+        fetchDisputes();
+      } else if (activeTab === 'social') {
+        fetchSocialAccounts();
       }
       // 'content' tab uses its own component with internal state
     }
-  }, [user, activeTab, jobFilter]);
+  }, [user, activeTab, jobFilter, disputeFilter]);
 
   const fetchUser = async () => {
     try {
