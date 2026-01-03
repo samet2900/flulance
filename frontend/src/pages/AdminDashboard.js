@@ -264,6 +264,56 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleApproveJob = async (jobId) => {
+    try {
+      await axios.put(`${API_URL}/api/admin/jobs/${jobId}/approval`, {
+        approval_status: 'approved'
+      }, {
+        withCredentials: true
+      });
+      alert('İlan onaylandı! ✅');
+      fetchJobs();
+    } catch (error) {
+      console.error('Error approving job:', error);
+      alert('İlan onaylanamadı');
+    }
+  };
+
+  const handleRejectJob = async () => {
+    if (!showRejectModal) return;
+    
+    try {
+      await axios.put(`${API_URL}/api/admin/jobs/${showRejectModal}/approval`, {
+        approval_status: 'rejected',
+        rejection_reason: rejectionReason
+      }, {
+        withCredentials: true
+      });
+      alert('İlan reddedildi');
+      setShowRejectModal(null);
+      setRejectionReason('');
+      fetchJobs();
+    } catch (error) {
+      console.error('Error rejecting job:', error);
+      alert('İlan reddedilemedi');
+    }
+  };
+
+  const handleDeleteJob = async (jobId) => {
+    if (!window.confirm('Bu ilanı kalıcı olarak silmek istediğinizden emin misiniz?')) return;
+    
+    try {
+      await axios.delete(`${API_URL}/api/jobs/${jobId}`, {
+        withCredentials: true
+      });
+      alert('İlan silindi');
+      fetchJobs();
+    } catch (error) {
+      console.error('Error deleting job:', error);
+      alert('İlan silinemedi');
+    }
+  };
+
   const handleAwardBadge = async (userId) => {
     try {
       await axios.post(`${API_URL}/api/admin/badges/${userId}`, badgeForm, {
