@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-import { Briefcase, TrendingUp, Bell, Star, Heart, Search, Filter, Users, DollarSign, MapPin, Calendar } from 'lucide-react';
+import { Briefcase, TrendingUp, Bell, Star, Heart, Search, Filter, Users, DollarSign, MapPin, Calendar, X, Send } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -19,6 +19,9 @@ const HomeFeed = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterPlatform, setFilterPlatform] = useState('');
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [applicationMessage, setApplicationMessage] = useState('');
+  const [applying, setApplying] = useState(false);
 
   const categories = [
     'Ürün Tanıtımı', 'Story Paylaşımı', 'Video İçerik', 'Reklam Kampanyası',
