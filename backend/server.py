@@ -3445,6 +3445,66 @@ async def admin_resolve_dispute(request: Request, dispute_id: str, data: dict):
     
     return {"message": "Dispute updated"}
 
+# ============= ADMIN: SOCIAL ACCOUNTS =============
+
+@api_router.get("/admin/social-accounts")
+async def admin_get_social_accounts(request: Request):
+    """Admin: Get all pending social account verifications"""
+    await require_role(request, ["admin"])
+    
+    # Get all unverified social accounts with user info
+    pipeline = [
+        {"$match": {"verified": {"$ne": True}}},
+        {"$lookup": {
+            "from": "users",
+            "localField": "user_id",
+            "foreignField": "user_id",
+            "as": "user_info"
+        }},
+        {"$unwind": {"path": "$user_info", "preserveNullAndEmptyArrays": True}},
+        {"$project": {
+            "_id": 0,
+            "user_id": 1,
+            "platform": 1,
+            "username": 1,
+            "followers": 1,
+            "profile_url": 1,
+            "verified": 1,
+            "created_at": 1,
+            "user_name": "$user_info.name"
+        }}
+    ]
+    
+    accounts = await db.social_accounts.aggregate(pipeline).to_list(100)
+    return accounts
+
+@api_router.put("/admin/social-accounts/{user_id}/{platform}")
+async def admin_update_social_account(request: Request, user_id: str, platform: str):
+    """Admin: Approve or reject social account"""
+    admin_user = await require_role(request, ["admin"])
+    
+    data = await request.json()
+    verified = data.get("verified", False)
+    
+    result = await db.social_accounts.update_one(
+        {"user_id": user_id, "platform": platform},
+        {"$set": {"verified": verified, "verified_at": datetime.now(timezone.utc) if verified else None}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Social account not found")
+    
+    # Notify user
+    await create_notification(
+        user_id=user_id,
+        type="social_verification",
+        title="Sosyal Hesap Doğrulama",
+        message=f"{platform.capitalize()} hesabınız {'onaylandı' if verified else 'reddedildi'}!",
+        link="/social-accounts"
+    )
+    
+    return {"message": f"Social account {'verified' if verified else 'rejected'}"}
+
 # ============= ETAP 5: CONTRACT SIGNATURES =============
 
 @api_router.post("/contracts/{contract_id}/sign")
