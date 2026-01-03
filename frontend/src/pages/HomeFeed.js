@@ -20,6 +20,8 @@ const HomeFeed = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [favorites, setFavorites] = useState(new Set());
   const [loading, setLoading] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupData, setPopupData] = useState(null);
   
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState('');
