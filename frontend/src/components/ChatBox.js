@@ -182,7 +182,7 @@ const ChatBox = ({ match, currentUser, onClose }) => {
         target="_blank" 
         rel="noopener noreferrer"
         className={`mt-2 flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-          isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'
+          isMine ? 'bg-white/20 hover:bg-white/30' : 'bg-gray-900/50 hover:bg-white/20'
         }`}
       >
         <File className="w-5 h-5" />
@@ -202,19 +202,19 @@ const ChatBox = ({ match, currentUser, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div 
-        className="bg-gray-900 rounded-2xl w-full max-w-3xl h-[600px] flex flex-col border border-white/20" 
+        className="bg-gray-900 rounded-2xl w-full max-w-3xl h-[600px] flex flex-col border border-gray-800" 
         onClick={(e) => e.stopPropagation()}
         data-testid="chatbox"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
+        <div className="flex items-center justify-between p-6 border-b border-gray-700">
           <div>
             <h2 className="text-2xl font-bold">{match.job_title}</h2>
             <p className="text-gray-400">Sohbet: {otherUserName}</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-900/50 rounded-lg transition-colors"
             data-testid="close-chat-btn"
           >
             <X className="w-6 h-6" />
@@ -238,8 +238,8 @@ const ChatBox = ({ match, currentUser, onClose }) => {
                 <div
                   className={`max-w-[70%] rounded-2xl px-4 py-3 ${
                     msg.sender_user_id === currentUser.user_id
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500'
-                      : 'bg-white/10'
+                      ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-500'
+                      : 'bg-gray-900/50'
                   }`}
                 >
                   <p className="text-xs text-gray-300 mb-1">{msg.sender_name}</p>
@@ -260,12 +260,12 @@ const ChatBox = ({ match, currentUser, onClose }) => {
 
         {/* File Preview */}
         {selectedFile && (
-          <div className="px-6 py-3 border-t border-white/10 bg-white/5">
+          <div className="px-6 py-3 border-t border-gray-700 bg-black/50">
             <div className="flex items-center gap-3">
               {previewUrl ? (
                 <img src={previewUrl} alt="Preview" className="w-16 h-16 object-cover rounded-lg" />
               ) : (
-                <div className="w-16 h-16 bg-white/10 rounded-lg flex items-center justify-center">
+                <div className="w-16 h-16 bg-gray-900/50 rounded-lg flex items-center justify-center">
                   {getFileIcon(selectedFile.type.split('/')[0])}
                 </div>
               )}
@@ -277,7 +277,7 @@ const ChatBox = ({ match, currentUser, onClose }) => {
               </div>
               <button
                 onClick={clearSelectedFile}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-900/50 rounded-lg transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -286,7 +286,7 @@ const ChatBox = ({ match, currentUser, onClose }) => {
         )}
 
         {/* Input */}
-        <div className="p-6 border-t border-white/10">
+        <div className="p-6 border-t border-gray-700">
           <form onSubmit={handleSendMessage} className="flex gap-2">
             <input
               type="file"
@@ -299,7 +299,7 @@ const ChatBox = ({ match, currentUser, onClose }) => {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="px-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors flex items-center gap-2"
+              className="px-4 py-3 bg-gray-900/50 hover:bg-white/20 rounded-xl transition-colors flex items-center gap-2"
               disabled={loading}
               data-testid="attach-file-btn"
             >
@@ -310,14 +310,14 @@ const ChatBox = ({ match, currentUser, onClose }) => {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Mesajınızı yazın..."
-              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500 text-white"
+              className="flex-1 px-4 py-3 bg-black/50 border border-gray-700 rounded-xl focus:outline-none focus:border-fuchsia-500 text-white"
               disabled={loading}
               data-testid="message-input"
             />
             <button
               type="submit"
               disabled={loading || (!newMessage.trim() && !selectedFile)}
-              className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2"
+              className="px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl font-semibold hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2"
               data-testid="send-message-btn"
             >
               {uploading ? (
