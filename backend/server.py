@@ -1078,6 +1078,118 @@ async def update_job(request: Request, job_id: str, job_update: JobUpdate):
     
     return JobPost(**updated_doc)
 
+# ============= ADMIN JOB MANAGEMENT =============
+
+@api_router.get("/admin/jobs", response_model=List[JobPost])
+async def admin_get_all_jobs(request: Request, approval_status: Optional[str] = None):
+    """Admin can view all jobs with filters"""
+    user = await require_role(request, ["admin"])
+    
+    query = {}
+    if approval_status:
+        query["approval_status"] = approval_status
+    
+    jobs = await db.job_posts.find(query, {"_id": 0}).sort("created_at", -1).to_list(500)
+    
+    result = []
+    for j in jobs:
+        app_count = await db.applications.count_documents({"job_id": j["job_id"]})
+        j["application_count"] = app_count
+        j.setdefault("is_featured", False)
+        j.setdefault("is_urgent", False)
+        j.setdefault("view_count", 0)
+        j.setdefault("approval_status", "approved")
+        j.setdefault("duration_days", 15)
+        result.append(JobPost(**j))
+    
+    return result
+
+class JobApproval(BaseModel):
+    approval_status: str  # 'approved' or 'rejected'
+    rejection_reason: Optional[str] = None
+
+@api_router.put("/admin/jobs/{job_id}/approval")
+async def admin_approve_job(request: Request, job_id: str, approval: JobApproval):
+    """Admin approves or rejects a job"""
+    user = await require_role(request, ["admin"])
+    
+    job_doc = await db.job_posts.find_one({"job_id": job_id})
+    if not job_doc:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    if approval.approval_status not in ["approved", "rejected"]:
+        raise HTTPException(status_code=400, detail="Invalid approval status")
+    
+    update_data = {
+        "approval_status": approval.approval_status
+    }
+    
+    if approval.approval_status == "rejected" and approval.rejection_reason:
+        update_data["rejection_reason"] = approval.rejection_reason
+    
+    await db.job_posts.update_one(
+        {"job_id": job_id},
+        {"$set": update_data}
+    )
+    
+    # Notify the brand
+    if approval.approval_status == "approved":
+        await create_notification(
+            user_id=job_doc["brand_user_id"],
+            type="update",
+            title="İlanınız Onaylandı! ✅",
+            message=f"'{job_doc['title']}' ilanınız onaylandı ve yayınlandı.",
+            link="/brand#jobs"
+        )
+    else:
+        reason_text = f" Sebep: {approval.rejection_reason}" if approval.rejection_reason else ""
+        await create_notification(
+            user_id=job_doc["brand_user_id"],
+            type="update",
+            title="İlanınız Reddedildi ❌",
+            message=f"'{job_doc['title']}' ilanınız reddedildi.{reason_text}",
+            link="/brand#jobs"
+        )
+    
+    return {"message": f"Job {approval.approval_status}"}
+
+@api_router.post("/jobs/{job_id}/renew")
+async def renew_job(request: Request, job_id: str):
+    """Renew an expired job for another 15 days"""
+    user = await require_role(request, ["marka"])
+    
+    job_doc = await db.job_posts.find_one({"job_id": job_id})
+    if not job_doc:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    if job_doc["brand_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your job")
+    
+    now = datetime.now(timezone.utc)
+    new_expires_at = now + timedelta(days=15)
+    
+    await db.job_posts.update_one(
+        {"job_id": job_id},
+        {"$set": {
+            "status": "open",
+            "expires_at": new_expires_at,
+            "approval_status": "pending"  # Needs re-approval
+        }}
+    )
+    
+    # Notify admins
+    admins = await db.users.find({"user_type": "admin"}, {"_id": 0, "user_id": 1}).to_list(100)
+    for admin in admins:
+        await create_notification(
+            user_id=admin["user_id"],
+            type="update",
+            title="İlan Yenilendi - Onay Bekliyor",
+            message=f"{user.name} ilanı yeniledi: {job_doc['title']}",
+            link="/admin#jobs"
+        )
+    
+    return {"message": "Job renewed for 15 days, pending approval"}
+
 # ============= APPLICATION ROUTES =============
 
 @api_router.post("/applications", response_model=Application)
