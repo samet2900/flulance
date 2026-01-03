@@ -617,12 +617,13 @@ const SettingsPage = () => {
                     <h3 className="text-lg font-semibold mb-4">Tema</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <button
-                        onClick={() => {/* TODO: implement theme change */}}
+                        onClick={() => handleThemeChange('dark')}
+                        disabled={saving}
                         className={`p-4 rounded-xl border-2 ${
                           settings?.theme === 'dark' 
                             ? 'border-fuchsia-500 bg-fuchsia-500/20' 
                             : 'border-gray-700 hover:border-gray-600'
-                        } flex items-center gap-3`}
+                        } flex items-center gap-3 disabled:opacity-50 transition-all`}
                       >
                         <Moon className="w-6 h-6" />
                         <div className="text-left">
@@ -632,12 +633,13 @@ const SettingsPage = () => {
                         {settings?.theme === 'dark' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
                       </button>
                       <button
-                        onClick={() => {/* TODO: implement theme change */}}
+                        onClick={() => handleThemeChange('light')}
+                        disabled={saving}
                         className={`p-4 rounded-xl border-2 ${
                           settings?.theme === 'light' 
                             ? 'border-fuchsia-500 bg-fuchsia-500/20' 
                             : 'border-gray-700 hover:border-gray-600'
-                        } flex items-center gap-3`}
+                        } flex items-center gap-3 disabled:opacity-50 transition-all`}
                       >
                         <Sun className="w-6 h-6" />
                         <div className="text-left">
@@ -647,18 +649,20 @@ const SettingsPage = () => {
                         {settings?.theme === 'light' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
                       </button>
                     </div>
+                    <p className="text-sm text-gray-500 mt-3">Not: Açık mod şu anda geliştirme aşamasındadır.</p>
                   </div>
 
                   <div>
                     <h3 className="text-lg font-semibold mb-4">Dil</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <button
-                        onClick={() => {/* TODO: implement language change */}}
+                        onClick={() => handleLanguageChange('tr')}
+                        disabled={saving}
                         className={`p-4 rounded-xl border-2 ${
                           settings?.language === 'tr' 
                             ? 'border-fuchsia-500 bg-fuchsia-500/20' 
                             : 'border-gray-700 hover:border-gray-600'
-                        } flex items-center gap-3`}
+                        } flex items-center gap-3 disabled:opacity-50 transition-all`}
                       >
                         <span className="text-2xl">🇹🇷</span>
                         <div className="text-left">
@@ -667,12 +671,13 @@ const SettingsPage = () => {
                         {settings?.language === 'tr' && <Check className="w-5 h-5 text-fuchsia-400 ml-auto" />}
                       </button>
                       <button
-                        onClick={() => {/* TODO: implement language change */}}
+                        onClick={() => handleLanguageChange('en')}
+                        disabled={saving}
                         className={`p-4 rounded-xl border-2 ${
                           settings?.language === 'en' 
                             ? 'border-fuchsia-500 bg-fuchsia-500/20' 
                             : 'border-gray-700 hover:border-gray-600'
-                        } flex items-center gap-3`}
+                        } flex items-center gap-3 disabled:opacity-50 transition-all`}
                       >
                         <span className="text-2xl">🇬🇧</span>
                         <div className="text-left">
