@@ -18,9 +18,23 @@ const InfluencerDashboard = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [showEditStats, setShowEditStats] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(null);
   const [loading, setLoading] = useState(false);
   const [filterCategory, setFilterCategory] = useState('');
   const [filterPlatform, setFilterPlatform] = useState('');
+  const [stats, setStats] = useState(null);
+  const [reviews, setReviews] = useState([]);
+
+  const [statsForm, setStatsForm] = useState({
+    instagram_followers: '',
+    instagram_engagement: '',
+    tiktok_followers: '',
+    tiktok_engagement: '',
+    youtube_subscribers: '',
+    youtube_avg_views: '',
+    twitter_followers: ''
+  });
 
   const [profileForm, setProfileForm] = useState({
     bio: '',
