@@ -8,6 +8,7 @@ import AnnouncementsPage from './pages/AnnouncementsPage';
 import BrandDashboard from './pages/BrandDashboard';
 import InfluencerDashboard from './pages/InfluencerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import SettingsPage from './pages/SettingsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useLocation } from 'react-router-dom';
 
@@ -42,6 +43,16 @@ function AppRouter() {
         element={
           <ProtectedRoute allowedRoles={['marka', 'influencer', 'admin']}>
             <AnnouncementsPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Settings Page */}
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute allowedRoles={['marka', 'influencer', 'admin']}>
+            <SettingsPage />
           </ProtectedRoute>
         }
       />
