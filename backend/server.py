@@ -2390,6 +2390,111 @@ async def get_user_badges(user_id: str):
         "badge_history": badges
     }
 
+# ============= INFLUENCER SEARCH ROUTES =============
+
+@api_router.get("/influencers/search")
+async def search_influencers(
+    request: Request,
+    q: Optional[str] = None,
+    specialty: Optional[str] = None,
+    platform: Optional[str] = None,
+    min_followers: Optional[int] = None,
+    max_price: Optional[float] = None,
+    badge: Optional[str] = None,
+    sort: str = "rating"
+):
+    """Search and filter influencers"""
+    await require_auth(request)
+    
+    # Build query
+    query = {"user_type": "influencer"}
+    
+    # Get all influencer users
+    users = await db.users.find(query, {"_id": 0, "password_hash": 0}).to_list(1000)
+    
+    results = []
+    for user in users:
+        # Get profile
+        profile = await db.influencer_profiles.find_one({"user_id": user["user_id"]}, {"_id": 0})
+        # Get stats
+        stats = await db.influencer_stats.find_one({"user_id": user["user_id"]}, {"_id": 0})
+        # Get reviews for avg rating
+        reviews = await db.reviews.find({"reviewed_user_id": user["user_id"]}).to_list(100)
+        avg_rating = sum(r.get("rating", 0) for r in reviews) / len(reviews) if reviews else 0
+        
+        # Combine data
+        influencer = {
+            "user_id": user["user_id"],
+            "name": user.get("name", ""),
+            "email": user.get("email", ""),
+            "picture": user.get("picture"),
+            "badge": user.get("badge"),
+            "bio": profile.get("bio", "") if profile else "",
+            "specialties": profile.get("specialties", []) if profile else [],
+            "starting_price": profile.get("starting_price", 0) if profile else 0,
+            "instagram_followers": stats.get("instagram_followers", 0) if stats else 0,
+            "youtube_subscribers": stats.get("youtube_subscribers", 0) if stats else 0,
+            "tiktok_followers": stats.get("tiktok_followers", 0) if stats else 0,
+            "twitter_followers": stats.get("twitter_followers", 0) if stats else 0,
+            "total_followers": (
+                (stats.get("instagram_followers", 0) if stats else 0) +
+                (stats.get("youtube_subscribers", 0) if stats else 0) +
+                (stats.get("tiktok_followers", 0) if stats else 0) +
+                (stats.get("twitter_followers", 0) if stats else 0)
+            ),
+            "avg_rating": avg_rating,
+            "review_count": len(reviews),
+            "created_at": user.get("created_at")
+        }
+        
+        # Apply filters
+        if q:
+            q_lower = q.lower()
+            name_match = q_lower in influencer["name"].lower()
+            specialty_match = any(q_lower in s.lower() for s in influencer["specialties"])
+            bio_match = q_lower in influencer["bio"].lower()
+            if not (name_match or specialty_match or bio_match):
+                continue
+        
+        if specialty:
+            if specialty not in influencer["specialties"]:
+                continue
+        
+        if platform:
+            platform_followers = {
+                "instagram": influencer["instagram_followers"],
+                "youtube": influencer["youtube_subscribers"],
+                "tiktok": influencer["tiktok_followers"],
+                "twitter": influencer["twitter_followers"]
+            }
+            if platform_followers.get(platform, 0) == 0:
+                continue
+        
+        if min_followers and influencer["total_followers"] < min_followers:
+            continue
+        
+        if max_price and influencer["starting_price"] > max_price:
+            continue
+        
+        if badge and influencer["badge"] != badge:
+            continue
+        
+        results.append(influencer)
+    
+    # Sort results
+    if sort == "rating":
+        results.sort(key=lambda x: x["avg_rating"], reverse=True)
+    elif sort == "followers":
+        results.sort(key=lambda x: x["total_followers"], reverse=True)
+    elif sort == "price_low":
+        results.sort(key=lambda x: x["starting_price"] or float('inf'))
+    elif sort == "price_high":
+        results.sort(key=lambda x: x["starting_price"], reverse=True)
+    elif sort == "newest":
+        results.sort(key=lambda x: x["created_at"] or datetime.min, reverse=True)
+    
+    return results
+
 # ============= FAVORITES ROUTES =============
 
 @api_router.get("/favorites", response_model=List[Favorite])
