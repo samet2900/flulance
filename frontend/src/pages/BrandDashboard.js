@@ -436,7 +436,27 @@ const BrandDashboard = () => {
             ) : (
               <div className="grid gap-6" data-testid="jobs-list">
                 {jobs.map((job) => (
-                  <div key={job.job_id} className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
+                  <div 
+                    key={job.job_id} 
+                    className={`bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border transition-all ${
+                      job.is_featured ? 'border-yellow-500/50 ring-1 ring-yellow-500/20' : 'border-gray-800'
+                    }`}
+                  >
+                    {/* Premium Badges */}
+                    {(job.is_featured || job.is_urgent) && (
+                      <div className="flex gap-2 mb-3">
+                        {job.is_featured && (
+                          <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-lg text-xs font-semibold flex items-center gap-1">
+                            <Zap className="w-3 h-3" /> ÖNE ÇIKAN
+                          </span>
+                        )}
+                        {job.is_urgent && (
+                          <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded-lg text-xs font-semibold flex items-center gap-1">
+                            <Clock className="w-3 h-3" /> ACİL
+                          </span>
+                        )}
+                      </div>
+                    )}
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-2xl font-bold mb-2">{job.title}</h3>
