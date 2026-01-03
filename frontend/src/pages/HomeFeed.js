@@ -165,6 +165,34 @@ const HomeFeed = () => {
     }
   };
 
+  const handleApply = async (e) => {
+    e.preventDefault();
+    if (!selectedJob) return;
+    
+    setApplying(true);
+    try {
+      await axios.post(`${API_URL}/api/jobs/${selectedJob.job_id}/apply`, {
+        message: applicationMessage
+      }, {
+        withCredentials: true
+      });
+      
+      setSelectedJob(null);
+      setApplicationMessage('');
+      alert('Başvurunuz başarıyla gönderildi!');
+    } catch (error) {
+      console.error('Error applying:', error);
+      alert(error.response?.data?.detail || 'Başvuru gönderilirken bir hata oluştu');
+    } finally {
+      setApplying(false);
+    }
+  };
+
+  const openApplicationModal = (job) => {
+    setSelectedJob(job);
+    setApplicationMessage('');
+  };
+
   const filteredJobs = jobs.filter(job => {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
