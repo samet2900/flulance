@@ -92,6 +92,84 @@ function AppRouter() {
         }
       />
       
+      {/* Briefs - Reverse Job Posts */}
+      <Route
+        path="/briefs"
+        element={
+          <ProtectedRoute allowedRoles={['marka', 'influencer']}>
+            <BriefsPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Portfolio */}
+      <Route
+        path="/portfolio"
+        element={
+          <ProtectedRoute allowedRoles={['influencer', 'marka']}>
+            <PortfolioPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/portfolio/:userId"
+        element={
+          <ProtectedRoute allowedRoles={['marka', 'influencer', 'admin']}>
+            <PortfolioPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Social Accounts */}
+      <Route
+        path="/social-accounts"
+        element={
+          <ProtectedRoute allowedRoles={['influencer']}>
+            <SocialAccountsPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Category Alerts */}
+      <Route
+        path="/category-alerts"
+        element={
+          <ProtectedRoute allowedRoles={['influencer']}>
+            <CategoryAlertsPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Identity Verification */}
+      <Route
+        path="/verification"
+        element={
+          <ProtectedRoute allowedRoles={['marka', 'influencer']}>
+            <VerificationPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Disputes */}
+      <Route
+        path="/disputes"
+        element={
+          <ProtectedRoute allowedRoles={['marka', 'influencer']}>
+            <DisputesPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Contracts */}
+      <Route
+        path="/contracts"
+        element={
+          <ProtectedRoute allowedRoles={['marka', 'influencer']}>
+            <ContractsPage />
+          </ProtectedRoute>
+        }
+      />
+      
       {/* Brand Routes */}
       <Route
         path="/brand"
