@@ -1561,16 +1561,6 @@ async def get_my_stats(request: Request):
     
     return InfluencerStats(**stats_doc)
 
-@api_router.get("/influencer-stats/{user_id}", response_model=Optional[InfluencerStats])
-async def get_influencer_stats(user_id: str):
-    """Public endpoint to get influencer stats"""
-    stats_doc = await db.influencer_stats.find_one({"user_id": user_id}, {"_id": 0})
-    
-    if not stats_doc:
-        return None
-    
-    return InfluencerStats(**stats_doc)
-
 @api_router.get("/influencer-stats/top-influencers")
 async def get_top_influencers():
     """Get top influencers by rating and reach"""
@@ -1596,6 +1586,16 @@ async def get_top_influencers():
             })
     
     return result
+
+@api_router.get("/influencer-stats/{user_id}", response_model=Optional[InfluencerStats])
+async def get_influencer_stats(user_id: str):
+    """Public endpoint to get influencer stats"""
+    stats_doc = await db.influencer_stats.find_one({"user_id": user_id}, {"_id": 0})
+    
+    if not stats_doc:
+        return None
+    
+    return InfluencerStats(**stats_doc)
 
 # ============= BADGE/VERIFICATION ROUTES (FAZ 2) =============
 
