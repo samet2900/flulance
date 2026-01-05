@@ -501,37 +501,20 @@ E-posta bildirimleri şu an **MOCKED** durumda. Gerçek e-posta göndermek için
 
 ## Gelecek Özellikler (Kullanıcı İstek Listesi)
 
-### Etap 2 - Temel İletişim (P0):
-- [ ] E-posta Bildirimleri - Başvuru, onay, mesaj bildirimleri
-- [ ] Şifremi Unuttum - Şifre sıfırlama özelliği
-- [ ] Influencer Arama Sayfası - Markalar için filtreleme
-
-### Etap 3 - Admin Panel Geliştirmeleri (P1):
-- [ ] Dashboard Grafikleri - İstatistik grafikleri
-- [ ] Pop-up Bildirim Yönetimi - Girişteki pop-up içeriğini admin düzenlesin
-- [ ] Aktivite Logları - Kullanıcı aktivite takibi
-- [ ] Blog/Feed Yönetimi - Admin panelden kontrol
-- [ ] Q&A Bölümü Yönetimi - Soru-cevap ekleme/düzenleme
-- [ ] Başarı Hikayeleri - Admin panelden kontrol
-- [ ] Etkinlikler - Webinar/workshop duyuruları
-
-### Etap 4 - Gamification (P1):
+### Yüksek Öncelik (P1):
+- [ ] İlan İstatistikleri - Görüntülenme ve başvuru sayısı gösterimi
+- [ ] İlan Arşivleme - Eski ilanları arşivleme
+- [ ] Public Profil Sayfaları - Kullanıcıların public profil sayfası
 - [ ] Influencer Seviye Sistemi - Bronz → Gümüş → Altın → Elmas
 - [ ] Başarı Rozetleri - "İlk İşini Tamamladı" vb.
-- [ ] Marka/Influencer Raporları - Aylık özet raporları
 
-### Etap 5 - Gelişmiş Özellikler (P2):
+### Orta Öncelik (P2):
 - [ ] Influencer Karşılaştırma - Yan yana karşılaştır
-- [ ] Teklif İsteme (Tersine İlan) - Marka brief paylaşır
 - [ ] Favori Influencer Listesi - Markaların favori listesi
-- [ ] Portföy/Showcase Sayfası - Influencer geçmiş işleri
-- [ ] Sosyal Medya Bağlama - Instagram/TikTok API
 - [ ] Akıllı İlan Önerileri - Kişiselleştirilmiş öneriler
-- [ ] Kategori Alarmı - "Yeni ilan çıkınca haber ver"
 - [ ] Son Görülme / Canlı Aktivite - "15 kişi bakıyor"
-- [ ] Kimlik Doğrulama - TC/Vergi no (opsiyonel)
-- [ ] Anlaşmazlık Çözümü - Admin arabuluculuğu
-- [ ] Dijital Sözleşme İmza - Yasal geçerlilik
+- [ ] Marka/Influencer Raporları - Aylık özet raporları
+- [ ] Pazar Analizi - Trend kategoriler (Admin)
 
 ### Altyapı & SEO (P2):
 - [ ] SEO Optimizasyonu - Meta taglar, sitemap
