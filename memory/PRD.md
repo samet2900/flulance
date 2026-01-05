@@ -420,6 +420,85 @@ E-posta bildirimleri şu an **MOCKED** durumda. Gerçek e-posta göndermek için
 
 ---
 
+## FAZ 10 - Etap 5 Özellikleri ✅ TAMAMLANDI (3 Ocak 2026)
+
+### Tamamlanan Özellikler:
+- [x] **Teklif İsteme (Briefs) - Reverse Job Post**
+  - Markalar brief oluşturabilir
+  - Influencer'lar açık brief'lere teklif verebilir
+  - Marka teklifleri görebilir ve kabul edebilir
+  - Kabul edilince otomatik eşleşme oluşur
+  - `/briefs` sayfası
+  - API: `POST/GET /api/briefs`, `/api/briefs/{id}/proposals`
+
+- [x] **Portföy/Showcase Sayfası**
+  - Influencer'lar geçmiş işlerini sergileyebilir
+  - Görsel, video URL, link ekleme
+  - Metrikler (görüntülenme, beğeni, engagement)
+  - Marka adı ve tarih bilgisi
+  - `/portfolio` ve `/portfolio/{userId}` sayfaları
+  - API: `GET/POST/PUT/DELETE /api/portfolio`
+
+- [x] **Sosyal Medya Bağlama (Manuel Giriş + Admin Onay)**
+  - Influencer'lar sosyal hesaplarını manuel ekleyebilir
+  - Platform, kullanıcı adı, takipçi sayısı girişi
+  - Admin onay sistemi
+  - `/social-accounts` sayfası
+  - Admin panelde "Sosyal Hesaplar" sekmesi
+  - API: `GET/POST/DELETE /api/social-accounts`, `GET/PUT /api/admin/social-accounts`
+
+- [x] **Kategori Alarmları**
+  - Influencer'lar ilgi kategorilerini seçebilir
+  - Platform ve bütçe filtresi
+  - E-posta ve push bildirim tercihleri
+  - `/category-alerts` sayfası
+  - API: `GET/POST/DELETE /api/category-alerts`
+
+- [x] **Kimlik Doğrulama**
+  - TC Kimlik veya Vergi No ile doğrulama
+  - Admin onay sistemi
+  - Doğrulanmış kullanıcılara rozet
+  - `/verification` sayfası
+  - Admin panelde "Kimlik Doğrulama" sekmesi
+  - API: `POST/GET /api/identity-verification`, `GET/PUT /api/admin/identity-verifications`
+
+- [x] **Anlaşmazlık Çözümü**
+  - Kullanıcılar anlaşmazlık bildirebilir
+  - Admin arabuluculuk sistemi
+  - Durum takibi (açık, inceleniyor, çözüldü, kapalı)
+  - `/disputes` sayfası
+  - Admin panelde "Anlaşmazlıklar" sekmesi
+  - API: `POST/GET /api/disputes`, `GET/PUT /api/admin/disputes`
+
+- [x] **Dijital Sözleşme İmza**
+  - Markalar eşleşmeler için sözleşme oluşturabilir
+  - Her iki taraf dijital olarak imzalayabilir
+  - İmza durumu takibi
+  - Sözleşme detayları (tutar, tarihler, şartlar)
+  - `/contracts` sayfası
+  - API: `POST/GET /api/contracts`, `POST /api/contracts/{id}/sign`
+
+### Yeni Dosyalar:
+- `/app/frontend/src/pages/BriefsPage.js` - Teklif isteme sayfası
+- `/app/frontend/src/pages/PortfolioPage.js` - Portföy sayfası
+- `/app/frontend/src/pages/SocialAccountsPage.js` - Sosyal hesaplar
+- `/app/frontend/src/pages/CategoryAlertsPage.js` - Kategori alarmları
+- `/app/frontend/src/pages/VerificationPage.js` - Kimlik doğrulama
+- `/app/frontend/src/pages/DisputesPage.js` - Anlaşmazlıklar
+- `/app/frontend/src/pages/ContractsPage.js` - Dijital sözleşmeler
+
+### Admin Dashboard Güncellemeleri:
+- "Kimlik Doğrulama" sekmesi - Bekleyen doğrulamaları yönet
+- "Anlaşmazlıklar" sekmesi - Anlaşmazlıkları çöz
+- "Sosyal Hesaplar" sekmesi - Sosyal hesap doğrulamaları
+
+### Navbar Güncellemeleri:
+- Profil menüsüne tüm yeni sayfalar eklendi
+- Influencer için: Portföyüm, Sosyal Hesaplarım, Kategori Alarmları
+- Tüm kullanıcılar için: Briefs, Sözleşmeler, Anlaşmazlıklar, Kimlik Doğrula
+
+---
+
 ## Gelecek Özellikler (Kullanıcı İstek Listesi)
 
 ### Etap 2 - Temel İletişim (P0):
